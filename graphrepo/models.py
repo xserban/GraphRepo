@@ -1,4 +1,4 @@
-"""This modules Defines all neo4j ORM models
+"""This modules Defines all neo4j OGM models
 """
 import hashlib
 import relationships as rl
@@ -25,7 +25,7 @@ class Branch(Node):
 
 
 class Commit(Node):
-  """Commit ORM  - Mapps Commit from PyDriller to py2neo
+  """Commit OGM  - Mapps Commit from PyDriller to py2neo
   """
 
   def __init__(self, commit):
@@ -118,7 +118,7 @@ class Commit(Node):
 
 
 class Change(Node):
-  """Change ORM Node - Maps files changed in a commit
+  """Change OGM Node - Maps files changed in a commit
   to py2neo objects
   """
   def __init__(self, change):
@@ -132,7 +132,7 @@ class Change(Node):
 
 
 class Developer(Node):
-  """Developer ORM Node - Maps PyDriller Developer objects
+  """Developer OGM Node - Maps PyDriller Developer objects
   to py2neo. Should be changed to Contributor in the future
   """
 
@@ -147,7 +147,7 @@ class Developer(Node):
 
 
 class Year(Node):
-  """Year ORM node
+  """Year OGM node
   """
   def __init__(self, date):
     """Instantiates a year object. Please be aware the node
