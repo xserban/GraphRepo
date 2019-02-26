@@ -1,6 +1,6 @@
 from py2neo import Graph
 from constants import Constants
-from drill import Drill
+from driller import Driller
 
 CT = Constants()
 
@@ -8,12 +8,12 @@ def init_graph():
   """Configures the graph + connection
   :returns: graph
   """
-  repo_graph = Graph(host=CT.DB_URL, user=CT.DB_USER, password=CT.DB_PWD)
+  repo_graph = Graph(host=CT.DB_URL, user=CT.DB_USER, password=CT.DB_PWD, http_port=CT.PORT)
   return repo_graph
 
 def main():
   repo_graph = init_graph()
-  driller = Drill()
+  driller = Driller()
   commits, repo = driller.drill()
 
   # index in neo4j

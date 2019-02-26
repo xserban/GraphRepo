@@ -8,7 +8,7 @@ from models import Commit, Change, Developer
 CT = Constants()
 
 
-class Drill(object):
+class Driller(object):
   """ Drill class - parses a git repo and uses the models
   to index everything in Neo4j
   """
