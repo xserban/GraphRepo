@@ -2,10 +2,34 @@
 """
 from py2neo.data import Relationship
 
-class Branch(Relationship): pass
-class Authorship(Relationship): pass
-class Parent(Relationship): pass
+class CustomRelationship(Relationship):
+  """Extends py2neo relationship object
+  with custom functionality.
+  """
+  def __init__(self, rel_from=None, rel_to=None, graph=None):
+    """Instantiates a custom relationship. If a graph is given
+    the relationship is indexed in the graph.
+    :param rel_from: py2neo Node object
+    :param rel_to: py2neo Node object
+    :param graph: py2neo graph object
+    """
+    Relationship.__init__(self, rel_from, rel_to)
+    if graph is not None:
+      self.create(graph)
 
-class YearMonth(Relationship): pass
-class MonthDay(Relationship): pass
-class DayCommit(Relationship): pass
+  def create(self, graph):
+    graph.create(self)
+
+
+class Branch(CustomRelationship): pass
+class Authorship(CustomRelationship): pass
+class Parent(CustomRelationship): pass
+
+class YearMonth(CustomRelationship): pass
+class MonthDay(CustomRelationship): pass
+class DayCommit(CustomRelationship): pass
+
+class Branch(CustomRelationship): pass
+
+class File(CustomRelationship): pass
+class Filetype(CustomRelationship): pass
