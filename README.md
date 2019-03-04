@@ -1,6 +1,6 @@
 # GraphRepo
 
-This tool maps a git repository to a neo4j database. Each entity in a repository has a custom model (which can be found in graphrepo/models).
+This tool maps a git repository to a neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
 Whenever we instantiate a new model, if a py2neo graph object is given, a neo4j object is also created.
 
 ### 1. Running the project
