@@ -1,3 +1,4 @@
+"""This module is a mapping between Pydriller Commit and neo4j """
 import graphrepo.models.relationships as rel
 
 from graphrepo.models.custom_node import CustomNode
