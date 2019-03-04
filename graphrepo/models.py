@@ -56,7 +56,7 @@ class Commit(CustomNode):
     CustomNode.__init__(self, self.node_type, hash=self.commit.hash)
 
     if graph is not None:
-      self.index_all(graph=graph, repo=repo)
+      self.index_all_data(graph=graph, repo=repo)
 
   def index_files_changed(self, graph):
     """Indexes the files changed by a commit
@@ -79,7 +79,7 @@ class Commit(CustomNode):
   def index_parents(self, graph, repo):
     """For each parent of the commit, this method requests
     a commit object from pydriller's RepositoryMining object
-    and indexes some data. If index_all is used, this method
+    and indexes some data. If index_all_data is used, this method
     is applied recursively to all parents, however, this is
     very slow.
     :param graph: py2neo graph object
@@ -91,7 +91,7 @@ class Commit(CustomNode):
       commit = Commit(repo.get_commit(parent))
       commit.index_author(graph)
       commit.index_date(graph)
-      # commit.index_all(graph, repo)
+      # commit.index_all_data(graph, repo)
       rel.Parent(commit, self, graph=graph)
 
   def index_date(self, graph):
@@ -112,7 +112,7 @@ class Commit(CustomNode):
     rel.DayCommit(day, self, graph=graph)
 
 
-  def index_all(self, graph, repo=None):
+  def index_all_data(self, graph, repo=None):
     """Indexes all the data for a commit
     :param graph: py2neo graph object
     :param repo: PyDriller RepositoryMining class for the
@@ -145,8 +145,13 @@ class File(CustomNode):
     self.file = file
     _hash =  hashlib.sha224(str(file.filename).encode('utf-8')).hexdigest()
     super().__init__(self.node_type, hash=_hash, name=file.filename)
+
     if graph is not None:
       self.index(graph)
+
+    if file_type is True:
+      self.index_type(graph=graph)
+
 
   def index(self, graph):
     """Adds node in the graph
@@ -154,10 +159,15 @@ class File(CustomNode):
     """
     graph.merge(self, self.node_type, self.node_index)
 
-  def index_type(self):
+  def index_type(self, graph):
     """Creates file type if it does not exist and adds filetype
-    relationship"""
-    pass
+    relationship
+    :param graph: py2neo Graph object
+    """
+    self.file_type = Filetype(self.file, graph=graph)
+    rel.Filetype(self.file_type, self, graph=graph)
+
+
 
 class Filetype(CustomNode):
   """Filetype OGM Node - Maps file types to py2neo object
@@ -171,8 +181,8 @@ class Filetype(CustomNode):
     self.node_type = "Filetype"
     self.node_index = "hash"
 
-    _name = file.filename.split()[-1:]
-    _hash = hashlib.sha224(_name).hexdigest()
+    _name = '.' + file.filename.split('.')[-1:][0]
+    _hash = hashlib.sha224(_name.encode('utf-8')).hexdigest()
     super().__init__(self.node_type, hash=_hash, name=_name)
     if graph is not None:
       self.index(graph)

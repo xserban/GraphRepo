@@ -18,7 +18,7 @@ def main():
 
   # index in neo4j
   for com in commits:
-    com.index_all(repo_graph, repo)
+    com.index_all_data(repo_graph, repo)
 
 if __name__ == '__main__':
   main()

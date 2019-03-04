@@ -13,7 +13,7 @@ class CustomRelationship(Relationship):
     :param rel_to: py2neo Node object
     :param graph: py2neo graph object
     """
-    Relationship.__init__(self, rel_from, rel_to)
+    super().__init__(rel_from, rel_to)
     if graph is not None:
       self.create(graph)
 
