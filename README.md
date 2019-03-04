@@ -63,7 +63,7 @@ MATCH (n) RETURN n
 ```
 
 
-#### 2.2 Deleete all nodes in a graph
+#### 2.2 Delete all nodes in a graph
 
 ```
 MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r
