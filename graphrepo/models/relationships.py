@@ -1,5 +1,4 @@
-""" This class holds all possible relationships in the graph
-"""
+"""This module holds all possible relationships in the graph"""
 from py2neo.data import Relationship
 
 class CustomRelationship(Relationship):

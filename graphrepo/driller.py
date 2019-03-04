@@ -2,8 +2,8 @@
 and indexes it in neo4j
 """
 from pydriller import RepositoryMining, GitRepository
-from constants import Constants
-from models import Commit, File, Developer
+from graphrepo.constants import Constants
+from graphrepo.models.commit import Commit
 
 CT = Constants()
 
