@@ -36,7 +36,7 @@ The default one is *neo4j*.
 
 #### 1.3 Index and vizualize your repo:
 
-Please configure the constants in ```examples/index_all.py```, then run the file using the
+Please configure the constants in [examples/index_all.py](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/index_all.py), then run the file using the
 following command:
 
 ```
