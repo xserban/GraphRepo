@@ -31,3 +31,9 @@ class CustomNode(Node):
     if not self.indexed:
       graph.merge(self, self.node_type, self.node_index)
       self.indexed = True
+
+  def index(self, graph):
+    """Adds graph node for this object
+    :param graph: py2neo graph
+    """
+    graph.merge(self, self.node_type, self.node_index)

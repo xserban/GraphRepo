@@ -45,12 +45,6 @@ class File(CustomNode):
       self.index_type(graph=graph)
 
 
-  def index(self, graph):
-    """Adds node in the graph
-    :param graph: py2neo graph
-    """
-    graph.merge(self, self.node_type, self.node_index)
-
   def index_type(self, graph):
     """Creates file type if it does not exist and adds filetype
     relationship
@@ -78,9 +72,3 @@ class Filetype(CustomNode):
     super().__init__(self.node_type, hash=_hash, name=_name)
     if graph is not None:
       self.index(graph)
-
-  def index(self, graph):
-    """Adds file type node in the graph
-    :param graph: py2neo graph object
-    """
-    graph.merge(self, self.node_type, self.node_index)
