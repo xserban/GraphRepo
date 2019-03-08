@@ -25,30 +25,17 @@ The following instructions assume the Docker daemon is running on your machine.
 $ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data/exp:/data --volume=$HOME/neo4j/logs/exp:/logs neo4j:3.0
 ```
 
-Now open a browser window and go to [http://localhost:7474](http://localhost:7474). Here you can configure the neo4j password. 
+Now open a browser window and go to [http://localhost:7474](http://localhost:7474). Here you can configure the neo4j password.
 The default one is *neo4j*.
 
 
-#### 1.3 Configure the graphrepo project
+#### 1.3 Index and vizualize your repo:
 
-At the moment all configuration happens in [graphrepo/constants](https://github.com/NullConvergence/GraphRepo/blob/develop/graphrepo/constants.py). 
-Please configure the neo4j database credentials, the path to your repo (REPO) and the dates from which you want to index commits. If you want to index
-the whole repo, than set the dates to None.
-
+Please configure the constants in ```examples/index_all.py```, then run the file using the
+following command:
 
 ```
-$ vi graphrepo/constants.py
-$ i
-$ <edit-stuff>
-$ esc
-$ :wq
-```
-
-
-#### 1.4 Index and vizualize your repo:
-
-```
-$ python graphrepo/main.py
+$ python examples/index_all.py
 ```
 
 Then go to [http://localhost:7474](http://localhost:7474) and use the first query from Section 2.
