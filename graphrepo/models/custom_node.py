@@ -17,11 +17,15 @@ should be inherited by all models
 """
 from py2neo.data import Node
 
+
 class CustomNode(Node):
   """Parent class for all custom Nodes"""
+
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.indexed = False
+    self.node_type = ""
+    self.node_index = ""
 
   def check_self(self, graph):
     """Checks if the node corresponding to this instance
