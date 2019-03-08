@@ -1,6 +1,6 @@
 # GraphRepo
 
-This tool maps a git repository to a neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
+This tool maps a git repository to a Neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
 Whenever we instantiate a new model, if a py2neo graph object is given to its constructor, a neo4j node is created.
 
 ### 1. Running the project
@@ -8,13 +8,13 @@ Whenever we instantiate a new model, if a py2neo graph object is given to its co
 #### Prereq
 The only requirement is to have Python and Docker installed on your system.
 
-#### 1.1 Install with pip
+#### 1.1 Installing the production release with pip
 
 ```
 $ pip install graphrepo
 ```
 
-#### 1.2 Alternative: Clone project and install dependencies
+#### 1.2 Alternative: Installing the development version
 ```
 $ git clone https://github.com/NullConvergence/GraphRepo
 $ cd graphrepo/
@@ -36,7 +36,7 @@ The default one is *neo4j*.
 
 #### 1.3 Index and vizualize your repo:
 
-Please configure the constants in ```examples/index_all.py```, then run the file using the
+Please configure the constants in [examples/index_all.py](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/index_all.py), then run the file using the
 following command:
 
 ```
