@@ -60,15 +60,14 @@ class Commit(CustomNode):
     dev = Developer(self.commit.author, graph=graph)
     rel.Authorship(dev, self, graph=graph)
 
-  def index_parents(self, graph, repo):
+  def index_parent(self, graph, repo):
     """For each parent of the commit, this method requests
     a commit object from pydriller's RepositoryMining object
     and indexes some data. If index_all_data is used, this method
     is applied recursively to all parents, however, this is
     very slow.
     :param graph: py2neo graph object
-    :param repo: PyDriller RepositoryMining class for the
-      current repo
+    :param repo: PyDriller RepositoryMining object
     """
     self.check_self(graph)
     for parent in self.commit.parents:
@@ -77,6 +76,33 @@ class Commit(CustomNode):
       commit.index_date(graph)
       # commit.index_all_data(graph, repo)
       rel.Parent(commit, self, graph=graph)
+
+  def index_parents(self, graph, repo, branch=True):
+    """This method chooses between indexing a parent
+    relation or indexing a branch relationship between
+    parent commits.
+    :param graph
+
+    """
+    if branch is False:
+      self.index_parent(graph, repo)
+    else:
+      self.index_parent_branch(graph, repo)
+
+  def index_parent_branch(self, graph, repo):
+    """For each parent of the commit, this method requests
+    a commit object from pydriller's RepositoryMining object
+    and indexes a branch relationship between the two and
+    the parent commit data
+    :param graph: py2neo Graph object
+    :param repo: Pydriller RepositoryMining object
+    """
+    self.check_self(graph)
+    for parent in self.commit.parents:
+      commit = Commit(repo.get_commit(parent))
+      commit.index_author(graph)
+      commit.index_date(graph)
+      rel.Branch(commit, self, graph=graph)
 
   def index_date(self, graph):
     """Splits the date in year, month and day and creates
