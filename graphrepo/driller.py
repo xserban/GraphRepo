@@ -66,8 +66,9 @@ class Driller(metaclass=Singleton):
       LG.log_and_raise(exc)
 
   def _drill(self):
-    """Method to index the repo in neo4j
-    :param repo: a string with the repo path
+    """Parses all commits
+    :returns: a tupple containing a list of commits and
+      a Pydriller GitRepository commit
     """
     rep_obj = GitRepository(self.config.REPO)
     commits = []
