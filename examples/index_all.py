@@ -12,27 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from py2neo import Graph
-from graphrepo.constants import Constants
 from graphrepo.driller import Driller
+from datetime import datetime
 
-CT = Constants()
+DB_URL = 'localhost'
+PORT = 13000
+DB_USER = 'neo4j'
+DB_PWD = 'letmein'
+REPO = 'pydriller/'
+START_DATE = datetime(2018, 12, 1)
+END_DATE = datetime(2019, 1, 1)
 
-def init_graph():
-  """Configures the graph + connection
-  :returns: graph
-  """
-  repo_graph = Graph(host=CT.DB_URL, user=CT.DB_USER, password=CT.DB_PWD, http_port=CT.PORT)
-  return repo_graph
 
 def main():
-  repo_graph = init_graph()
   driller = Driller()
-  commits, repo = driller.drill()
+  driller.configure(
+      db_url=DB_URL,
+      port=PORT,
+      db_user=DB_USER,
+      db_pwd=DB_PWD,
+      repo=REPO,
+      start_date=START_DATE,
+      end_date=END_DATE
+  )
+  driller.drill()
 
-  # index in neo4j
-  for com in commits:
-    com.index_all_data(repo_graph, repo)
 
 if __name__ == '__main__':
   main()
