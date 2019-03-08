@@ -14,7 +14,7 @@ The only requirement is to have Python and Docker installed on your system.
 $ pip install graphrepo
 ```
 
-#### 1.2 Alternative: Install the development version
+#### Alternative: Install the development version
 ```
 $ git clone https://github.com/NullConvergence/GraphRepo
 $ cd graphrepo/
