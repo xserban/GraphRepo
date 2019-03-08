@@ -25,6 +25,10 @@ class Constants(object):
   DB_USER = 'neo4j'
   DB_PWD = 'letmein'
   REPO = 'pydriller/'
+  # If True each branch will be a node and between commits there will be a Parent
+  # relationship.
+  # If False, a branch will be a relationship between commits
+  BRANCH_AS_NODE = True
   START_DATE = datetime(2018, 12, 1)
   END_DATE = datetime(2019, 1, 1)
   # START_DATE = None
