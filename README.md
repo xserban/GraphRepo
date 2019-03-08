@@ -8,13 +8,13 @@ Whenever we instantiate a new model, if a py2neo graph object is given to its co
 #### Prereq
 The only requirement is to have Python and Docker installed on your system.
 
-#### 1.1 Install with pip
+#### 1.1 Installing the production release with pip
 
 ```
 $ pip install graphrepo
 ```
 
-#### 1.2 Alternative: Clone project and install dependencies
+#### 1.2 Alternative: Installing the development version
 ```
 $ git clone https://github.com/NullConvergence/GraphRepo
 $ cd graphrepo/
