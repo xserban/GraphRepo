@@ -12,17 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-import unittest
+"""This module is a mapping to a neo4j node for a year"""
+import hashlib
 
-class CustomTest(unittest.TestCase):
-    def setUp(self):
-        self.test_start = time.time()
-        # always use the same reandom seed
-        # during tests
-        print("Test: ", self.id, " started.")
+from graphrepo.models.custom_node import CustomNode
 
-    def tearDown(self):
-        print("Test: ", self.id, "took ", time.time() -
-              self.test_start, " seconds.")
+class Year(CustomNode):
+  """Year OGM node
+  """
+  def __init__(self, date, graph=None):
+    """Instantiates a year object. If a graph is provided
+    the object is indexed in neo4j
+    :param date: datetime object containing all date info
+    """
+    self.node_type = "Year"
+    self.node_index = "name"
 
+    super().__init__(self.node_type, name=date.year)
+    if graph is not None:
+      self.index(graph)

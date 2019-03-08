@@ -12,17 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-import unittest
+"""Singleton metaclass"""
 
-class CustomTest(unittest.TestCase):
-    def setUp(self):
-        self.test_start = time.time()
-        # always use the same reandom seed
-        # during tests
-        print("Test: ", self.id, " started.")
 
-    def tearDown(self):
-        print("Test: ", self.id, "took ", time.time() -
-              self.test_start, " seconds.")
+class Singleton(type):
+  """
+  Define an Instance operation that lets clients access its unique
+  instance.
+  """
 
+  def __init__(cls, name, bases, attrs, **kwargs):
+    super().__init__(name, bases, attrs)
+    cls._instance = None
+
+  def __call__(cls, *args, **kwargs):
+    if cls._instance is None:
+      cls._instance = super().__call__(*args, **kwargs)
+    return cls._instance

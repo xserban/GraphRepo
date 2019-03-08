@@ -12,17 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-import unittest
+from graphrepo.driller import Driller
+from datetime import datetime
 
-class CustomTest(unittest.TestCase):
-    def setUp(self):
-        self.test_start = time.time()
-        # always use the same reandom seed
-        # during tests
-        print("Test: ", self.id, " started.")
+DB_URL = 'localhost'
+PORT = 13000
+DB_USER = 'neo4j'
+DB_PWD = 'letmein'
+REPO = 'pydriller/'
+START_DATE = datetime(2018, 12, 1)
+END_DATE = datetime(2019, 1, 1)
 
-    def tearDown(self):
-        print("Test: ", self.id, "took ", time.time() -
-              self.test_start, " seconds.")
 
+def main():
+  driller = Driller()
+  driller.configure(
+      db_url=DB_URL,
+      port=PORT,
+      db_user=DB_USER,
+      db_pwd=DB_PWD,
+      repo=REPO,
+      start_date=START_DATE,
+      end_date=END_DATE
+  )
+  driller.drill()
+
+
+if __name__ == '__main__':
+  main()

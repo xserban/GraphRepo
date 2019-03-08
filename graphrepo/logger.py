@@ -11,18 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from graphrepo.singleton import Singleton
 
-import time
-import unittest
 
-class CustomTest(unittest.TestCase):
-    def setUp(self):
-        self.test_start = time.time()
-        # always use the same reandom seed
-        # during tests
-        print("Test: ", self.id, " started.")
+class Logger(metaclass=Singleton):
+  def __init__(self, *args, **kwargs):
+    pass
 
-    def tearDown(self):
-        print("Test: ", self.id, "took ", time.time() -
-              self.test_start, " seconds.")
+  def log(self, exception):
+    """Logs exceptions and prints it to console
+    :param exception: Exception type from Python
+    """
+    # TODO: log?
+    print('[EXCEPTION]: {}'.format(exception))
 
+  def log_and_raise(self, exception):
+    """Logs, prints and raises exception
+    :param exception: Python Exception object
+    """
+    self.log(exception)
+    raise exception
