@@ -15,27 +15,90 @@
 """ This module uses pydriller to search a repository
 and indexes it in neo4j
 """
+from py2neo import Graph
 from pydriller import RepositoryMining, GitRepository
-from graphrepo.constants import Constants
+from graphrepo.config import Config
+from graphrepo.logger import Logger
 from graphrepo.models.commit import Commit
+from graphrepo.singleton import Singleton
 
-CT = Constants()
+
+LG = Logger()
 
 
-class Driller(object):
-  """ Drill class - parses a git repo and uses the models
-  to index everything in Neo4j
+class Driller(metaclass=Singleton):
+  """Drill class - parses a git repo and uses the models
+  to index everything in Neo4j. This class is a singleton
+  because it holds the connection to Neo4j in self.graph
   """
 
   def __init__(self):
-    pass
+    """Initializes the properties of this class"""
+    self.config = Config()
+    self.graph = None
 
-  def drill(self, repo=CT.REPO):
-    """ Method to index the repo in neo4j
+  def configure(self, db_url="localhost",
+                port=13000, db_user="neo4j",
+                db_pwd="neo4j", repo="pydriller/",
+                start_date=None,
+                end_date=None):
+    """Sets the application constants"""
+    # TODO: validate inputs
+    self.config.DB_URL = db_url
+    self.config.PORT = port
+    self.config.DB_USER = db_user
+    self.config.DB_PWD = db_pwd
+    self.config.REPO = repo
+    self.config.START_DATE = start_date
+    self.config.END_DATE = end_date
+
+  def connect(self):
+    """Instantiates the connection to Neo4j and stores
+    the graph internally.
+    Throws exception if the connection can not pe realized
+    """
+    try:
+      self.graph = Graph(host=self.config.DB_URL,
+                         user=self.config.DB_USER,
+                         password=self.config.DB_PWD,
+                         http_port=self.config.PORT)
+    except Exception as exc:
+      LG.log_and_raise(exc)
+
+  def _drill(self):
+    """Method to index the repo in neo4j
     :param repo: a string with the repo path
     """
-    rep_obj = GitRepository(repo)
+    rep_obj = GitRepository(self.config.REPO)
     commits = []
-    for commit in RepositoryMining(repo, since=CT.START_DATE, to=CT.END_DATE).traverse_commits():
+    for commit in RepositoryMining(self.config.REPO,
+                                   since=self.config.START_DATE,
+                                   to=self.config.END_DATE).traverse_commits():
       commits.append(Commit(commit))
+
     return commits, rep_obj
+
+  def drill(self):
+    """Gets commits and indexes them to Neo4j Database"""
+    try:
+      self.config.check_config()
+      self.check_connection()
+
+      commits, rep_obj = self._drill()
+      for com in commits:
+        com.index_all_data(self.graph, rep_obj)
+    except Exception as exc:
+      LG.log_and_raise(exc)
+    else:
+      return
+
+  def check_connection(self):
+    """Checks if there is a db connection and raises
+    ReferenceError if not.
+    """
+    try:
+      self.connect()
+    except:
+      raise ReferenceError("There is no valid "
+                           "database connection. Please "
+                           "configure and connect first.")

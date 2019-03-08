@@ -23,13 +23,15 @@ from graphrepo.models.day import Day
 from graphrepo.models.month import Month
 from graphrepo.models.year import Year
 
-from graphrepo.constants import Constants
+from graphrepo.config import Config
 
-CT = Constants()
+CT = Config()
+
 
 class Commit(CustomNode):
   """Commit OGM  - Mapps Commit from PyDriller to py2neo
   """
+
   def __init__(self, commit, graph=None, repo=None):
     """Instantiates a commit. If a graph is given
     the node is created in the graph
@@ -37,7 +39,7 @@ class Commit(CustomNode):
     :param graph: py2neo Graph object
     :param repo: pydriller RepositoryMining object
     """
-    self.node_type="Commit"
+    self.node_type = "Commit"
     self.node_index = "hash"
 
     self.commit = commit
@@ -98,7 +100,6 @@ class Commit(CustomNode):
         br = Branch(name=branch, graph=graph)
         rel.Branch(rel_from=self, rel_to=br, graph=graph, name=branch)
 
-
   def index_parent_branch(self, graph, repo):
     """For each parent of the commit, this method requests
     a commit object from pydriller's RepositoryMining object
@@ -133,7 +134,6 @@ class Commit(CustomNode):
     rel.MonthDay(rel_from=month, rel_to=day, graph=graph)
     rel.DayCommit(rel_from=day, rel_to=self, graph=graph)
 
-
   def index_all_data(self, graph, repo=None):
     """Indexes all the data for a commit
     :param graph: py2neo graph object
@@ -147,7 +147,6 @@ class Commit(CustomNode):
 
     if repo is not None:
       self.index_parents(graph, repo)
-
 
   def _common_branch(self, ot_commit):
     """Searches for a common branch between one commit
@@ -164,4 +163,3 @@ class Commit(CustomNode):
     :param branch: branch details
     :param graph: py2neo graph
     """
-

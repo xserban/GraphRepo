@@ -12,24 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" This mpdule stores all config constants
-"""
-from datetime import datetime
+"""Singleton metaclass"""
 
 
-class Constants(object):
-  """ Class with all constants
+class Singleton(type):
   """
-  DB_URL = 'localhost'
-  PORT = 13000
-  DB_USER = 'neo4j'
-  DB_PWD = 'letmein'
-  REPO = 'pydriller/'
-  # If True each branch will be a node and between commits there will be a Parent
-  # relationship.
-  # If False, a branch will be a relationship between commits
-  BRANCH_AS_NODE = True
-  START_DATE = datetime(2018, 12, 1)
-  END_DATE = datetime(2019, 1, 1)
-  # START_DATE = None
-  # END_DATE = None
+  Define an Instance operation that lets clients access its unique
+  instance.
+  """
+
+  def __init__(cls, name, bases, attrs, **kwargs):
+    super().__init__(name, bases, attrs)
+    cls._instance = None
+
+  def __call__(cls, *args, **kwargs):
+    if cls._instance is None:
+      cls._instance = super().__call__(*args, **kwargs)
+    return cls._instance
