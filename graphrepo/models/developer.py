@@ -35,9 +35,3 @@ class Developer(CustomNode):
     super().__init__(self.node_type, name=self.actor.name, email=self.actor.email)
     if graph is not None:
       self.index(graph)
-
-  def index(self, graph):
-    """Adds graph node for this object
-    :param graph: py2neo graph
-    """
-    graph.merge(self, self.node_type, self.node_index)

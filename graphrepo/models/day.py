@@ -31,12 +31,6 @@ class Day(CustomNode):
     self.node_index = "hash"
 
     _hash = hashlib.sha224((str(date.month) + str(date.year) + str(date.day)).encode('utf-8')).hexdigest()
-    super().__init__("Day", name=date.day, hash=_hash)
+    super().__init__(self.node_type, name=date.day, hash=_hash)
     if graph is not None:
       self.index(graph)
-
-  def index(self, graph):
-    """Adds graph node for this object
-    :param graph: py2neo graph
-    """
-    graph.merge(self, self.node_type, self.node_index)

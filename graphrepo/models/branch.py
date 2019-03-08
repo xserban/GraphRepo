@@ -12,22 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This module is a mapping to a neo4j node for a year"""
+"""This module is a mapping to a neo4j node for a day"""
 import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 
-class Year(CustomNode):
-  """Year OGM node
+class Branch(CustomNode):
+  """Branch node
   """
-  def __init__(self, date, graph=None):
-    """Instantiates a year object. If a graph is provided
-    the object is indexed in neo4j
-    :param date: datetime object containing all date info
+  def __init__(self, name,  graph=None, *args, **kwargs):
+    """Instantiates a branch node and, if a graph is given,
+    it indexes the graph to Neo4j
+    :param name: string containing an unique name
+    :param graph: py2neo graph objects
     """
-    self.node_type = "Year"
+    self.node_type = "Branch"
     self.node_index = "name"
 
-    super().__init__(self.node_type, name=date.year)
+    super().__init__(self.node_type, name=name, *args, **kwargs)
     if graph is not None:
       self.index(graph)
+
