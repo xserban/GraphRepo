@@ -19,14 +19,14 @@ class CustomRelationship(Relationship):
   """Extends py2neo relationship object
   with custom functionality.
   """
-  def __init__(self, rel_from=None, rel_to=None, graph=None):
+  def __init__(self, rel_from=None, rel_to=None, graph=None, *args, **kwargs):
     """Instantiates a custom relationship. If a graph is given
     the relationship is indexed in the graph.
     :param rel_from: py2neo Node object
     :param rel_to: py2neo Node object
     :param graph: py2neo graph object
     """
-    super().__init__(rel_from, rel_to)
+    super().__init__(rel_from, rel_to, *args, **kwargs)
     if graph is not None:
       self.create(graph)
 
@@ -34,7 +34,10 @@ class CustomRelationship(Relationship):
     graph.create(self)
 
 
-class Branch(CustomRelationship): pass
+class Branch(CustomRelationship):
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+
 class Authorship(CustomRelationship): pass
 class Parent(CustomRelationship): pass
 
