@@ -156,10 +156,3 @@ class Commit(CustomNode):
     oth_branches = ot_commit.commit.branches
     curr_branches = self.commit.branches
     return list((oth_branches).intersection(curr_branches))
-
-  def _index_branch_node(self, branch, graph=None):
-    """Cretes a branch node in the neo4j graph and connects
-    self to it through a branch relationship
-    :param branch: branch details
-    :param graph: py2neo graph
-    """
