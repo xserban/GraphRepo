@@ -24,8 +24,6 @@ class CustomNode(Node):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.indexed = False
-    self.node_type = ""
-    self.node_index = ""
 
   def check_self(self, graph):
     """Checks if the node corresponding to this instance
