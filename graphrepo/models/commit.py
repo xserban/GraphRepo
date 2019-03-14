@@ -56,7 +56,7 @@ class Commit(CustomNode):
     self.check_self(graph)
     for chg in self.commit.modifications:
       change = File(chg, graph=graph)
-      rel.File(rel_from=self, rel_to=change, graph=graph)
+      rel.Update(rel_from=self, rel_to=change, graph=graph)
 
   def index_author(self, graph):
     """Indexes the commit author node in the graph

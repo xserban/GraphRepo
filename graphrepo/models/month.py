@@ -17,9 +17,11 @@ import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 
+
 class Month(CustomNode):
   """Month node
   """
+
   def __init__(self, date, graph=None):
     """Instantiates a month object and creates an unique
     hash for each month of each year. This model was chosen
@@ -30,7 +32,8 @@ class Month(CustomNode):
     self.node_type = "Month"
     self.node_index = "hash"
 
-    _hash = hashlib.sha224((str(date.month) + str(date.year)).encode('utf-8')).hexdigest()
+    _hash = hashlib.sha224(
+        (str(date.month) + str(date.year)).encode('utf-8')).hexdigest()
     super().__init__(self.node_type, name=date.month, hash=_hash)
     if graph is not None:
       self.index(graph)

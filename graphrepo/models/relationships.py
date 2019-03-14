@@ -15,10 +15,12 @@
 """This module holds all possible relationships in the graph"""
 from py2neo.data import Relationship
 
+
 class CustomRelationship(Relationship):
   """Extends py2neo relationship object
   with custom functionality.
   """
+
   def __init__(self, rel_from=None, rel_to=None, graph=None, *args, **kwargs):
     """Instantiates a custom relationship. If a graph is given
     the relationship is indexed in the graph.
@@ -38,14 +40,53 @@ class Branch(CustomRelationship):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-class Authorship(CustomRelationship): pass
-class Parent(CustomRelationship): pass
 
-class YearMonth(CustomRelationship): pass
-class MonthDay(CustomRelationship): pass
-class DayCommit(CustomRelationship): pass
+class Authorship(CustomRelationship):
+  pass
 
-class Branch(CustomRelationship): pass
 
-class File(CustomRelationship): pass
-class Filetype(CustomRelationship): pass
+class Parent(CustomRelationship):
+  pass
+
+
+class YearMonth(CustomRelationship):
+  pass
+
+
+class MonthDay(CustomRelationship):
+  pass
+
+
+class DayCommit(CustomRelationship):
+  pass
+
+
+class Update(CustomRelationship):
+  def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
+    """Instantiates an Update relationship and creates a Neo4j relationship
+    which also contains some module metrics extracted from Pydriller through
+    Lizard.
+    :param rel_from: Commit object
+    :param rel_to: File object
+    :param graph: Py2neo Graph object
+    """
+    metrics = self.get_metrics(rel_to)
+    super().__init__(rel_from, rel_to, graph, *args, **kwargs, **metrics)
+
+  def get_metrics(self, change):
+    """Creates and returns a dic with different metrics
+    :param commit: Commit object
+    :returns: dic
+    """
+    return {
+        'added': change.file.added,
+        'removed': change.file.removed,
+        'complexity': change.file.complexity,
+        'nloc': change.file.nloc,
+        'type': change.file.change_type.name,
+        'token_count': change.file.token_count,
+    }
+
+
+class Filetype(CustomRelationship):
+  pass

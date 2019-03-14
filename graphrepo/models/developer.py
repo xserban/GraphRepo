@@ -17,6 +17,7 @@ import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 
+
 class Developer(CustomNode):
   """Developer OGM Node - Maps PyDriller Developer objects
   to py2neo. Should be changed to Contributor in the future

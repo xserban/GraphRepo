@@ -17,9 +17,11 @@ import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 
+
 class Year(CustomNode):
   """Year OGM node
   """
+
   def __init__(self, date, graph=None):
     """Instantiates a year object. If a graph is provided
     the object is indexed in neo4j
