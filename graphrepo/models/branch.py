@@ -17,9 +17,11 @@ import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 
+
 class Branch(CustomNode):
   """Branch node
   """
+
   def __init__(self, name,  graph=None, *args, **kwargs):
     """Instantiates a branch node and, if a graph is given,
     it indexes the graph to Neo4j
@@ -32,4 +34,3 @@ class Branch(CustomNode):
     super().__init__(self.node_type, name=name, *args, **kwargs)
     if graph is not None:
       self.index(graph)
-

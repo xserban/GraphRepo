@@ -15,10 +15,12 @@
 """This module holds all possible relationships in the graph"""
 from py2neo.data import Relationship
 
+
 class CustomRelationship(Relationship):
   """Extends py2neo relationship object
   with custom functionality.
   """
+
   def __init__(self, rel_from=None, rel_to=None, graph=None, *args, **kwargs):
     """Instantiates a custom relationship. If a graph is given
     the relationship is indexed in the graph.
@@ -38,14 +40,30 @@ class Branch(CustomRelationship):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-class Authorship(CustomRelationship): pass
-class Parent(CustomRelationship): pass
 
-class YearMonth(CustomRelationship): pass
-class MonthDay(CustomRelationship): pass
-class DayCommit(CustomRelationship): pass
+class Authorship(CustomRelationship):
+  pass
 
-class Branch(CustomRelationship): pass
 
-class File(CustomRelationship): pass
-class Filetype(CustomRelationship): pass
+class Parent(CustomRelationship):
+  pass
+
+
+class YearMonth(CustomRelationship):
+  pass
+
+
+class MonthDay(CustomRelationship):
+  pass
+
+
+class DayCommit(CustomRelationship):
+  pass
+
+
+class File(CustomRelationship):
+  pass
+
+
+class Filetype(CustomRelationship):
+  pass

@@ -23,6 +23,7 @@ class File(CustomNode):
   """File OGM Node - Maps files changed in a commit
   to py2neo objects
   """
+
   def __init__(self, file, graph=None, file_type=True):
     """Instantiates file object. If a graph is provided
     the node is also added to neo4j
@@ -35,7 +36,7 @@ class File(CustomNode):
     self.node_index = "hash"
 
     self.file = file
-    _hash =  hashlib.sha224(str(file.filename).encode('utf-8')).hexdigest()
+    _hash = hashlib.sha224(str(file.filename).encode('utf-8')).hexdigest()
     super().__init__(self.node_type, hash=_hash, name=file.filename)
 
     if graph is not None:
@@ -43,7 +44,6 @@ class File(CustomNode):
 
     if file_type is True:
       self.index_type(graph=graph)
-
 
   def index_type(self, graph):
     """Creates file type if it does not exist and adds filetype
@@ -54,10 +54,10 @@ class File(CustomNode):
     rel.Filetype(self.file_type, self, graph=graph)
 
 
-
 class Filetype(CustomNode):
   """Filetype OGM Node - Maps file types to py2neo object
   """
+
   def __init__(self, file, graph=None):
     """Instantiate Filetype object. If a graph is provided
     the node is also added to neo4j
