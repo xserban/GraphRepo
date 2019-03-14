@@ -1,6 +1,6 @@
 # GraphRepo
 
-This tool maps a git repository to a Neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
+This tool maps a Github repository to a Neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
 Whenever we instantiate a new model, if a py2neo graph object is given to its constructor, a neo4j node is created.
 
 ### 1. Running the project
@@ -8,13 +8,13 @@ Whenever we instantiate a new model, if a py2neo graph object is given to its co
 #### Prereq
 The only requirement is to have Python and Docker installed on your system.
 
-#### 1.1 Installing the production release with pip
+#### 1.1 Install the production release with pip
 
 ```
 $ pip install graphrepo
 ```
 
-#### 1.2 Alternative: Installing the development version
+#### Alternative: Install the development version
 ```
 $ git clone https://github.com/NullConvergence/GraphRepo
 $ cd graphrepo/
@@ -30,7 +30,7 @@ The following instructions assume the Docker daemon is running on your machine.
 $ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data/exp:/data --volume=$HOME/neo4j/logs/exp:/logs neo4j:3.0
 ```
 
-Now open a browser window and go to [http://localhost:7474](http://localhost:7474). Here you can configure the neo4j password.
+Open a browser window and go to [http://localhost:7474](http://localhost:7474). Here you can configure the neo4j password.
 The default one is *neo4j*.
 
 
@@ -43,7 +43,7 @@ following command:
 $ python examples/index_all.py
 ```
 
-Then go to [http://localhost:7474](http://localhost:7474) and use the first query from Section 2.
+Go to [http://localhost:7474](http://localhost:7474) and use the first query from Section 2.
 
 
 
