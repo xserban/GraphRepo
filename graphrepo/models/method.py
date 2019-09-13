@@ -31,6 +31,25 @@ class Method(CustomNode):
     self.node_index = "name"
 
     self.method = method
-    super().__init__(self.node_type, name=self.method.name)
+    self.metrics = self.get_metrics()
+
+    super().__init__(self.node_type, name=self.method.name, **self.metrics)
     if graph is not None:
       self.index(graph)
+
+  def get_metrics(self):
+    """Creates and returns a dic with different metrics for a method
+    :returns: dic
+    """
+    return {
+        'parameters': self.method.parameters,
+        'complexity': self.method.complexity,
+        'nloc': self.method.nloc,
+        'fan_in': self.method.fan_in,
+        'fan_out': self.method.fan_out,
+        'general_fan_out': self.method.general_fan_out,
+        'length': self.method.length,
+        'token_count': self.method.token_count,
+        'start_line': self.method.start_line,
+        'end_line': self.method.end_line
+    }

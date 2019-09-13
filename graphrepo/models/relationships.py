@@ -36,7 +36,7 @@ class CustomRelationship(Relationship):
     graph.create(self)
 
 
-class Branch(CustomRelationship):
+class BelongsToBranch(CustomRelationship):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
@@ -74,12 +74,10 @@ class Update(CustomRelationship):
     super().__init__(rel_from, rel_to, graph, *args, **kwargs, **metrics)
 
   def get_metrics(self, change):
-    """Creates and returns a dic with different metrics
+    """Creates and returns a dic with different metrics for a file
     :param commit: Commit object
     :returns: dic
     """
-    # for m in change.file.methods:
-    #   print(change.file.diff)
     return {
         'added': change.file.added,
         'removed': change.file.removed,
@@ -90,16 +88,17 @@ class Update(CustomRelationship):
     }
 
 
-class Method(CustomRelationship):
+class HasMethod(CustomRelationship):
   def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
     """Instantiates a Method relationship and creates a Neo4j relationship
     :param rel_from: Update object
     :param rel_to: Method Node
     :param graph: Py2neo Graph
     """
-    pass
+    super().__init__(rel_from, rel_to, graph, *args, **kwargs)
 
-class UpdateMethod(CustomRelationship):
+
+class UpdatedMethod(CustomRelationship):
   def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
     """Instantiates an UpdateMethod relationship and creates a Neo4j relationship
     :param rel_from: Update object
@@ -108,7 +107,8 @@ class UpdateMethod(CustomRelationship):
     """
     pass
 
-class AddMethod(CustomRelationship):
+
+class AddedMethod(CustomRelationship):
   def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
     """Instantiates an AddMethod relationship and creates a Neo4j relationship
     :param rel_from: Update object
@@ -117,7 +117,8 @@ class AddMethod(CustomRelationship):
     """
     pass
 
-class RenameMethod(CustomRelationship):
+
+class RenamedMethod(CustomRelationship):
   def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
     """Instantiates a RenameMethod relationship and creates a Neo4j relationship
     :param rel_from: Update object
@@ -126,7 +127,8 @@ class RenameMethod(CustomRelationship):
     """
     pass
 
-def RemoveMethod(CustomRelationship):
+
+def RemovedMethod(CustomRelationship):
   def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
     """Instantiates a RemoveMethod relationship and creates a Neo4j relationship
     :param rel_from: Update object
@@ -134,6 +136,7 @@ def RemoveMethod(CustomRelationship):
     :param graph: Py2neo Graph
     """
     pass
+
 
 class Filetype(CustomRelationship):
   pass
