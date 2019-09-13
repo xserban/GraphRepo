@@ -12,33 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graphrepo.driller import Driller
-from datetime import datetime
+"""This module is a mapping to a neo4j node for a method"""
+import hashlib
 
-DB_URL = 'localhost'
-PORT = 13000
-DB_USER = 'neo4j'
-DB_PWD = 'letmein'
-REPO = 'pydriller/'
-START_DATE = datetime(2018, 2, 1)
-END_DATE = datetime(2018, 3, 30)
-# START_DATE = None
-# END_DATE = None
+from graphrepo.models.custom_node import CustomNode
 
 
-def main():
-  driller = Driller()
-  driller.configure(
-      db_url=DB_URL,
-      port=PORT,
-      db_user=DB_USER,
-      db_pwd=DB_PWD,
-      repo=REPO,
-      start_date=START_DATE,
-      end_date=END_DATE
-  )
-  driller.drill()
+class Method(CustomNode):
+  """Method node
+  """
 
+  def __init__(self, method, graph=None):
+    """Instantiates a method object and creates an unique
+    hash
+    :param method: PyDriller Method object
+    """
+    self.node_type = "Method"
+    self.node_index = "name"
 
-if __name__ == '__main__':
-  main()
+    self.method = method
+    super().__init__(self.node_type, name=self.method.name)
+    if graph is not None:
+      self.index(graph)

@@ -58,6 +58,14 @@ class Commit(CustomNode):
       change = File(chg, graph=graph)
       rel.Update(rel_from=self, rel_to=change, graph=graph)
 
+  def index_methods(self, graph):
+    """Indexes all methods changed by a commig
+    :param graph: py2neo graph object
+    """
+    self.check_self(graph)
+    for chg in self.commit.modification:
+      pass
+
   def index_author(self, graph):
     """Indexes the commit author node in the graph
     and adds relationship to this commit
