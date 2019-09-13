@@ -15,20 +15,13 @@
 """This module is a mapping between Pydriller Commit and neo4j """
 import graphrepo.models.relationships as rel
 
-from graphrepo.models.custom_node import CustomNode
-from graphrepo.models.developer import Developer
-from graphrepo.models.branch import Branch
-from graphrepo.models.file import File
-from graphrepo.models.day import Day
-from graphrepo.models.month import Month
-from graphrepo.models.year import Year
-
+from graphrepo import models as mdl
 from graphrepo.config import Config
 
 CT = Config()
 
 
-class Commit(CustomNode):
+class Commit(mdl.CustomNode):
   """Commit OGM  - Mapps Commit from PyDriller to py2neo
   """
 
@@ -44,7 +37,7 @@ class Commit(CustomNode):
 
     self.commit = commit
     self.indexed = False
-    CustomNode.__init__(self, self.node_type, hash=self.commit.hash)
+    mdl.CustomNode.__init__(self, self.node_type, hash=self.commit.hash)
 
     if graph is not None:
       self.index_all_data(graph=graph, repo=repo)
@@ -55,8 +48,34 @@ class Commit(CustomNode):
     """
     self.check_self(graph)
     for chg in self.commit.modifications:
-      change = File(chg, graph=graph)
+      change = mdl.File(chg, graph=graph)
       rel.Update(rel_from=self, rel_to=change, graph=graph)
+      # Whenever a commit touches a method, the method
+      # attributes are updated (e.g. loc or complexity)
+      self.index_all_file_methods(graph, chg, change)
+
+  def index_all_file_methods(self, graph, modification, file):
+    """Indexes all methods from a commit file
+    :param graph: py2neo graph object
+    """
+    for met in modification.methods:
+      method = mdl.Method(met, graph=graph)
+      rel.HasMethod(rel_from=file, rel_to=method, graph=graph)
+
+  def index_changed_methods(self, graph):
+    """Indexes all methods changed by a commig
+    :param graph: py2neo graph object
+    """
+    self.check_self(graph)
+    all_methods = []
+    for chg in self.commit.modifications:
+      # collect methods changed
+      pass
+
+  def parse_changed_methods(self, change):
+    """Given a commit change, parses methods
+    touched by the commit"""
+    pass
 
   def index_author(self, graph):
     """Indexes the commit author node in the graph
@@ -64,7 +83,7 @@ class Commit(CustomNode):
     :params graph: py2neo graph object
     """
     self.check_self(graph)
-    dev = Developer(self.commit.author, graph=graph)
+    dev = mdl.Developer(self.commit.author, graph=graph)
     rel.Authorship(rel_from=dev, rel_to=self, graph=graph)
 
   def index_parents(self, graph, repo, branch=CT.BRANCH_AS_NODE):
@@ -89,7 +108,7 @@ class Commit(CustomNode):
     """
     self.check_self(graph)
     for parent in self.commit.parents:
-      commit = Commit(repo.get_commit(parent))
+      commit = mdl.Commit(repo.get_commit(parent))
       commit.index_author(graph)
       commit.index_date(graph)
       # commit.index_all_data(graph, repo)
@@ -97,8 +116,8 @@ class Commit(CustomNode):
       # index branches
       branches = self.commit.branches
       for branch in branches:
-        br = Branch(name=branch, graph=graph)
-        rel.Branch(rel_from=self, rel_to=br, graph=graph, name=branch)
+        br = mdl.Branch(name=branch, graph=graph)
+        rel.BelongsToBranch(rel_from=self, rel_to=br, graph=graph, name=branch)
 
   def index_parent_branch(self, graph, repo):
     """For each parent of the commit, this method requests
@@ -110,12 +129,13 @@ class Commit(CustomNode):
     """
     self.check_self(graph)
     for parent in self.commit.parents:
-      commit = Commit(repo.get_commit(parent))
+      commit = mdl.Commit(repo.get_commit(parent))
       commit.index_author(graph)
       commit.index_date(graph)
       common_branches = self._common_branch(commit)
       for branch in common_branches:
-        rel.Branch(rel_from=commit, rel_to=self, graph=graph, name=branch)
+        rel.BelongsToBranch(rel_from=commit, rel_to=self,
+                            graph=graph, name=branch)
 
   def index_date(self, graph):
     """Splits the date in year, month and day and creates
@@ -125,9 +145,9 @@ class Commit(CustomNode):
     self.check_self(graph)
 
     date = self.commit.author_date
-    day = Day(date, graph=graph)
-    month = Month(date, graph=graph)
-    year = Year(date, graph=graph)
+    day = mdl.Day(date, graph=graph)
+    month = mdl.Month(date, graph=graph)
+    year = mdl.Year(date, graph=graph)
 
     rel.YearMonth(rel_from=year, rel_to=month, graph=graph)
     rel.YearMonth(rel_from=year, rel_to=month, graph=graph)
