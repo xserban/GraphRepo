@@ -1,0 +1,8 @@
+neo:
+  db_url: 'localhost'
+  port: 13000
+  db_user: 'neo4j'
+  db_pwd: letmein'
+  repo: 'pydriller/'
+  start_date: "1 February, 2018"
+  end_date: "30 March, 2018"
