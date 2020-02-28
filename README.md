@@ -36,11 +36,11 @@ The default one is *neo4j*.
 
 #### 1.3 Index and vizualize your repo:
 
-Please configure the constants in [examples/index_all.py](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/index_all.py), then run the file using the
+Please configure the constants in [examples/config.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/config.yml), then run the file using the
 following command:
 
 ```
-$ python examples/index_all.py
+$ python index_all.py
 ```
 
 Go to [http://localhost:7474](http://localhost:7474) and use the first query from Section 2.
