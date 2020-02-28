@@ -36,7 +36,7 @@ The default one is *neo4j*.
 
 
 
-#### 2. Index and vizualize a repo:
+#### 2. Index and vizualize a repo
 
 Please configure the constants in [examples/config.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/config.yml), then run the file using the
 following command:
@@ -48,7 +48,7 @@ $ python index_all.py
 Go to [http://localhost:7474](http://localhost:7474) and use the first query from Section 2.
 
 
-#### 3. Mine data from the repo:
+#### 3. Mine data from the repo
 Please configure the constants in [examples/config.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/config.yml), then run the miners using the
 following command:
 
