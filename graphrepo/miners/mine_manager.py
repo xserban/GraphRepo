@@ -57,7 +57,7 @@ class MineManager():
     else:
       return
 
-  def get_all_data(self, map=False, merge=False,):
+  def get_all_data(self, map=False, merge=False):
     """Returns all nodes and relationships from Neo4j
     :param map: Map data using default mappers for nodes and rels
     :param merge: Concatenates nodes an relationships
@@ -71,7 +71,7 @@ class MineManager():
     if map is True:
       nodes = [mappers.node.NodeMapper.map_default_node(n) for n in nodes]
       rels = [mappers.rels.RelMapper.map_default_rel(r) for r in rels]
-
-      return nodes, rels if merge is False else nodes+rels, None
+      if merge is True:
+        return nodes+rels, None
 
     return nodes, rels

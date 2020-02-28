@@ -28,7 +28,6 @@ class NodeMapper(DefaultMapper):
   @classmethod
   def map_default_node(cls, node):
     """Maps a node to a dictionary"""
-    print('AAA', node)
     return {
         'data': {
             'id': cls.get_id(node),

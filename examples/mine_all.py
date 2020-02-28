@@ -43,7 +43,8 @@ def main():
   )
   # get all nodes and relationships from the manager
   nodes, rels = miner.manager.get_all_data(map=True, merge=False)
-  print("The DB has a total of {} nodes and {} relationships".format(nodes, rels))
+  print("The DB has a total of {} nodes and {} relationships".format(
+      len(nodes), len(rels)))
 
 
 if __name__ == '__main__':
