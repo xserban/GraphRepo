@@ -18,14 +18,12 @@ import graphrepo.models.relationships as rel
 from graphrepo import models as mdl
 from graphrepo.config import Config
 
-CT = Config()
-
 
 class Commit(mdl.CustomNode):
   """Commit OGM  - Mapps Commit from PyDriller to py2neo
   """
 
-  def __init__(self, commit, graph=None, repo=None):
+  def __init__(self, commit, config, graph=None, repo=None):
     """Instantiates a commit. If a graph is given
     the node is created in the graph
     :param commit: pydriller Commit object
@@ -34,6 +32,7 @@ class Commit(mdl.CustomNode):
     """
     self.node_type = "Commit"
     self.node_index = "hash"
+    self.config = config
 
     self.commit = commit
     self.indexed = False
@@ -86,13 +85,13 @@ class Commit(mdl.CustomNode):
     dev = mdl.Developer(self.commit.author, graph=graph)
     rel.Authorship(rel_from=dev, rel_to=self, graph=graph)
 
-  def index_parents(self, graph, repo, branch=CT.BRANCH_AS_NODE):
+  def index_parents(self, graph, repo):
     """This method chooses between indexing a parent
     relation or indexing a branch relationship between
     parent commits.
     :param graph: py2neo graph
     """
-    if branch is True:
+    if self.config.BRANCH_AS_NODE is True:
       self.index_parent(graph, repo)
     else:
       self.index_parent_branch(graph, repo)
@@ -171,7 +170,7 @@ class Commit(mdl.CustomNode):
   def _common_branch(self, ot_commit):
     """Searches for a common branch between one commit
     and self
-    :param ot_commit: another commint
+    :param ot_commit: another commit
     """
     oth_branches = ot_commit.commit.branches
     curr_branches = self.commit.branches

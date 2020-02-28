@@ -77,7 +77,7 @@ class Driller(metaclass=Singleton):
     for commit in RepositoryMining(self.config.REPO,
                                    since=self.config.START_DATE,
                                    to=self.config.END_DATE).traverse_commits():
-      commits.append(Commit(commit))
+      commits.append(Commit(commit, self.config))
 
     return commits, rep_obj
 
