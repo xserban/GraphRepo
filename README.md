@@ -2,7 +2,7 @@
 
 This tool maps a Github repository to a Neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
 Whenever we instantiate a new model, if a py2neo graph object is given to its constructor, a neo4j node is created.
-The newly included miners and mappers now enable queries to Neo4j from Python.
+The new miners and mappers enable queries to Neo4j from Python.
 
 ###  Running the project
 
