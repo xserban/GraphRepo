@@ -46,6 +46,18 @@ def main():
   print("The DB has a total of {} nodes and {} relationships".format(
       len(nodes), len(rels)))
 
+  # get all commits
+  commits = miner.manager.commit_miner.get_all()
+  print("The DB has a total of {} commits".format(len(commits)))
+
+  # get all developers
+  devs = miner.manager.dev_miner.get_all()
+  print("The DB has a total of {} developers".format(len(devs)))
+
+  # get all filess
+  files = miner.manager.file_miner.get_all()
+  print("The DB has a total of {} commits".format(len(files)))
+
 
 if __name__ == '__main__':
   main()

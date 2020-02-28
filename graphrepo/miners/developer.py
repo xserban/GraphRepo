@@ -20,5 +20,8 @@ class DeveloperMiner(DefaultMiner):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
+  def query(self, **kwargs):
+    return self.node_matcher.match("Developer", **kwargs)
+
   def get_all(self):
-    return super().get_all()
+    return self.node_matcher.match("Developer")
