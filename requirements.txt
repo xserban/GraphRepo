@@ -1,2 +1,8 @@
-py2neo==4.2.0
-pydriller==1.7
+lizard==1.16.6
+pytz==2018.9
+psutil==5.6.1
+py2neo==4.3.0
+requests==2.21.0
+pytest==5.3.5
+GitPython==3.1.0
+PyYAML==5.3
