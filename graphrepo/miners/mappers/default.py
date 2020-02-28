@@ -11,22 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""This module is a custom miner class with some abstractions"""
+"""This module is a custom mapper class with some abstractions"""
 from abc import abstractmethod
 
 
-class DefaultMiner(object):
+class DefaultMapper(object):
   """The miners are currently synchronous, but
   ideally they will be async in the future"""
 
-  def __init__(self, graph, node_matcher, rel_matcher, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    self.graph = graph
-    self.node_matcher = node_matcher
-    self.rel_matcher = rel_matcher
-
-  @abstractmethod
-  def get_all(self):
-    """This method returns all artifacts
-    found by a miner"""
-    raise NotImplementedError
+  def __init__(self, *args, **kwargs):
+    pass

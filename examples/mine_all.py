@@ -1,4 +1,4 @@
-# Copyright 2019 NullConvergence
+# Copyright 2020 NullConvergence
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,7 +41,9 @@ def main():
   miner.configure(
       **neo
   )
-  print(miner.manager)
+  # get all nodes and relationships from the manager
+  nodes, rels = miner.manager.get_all_data(map=True, merge=False)
+  print("The DB has a total of {} nodes and {} relationships".format(nodes, rels))
 
 
 if __name__ == '__main__':
