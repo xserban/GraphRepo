@@ -39,18 +39,13 @@ class Miner(metaclass=Singleton):
 
   def configure(self, db_url="localhost",
                 port=13000, db_user="neo4j",
-                db_pwd="neo4j", repo="pydriller/",
-                start_date=None,
-                end_date=None):
+                db_pwd="neo4j", *args, **kwargs):
     """Sets the application constants"""
     # TODO: validate inputs
     self.config.DB_URL = db_url
     self.config.PORT = port
     self.config.DB_USER = db_user
     self.config.DB_PWD = db_pwd
-    self.config.REPO = repo
-    self.config.START_DATE = start_date
-    self.config.END_DATE = end_date
 
     self.init_miners()
 

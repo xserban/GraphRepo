@@ -32,14 +32,16 @@ def main():
     conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
   neo = conf['neo']
-  neo['start_date'] = datetime.strptime(
-      neo['start_date'], '%d %B, %Y') if neo['start_date'] else None
-  neo['end_date'] = datetime.strptime(
-      neo['end_date'], '%d %B, %Y') if neo['end_date'] else None
+  project = conf['project']
+
+  project['start_date'] = datetime.strptime(
+      project['start_date'], '%d %B, %Y') if project['start_date'] else None
+  project['end_date'] = datetime.strptime(
+      project['end_date'], '%d %B, %Y') if project['end_date'] else None
 
   driller = Driller()
   driller.configure(
-      **neo
+      **neo, **project
   )
   driller.drill()
 
