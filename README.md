@@ -9,7 +9,7 @@ The newly included miners and mappers now enable queries to Neo4j from Python.
 #### 1. Prereq
 The only requirement is to have Python and Docker installed on your system.
 
-#### 1.1 Install the production release with pip
+#### 1.1 Install the production release with pip using the following command. Please be aware that the final release may miss some functionality.
 
 ```
 $ pip install graphrepo
