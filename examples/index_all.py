@@ -12,30 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 from graphrepo.driller import Driller
 from datetime import datetime
+import os
+import yaml
 
-DB_URL = 'localhost'
-PORT = 13000
-DB_USER = 'neo4j'
-DB_PWD = 'letmein'
-REPO = 'pydriller/'
-START_DATE = datetime(2018, 2, 1)
-END_DATE = datetime(2018, 3, 30)
-# START_DATE = None
-# END_DATE = None
+
+def parse_args():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--config', default='config.yml', type=str)
+  return parser.parse_args()
 
 
 def main():
+  args = parse_args()
+  folder = os.path.dirname(os.path.abspath(__file__))
+  with open(os.path.join(folder, args.config), 'r') as ymlfile:
+    conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
+
+  neo = conf['neo']
+  neo['start_date'] = datetime.strptime(
+      neo['start_date'], '%d %B, %Y') if neo['start_date'] else None
+  neo['end_date'] = datetime.strptime(
+      neo['end_date'], '%d %B, %Y') if neo['end_date'] else None
+
   driller = Driller()
   driller.configure(
-      db_url=DB_URL,
-      port=PORT,
-      db_user=DB_USER,
-      db_pwd=DB_PWD,
-      repo=REPO,
-      start_date=START_DATE,
-      end_date=END_DATE
+      **neo
   )
   driller.drill()
 
