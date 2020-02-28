@@ -35,6 +35,7 @@ class Miner(metaclass=Singleton):
     """Initializes the properties of this class"""
     self.config = Config()
     self.graph = None
+    self.manager = None
 
   def configure(self, db_url="localhost",
                 port=13000, db_user="neo4j",
@@ -51,7 +52,7 @@ class Miner(metaclass=Singleton):
     self.config.START_DATE = start_date
     self.config.END_DATE = end_date
 
-    self.manager = self.init_miners()
+    self.init_miners()
 
   def connect(self):
     """Instantiates the connection to Neo4j and stores
@@ -72,7 +73,7 @@ class Miner(metaclass=Singleton):
     """
     self.config.check_config()
     self.check_connection()
-    return MineManager(graph=self.graph)
+    self.manager = MineManager(graph=self.graph)
 
   def check_connection(self):
     """Checks if there is a db connection and raises
