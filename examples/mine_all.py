@@ -31,15 +31,9 @@ def main():
   with open(os.path.join(folder, args.config), 'r') as ymlfile:
     conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
-  neo = conf['neo']
-  neo['start_date'] = datetime.strptime(
-      neo['start_date'], '%d %B, %Y') if neo['start_date'] else None
-  neo['end_date'] = datetime.strptime(
-      neo['end_date'], '%d %B, %Y') if neo['end_date'] else None
-
   miner = Miner()
   miner.configure(
-      **neo
+      **conf['neo']
   )
   # get all nodes and relationships from the manager
   nodes, rels = miner.manager.get_all_data(map=True, merge=False)

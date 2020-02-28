@@ -15,6 +15,7 @@
 import argparse
 from graphrepo.driller import Driller
 from datetime import datetime
+import time
 import os
 import yaml
 
@@ -26,22 +27,26 @@ def parse_args():
 
 
 def main():
+  start = time.time()
   args = parse_args()
   folder = os.path.dirname(os.path.abspath(__file__))
   with open(os.path.join(folder, args.config), 'r') as ymlfile:
     conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
   neo = conf['neo']
-  neo['start_date'] = datetime.strptime(
-      neo['start_date'], '%d %B, %Y') if neo['start_date'] else None
-  neo['end_date'] = datetime.strptime(
-      neo['end_date'], '%d %B, %Y') if neo['end_date'] else None
+  project = conf['project']
+
+  project['start_date'] = datetime.strptime(
+      project['start_date'], '%d %B, %Y') if project['start_date'] else None
+  project['end_date'] = datetime.strptime(
+      project['end_date'], '%d %B, %Y') if project['end_date'] else None
 
   driller = Driller()
   driller.configure(
-      **neo
+      **neo, **project
   )
   driller.drill()
+  print('Indexing took {} s.'.format(time.time() - start))
 
 
 if __name__ == '__main__':

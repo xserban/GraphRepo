@@ -22,14 +22,15 @@ class Year(CustomNode):
   """Year OGM node
   """
 
-  def __init__(self, date, graph=None):
+  def __init__(self, date, project_id=None, graph=None):
     """Instantiates a year object. If a graph is provided
     the object is indexed in neo4j
     :param date: datetime object containing all date info
+    :param project_id: a string identifying the project a yeaer belogns to
     """
     self.node_type = "Year"
     self.node_index = "name"
 
-    super().__init__(self.node_type, name=date.year)
+    super().__init__(self.node_type, name=date.year, project_id=project_id)
     if graph is not None:
       self.index(graph)

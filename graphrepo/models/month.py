@@ -22,18 +22,19 @@ class Month(CustomNode):
   """Month node
   """
 
-  def __init__(self, date, graph=None):
+  def __init__(self, date, project_id=None, graph=None):
     """Instantiates a month object and creates an unique
     hash for each month of each year. This model was chosen
     because we aim to represent time series. If a graph is
     provided the object is indexed in neo4j
     :param date: datetime object containing all date info
+    :param project_id: a string identifying the project a month belogns to
     """
     self.node_type = "Month"
     self.node_index = "hash"
 
     _hash = hashlib.sha224(
         (str(date.month) + str(date.year)).encode('utf-8')).hexdigest()
-    super().__init__(self.node_type, name=date.month, hash=_hash)
+    super().__init__(self.node_type, name=date.month, hash=_hash, project_id=project_id)
     if graph is not None:
       self.index(graph)
