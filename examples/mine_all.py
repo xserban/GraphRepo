@@ -13,10 +13,9 @@
 # limitations under the License.
 
 import argparse
-from graphrepo.miner import Miner
-from datetime import datetime
 import os
 import yaml
+from graphrepo.miner import Miner
 
 
 def parse_args():

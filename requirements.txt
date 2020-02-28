@@ -1,6 +1,6 @@
 lizard==1.16.6
 pytz==2018.9
-psutil==5.6.1
+psutil==5.7.0
 py2neo==4.3.0
 requests==2.21.0
 pytest==5.3.5

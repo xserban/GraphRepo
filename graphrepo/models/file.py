@@ -73,6 +73,7 @@ class Filetype(CustomNode):
 
     _name = '.' + file.filename.split('.')[-1:][0]
     _hash = hashlib.sha224(_name.encode('utf-8')).hexdigest()
-    super().__init__(self.node_type, hash=_hash, name=_name, project_id=project_id)
+    super().__init__(self.node_type, hash=_hash, name=_name,
+                     project_id=project_id)
     if graph is not None:
       self.index(graph)

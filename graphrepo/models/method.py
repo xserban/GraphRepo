@@ -13,7 +13,6 @@
 # limitations under the License.
 
 """This module is a mapping to a neo4j node for a method"""
-import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 

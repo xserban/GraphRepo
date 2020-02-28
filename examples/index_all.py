@@ -13,11 +13,11 @@
 # limitations under the License.
 
 import argparse
-from graphrepo.driller import Driller
-from datetime import datetime
 import time
 import os
 import yaml
+from graphrepo.driller import Driller
+from datetime import datetime
 
 
 def parse_args():

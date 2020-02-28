@@ -13,7 +13,6 @@
 # limitations under the License.
 
 """This module is a mapping to a neo4j node for a day"""
-import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 
@@ -32,6 +31,7 @@ class Branch(CustomNode):
     self.node_type = "Branch"
     self.node_index = "name"
 
-    super().__init__(self.node_type, name=name, project_id=project_id, *args, **kwargs)
+    super().__init__(self.node_type, name=name,
+                     project_id=project_id, *args, **kwargs)
     if graph is not None:
       self.index(graph)

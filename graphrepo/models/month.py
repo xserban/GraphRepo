@@ -35,6 +35,7 @@ class Month(CustomNode):
 
     _hash = hashlib.sha224(
         (str(date.month) + str(date.year)).encode('utf-8')).hexdigest()
-    super().__init__(self.node_type, name=date.month, hash=_hash, project_id=project_id)
+    super().__init__(self.node_type, name=date.month,
+                     hash=_hash, project_id=project_id)
     if graph is not None:
       self.index(graph)

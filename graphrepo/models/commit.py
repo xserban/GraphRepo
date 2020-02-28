@@ -16,7 +16,6 @@
 import graphrepo.models.relationships as rel
 
 from graphrepo import models as mdl
-from graphrepo.config import Config
 
 
 class Commit(mdl.CustomNode):
@@ -70,10 +69,10 @@ class Commit(mdl.CustomNode):
     :param graph: py2neo graph object
     """
     self.check_self(graph)
-    all_methods = []
-    for chg in self.commit.modifications:
-      # collect methods changed
-      pass
+    # all_methods = []
+    # for chg in self.commit.modifications:
+    #   # collect methods changed
+    #   pass
 
   def parse_changed_methods(self, change):
     """Given a commit change, parses methods
@@ -119,9 +118,10 @@ class Commit(mdl.CustomNode):
       # index branches
       branches = self.commit.branches
       for branch in branches:
-        br = mdl.Branch(
+        brn = mdl.Branch(
             name=branch, project_id=self.project_id, graph=graph)
-        rel.BelongsToBranch(rel_from=self, rel_to=br, graph=graph, name=branch)
+        rel.BelongsToBranch(rel_from=self, rel_to=brn,
+                            graph=graph, name=branch)
 
   def index_parent_branch(self, graph, repo):
     """For each parent of the commit, this method requests

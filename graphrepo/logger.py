@@ -11,18 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Logger"""
 from graphrepo.singleton import Singleton
 
 
 class Logger(metaclass=Singleton):
   def __init__(self, *args, **kwargs):
-    pass
+    """Default init"""
 
   def log(self, exception):
     """Logs exceptions and prints it to console
     :param exception: Exception type from Python
     """
-    # TODO: log?
     print('[EXCEPTION]: {}'.format(exception))
 
   def log_and_raise(self, exception):

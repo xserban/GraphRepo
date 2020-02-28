@@ -42,7 +42,7 @@ class Driller(metaclass=Singleton):
                 db_pwd="neo4j", repo="pydriller/",
                 start_date=None,
                 end_date=None,
-                id=None):
+                project_id=None):
     """Sets the application constants"""
     # TODO: validate inputs
     self.config.DB_URL = db_url
@@ -52,7 +52,7 @@ class Driller(metaclass=Singleton):
     self.config.REPO = repo
     self.config.START_DATE = start_date
     self.config.END_DATE = end_date
-    self.config.PROJECT_ID = id
+    self.config.PROJECT_ID = project_id
 
   def connect(self):
     """Instantiates the connection to Neo4j and stores
