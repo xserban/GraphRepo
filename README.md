@@ -2,10 +2,11 @@
 
 This tool maps a Github repository to a Neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
 Whenever we instantiate a new model, if a py2neo graph object is given to its constructor, a neo4j node is created.
+The newly included miners and mappers now enable queries to Neo4j from Python.
 
-### 1. Running the project
+###  Running the project
 
-#### Prereq
+#### 1. Prereq
 The only requirement is to have Python and Docker installed on your system.
 
 #### 1.1 Install the production release with pip
@@ -34,7 +35,8 @@ Open a browser window and go to [http://localhost:7474](http://localhost:7474). 
 The default one is *neo4j*.
 
 
-#### 1.3 Index and vizualize your repo:
+
+#### 2. Index and vizualize a repo:
 
 Please configure the constants in [examples/config.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/config.yml), then run the file using the
 following command:
@@ -44,6 +46,16 @@ $ python index_all.py
 ```
 
 Go to [http://localhost:7474](http://localhost:7474) and use the first query from Section 2.
+
+
+#### 3. Mine data from the repo
+Please configure the constants in [examples/config.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/config.yml), then run the miners using the
+following command:
+
+```
+$ python mine_all.py
+```
+
 
 
 
