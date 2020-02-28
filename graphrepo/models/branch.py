@@ -22,15 +22,16 @@ class Branch(CustomNode):
   """Branch node
   """
 
-  def __init__(self, name,  graph=None, *args, **kwargs):
+  def __init__(self, name, project_id=None, graph=None, *args, **kwargs):
     """Instantiates a branch node and, if a graph is given,
     it indexes the graph to Neo4j
     :param name: string containing an unique name
+    :param project_id: a string identifying the project a branch belogns to
     :param graph: py2neo graph objects
     """
     self.node_type = "Branch"
     self.node_index = "name"
 
-    super().__init__(self.node_type, name=name, *args, **kwargs)
+    super().__init__(self.node_type, name=name, project_id=project_id, *args, **kwargs)
     if graph is not None:
       self.index(graph)

@@ -24,20 +24,23 @@ class File(CustomNode):
   to py2neo objects
   """
 
-  def __init__(self, file, graph=None, file_type=True):
+  def __init__(self, file, project_id=None, graph=None, file_type=True):
     """Instantiates file object. If a graph is provided
     the node is also added to neo4j
     :param file: pydriller Modification object
+    :param project_id: a string identifying the project a file belogns to
     :param graph: py2neo graph object
     :param file_type: flag which decides if the file type
       should be indexed
     """
     self.node_type = "File"
     self.node_index = "hash"
+    self.project_id = project_id
 
     self.file = file
     _hash = hashlib.sha224(str(file.filename).encode('utf-8')).hexdigest()
-    super().__init__(self.node_type, hash=_hash, name=file.filename)
+    super().__init__(self.node_type, hash=_hash,
+                     name=file.filename, project_id=project_id)
 
     if graph is not None:
       self.index(graph)
@@ -50,7 +53,7 @@ class File(CustomNode):
     relationship
     :param graph: py2neo Graph object
     """
-    self.file_type = Filetype(self.file, graph=graph)
+    self.file_type = Filetype(self.file, self.project_id, graph=graph)
     rel.Filetype(self.file_type, self, graph=graph)
 
 
@@ -58,10 +61,11 @@ class Filetype(CustomNode):
   """Filetype OGM Node - Maps file types to py2neo object
   """
 
-  def __init__(self, file, graph=None):
+  def __init__(self, file, project_id=None, graph=None):
     """Instantiate Filetype object. If a graph is provided
     the node is also added to neo4j
     :param file: pydriller Modification object
+    :param project_id: a string identifying the project a file belogns to
     :param graph: py2neo graph object
     """
     self.node_type = "Filetype"
@@ -69,6 +73,6 @@ class Filetype(CustomNode):
 
     _name = '.' + file.filename.split('.')[-1:][0]
     _hash = hashlib.sha224(_name.encode('utf-8')).hexdigest()
-    super().__init__(self.node_type, hash=_hash, name=_name)
+    super().__init__(self.node_type, hash=_hash, name=_name, project_id=project_id)
     if graph is not None:
       self.index(graph)

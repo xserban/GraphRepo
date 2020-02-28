@@ -15,6 +15,7 @@
 import argparse
 from graphrepo.driller import Driller
 from datetime import datetime
+import time
 import os
 import yaml
 
@@ -26,6 +27,7 @@ def parse_args():
 
 
 def main():
+  start = time.time()
   args = parse_args()
   folder = os.path.dirname(os.path.abspath(__file__))
   with open(os.path.join(folder, args.config), 'r') as ymlfile:
@@ -44,6 +46,7 @@ def main():
       **neo, **project
   )
   driller.drill()
+  print('Indexing took {} s.'.format(time.time() - start))
 
 
 if __name__ == '__main__':
