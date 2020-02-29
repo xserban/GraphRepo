@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(name="graphrepo",
-      version="0.1.2",
-      description="A tool that maps a Github repo to Neo4j",
+      version="0.1.3",
+      description="A tool that maps a Github repo to Neo4j and Helps Mining the Repo in the DB",
       url="https://github.com/NullConvergence/GraphRepo",
       license='Apache License',
       python_requires='>=3.5',
