@@ -16,28 +16,30 @@
 import graphrepo.models.relationships as rel
 
 from graphrepo import models as mdl
-from graphrepo.config import Config
-
-CT = Config()
 
 
 class Commit(mdl.CustomNode):
   """Commit OGM  - Mapps Commit from PyDriller to py2neo
   """
 
-  def __init__(self, commit, graph=None, repo=None):
+  def __init__(self, commit, config, graph=None, repo=None):
     """Instantiates a commit. If a graph is given
     the node is created in the graph
     :param commit: pydriller Commit object
+    :param config: a Config object
     :param graph: py2neo Graph object
     :param repo: pydriller RepositoryMining object
     """
     self.node_type = "Commit"
     self.node_index = "hash"
+    self.config = config
+    self.project_id = config.PROJECT_ID
 
     self.commit = commit
     self.indexed = False
-    mdl.CustomNode.__init__(self, self.node_type, hash=self.commit.hash)
+    mdl.CustomNode.__init__(self, self.node_type,
+                            hash=self.commit.hash,
+                            project_id=self.project_id)
 
     if graph is not None:
       self.index_all_data(graph=graph, repo=repo)
@@ -48,7 +50,7 @@ class Commit(mdl.CustomNode):
     """
     self.check_self(graph)
     for chg in self.commit.modifications:
-      change = mdl.File(chg, graph=graph)
+      change = mdl.File(chg, self.project_id, graph=graph)
       rel.Update(rel_from=self, rel_to=change, graph=graph)
       # Whenever a commit touches a method, the method
       # attributes are updated (e.g. loc or complexity)
@@ -59,7 +61,7 @@ class Commit(mdl.CustomNode):
     :param graph: py2neo graph object
     """
     for met in modification.methods:
-      method = mdl.Method(met, graph=graph)
+      method = mdl.Method(met, self.project_id, graph=graph)
       rel.HasMethod(rel_from=file, rel_to=method, graph=graph)
 
   def index_changed_methods(self, graph):
@@ -67,10 +69,10 @@ class Commit(mdl.CustomNode):
     :param graph: py2neo graph object
     """
     self.check_self(graph)
-    all_methods = []
-    for chg in self.commit.modifications:
-      # collect methods changed
-      pass
+    # all_methods = []
+    # for chg in self.commit.modifications:
+    #   # collect methods changed
+    #   pass
 
   def parse_changed_methods(self, change):
     """Given a commit change, parses methods
@@ -86,13 +88,13 @@ class Commit(mdl.CustomNode):
     dev = mdl.Developer(self.commit.author, graph=graph)
     rel.Authorship(rel_from=dev, rel_to=self, graph=graph)
 
-  def index_parents(self, graph, repo, branch=CT.BRANCH_AS_NODE):
+  def index_parents(self, graph, repo):
     """This method chooses between indexing a parent
     relation or indexing a branch relationship between
     parent commits.
     :param graph: py2neo graph
     """
-    if branch is True:
+    if self.config.BRANCH_AS_NODE is True:
       self.index_parent(graph, repo)
     else:
       self.index_parent_branch(graph, repo)
@@ -108,7 +110,7 @@ class Commit(mdl.CustomNode):
     """
     self.check_self(graph)
     for parent in self.commit.parents:
-      commit = mdl.Commit(repo.get_commit(parent))
+      commit = mdl.Commit(repo.get_commit(parent), self.config)
       commit.index_author(graph)
       commit.index_date(graph)
       # commit.index_all_data(graph, repo)
@@ -116,8 +118,10 @@ class Commit(mdl.CustomNode):
       # index branches
       branches = self.commit.branches
       for branch in branches:
-        br = mdl.Branch(name=branch, graph=graph)
-        rel.BelongsToBranch(rel_from=self, rel_to=br, graph=graph, name=branch)
+        brn = mdl.Branch(
+            name=branch, project_id=self.project_id, graph=graph)
+        rel.BelongsToBranch(rel_from=self, rel_to=brn,
+                            graph=graph, name=branch)
 
   def index_parent_branch(self, graph, repo):
     """For each parent of the commit, this method requests
@@ -129,7 +133,7 @@ class Commit(mdl.CustomNode):
     """
     self.check_self(graph)
     for parent in self.commit.parents:
-      commit = mdl.Commit(repo.get_commit(parent))
+      commit = mdl.Commit(repo.get_commit(parent), self.config)
       commit.index_author(graph)
       commit.index_date(graph)
       common_branches = self._common_branch(commit)
@@ -145,9 +149,9 @@ class Commit(mdl.CustomNode):
     self.check_self(graph)
 
     date = self.commit.author_date
-    day = mdl.Day(date, graph=graph)
-    month = mdl.Month(date, graph=graph)
-    year = mdl.Year(date, graph=graph)
+    day = mdl.Day(date, self.project_id,  graph=graph)
+    month = mdl.Month(date, self.project_id, graph=graph)
+    year = mdl.Year(date, self.project_id, graph=graph)
 
     rel.YearMonth(rel_from=year, rel_to=month, graph=graph)
     rel.YearMonth(rel_from=year, rel_to=month, graph=graph)
@@ -171,7 +175,7 @@ class Commit(mdl.CustomNode):
   def _common_branch(self, ot_commit):
     """Searches for a common branch between one commit
     and self
-    :param ot_commit: another commint
+    :param ot_commit: another commit
     """
     oth_branches = ot_commit.commit.branches
     curr_branches = self.commit.branches

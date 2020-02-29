@@ -1,8 +1,8 @@
 # VSCode
 .vscode/
 
-# pydriller repo
-pydriller/
+# repo
+repos/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

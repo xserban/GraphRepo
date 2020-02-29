@@ -27,6 +27,7 @@ class Config(metaclass=Singleton):
   REPO = ""
   START_DATE = None
   END_DATE = None
+  PROJECT_ID = None
   # If True, each branch will be indexed as a node
   # and commits will be linked by a Parent relationship
   # If False, then the commits are linked by a Branch
@@ -45,6 +46,3 @@ class Config(metaclass=Singleton):
 
     if self.DB_USER == "" or self.DB_PWD == "":
       raise ValueError("Database credentials are not set.")
-
-    if self.REPO == "":
-      raise ValueError("Repository path not set.")

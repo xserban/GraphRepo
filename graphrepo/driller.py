@@ -41,7 +41,8 @@ class Driller(metaclass=Singleton):
                 port=13000, db_user="neo4j",
                 db_pwd="neo4j", repo="pydriller/",
                 start_date=None,
-                end_date=None):
+                end_date=None,
+                project_id=None):
     """Sets the application constants"""
     # TODO: validate inputs
     self.config.DB_URL = db_url
@@ -51,6 +52,7 @@ class Driller(metaclass=Singleton):
     self.config.REPO = repo
     self.config.START_DATE = start_date
     self.config.END_DATE = end_date
+    self.config.PROJECT_ID = project_id
 
   def connect(self):
     """Instantiates the connection to Neo4j and stores
@@ -75,7 +77,7 @@ class Driller(metaclass=Singleton):
     for commit in RepositoryMining(self.config.REPO,
                                    since=self.config.START_DATE,
                                    to=self.config.END_DATE).traverse_commits():
-      commits.append(Commit(commit))
+      commits.append(Commit(commit, self.config))
 
     return commits, rep_obj
 

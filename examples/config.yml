@@ -3,6 +3,9 @@ neo:
   port: 13000
   db_user: neo4j
   db_pwd: neo4jj
-  repo: pydriller/
-  start_date: "1 February, 2018"
-  end_date: "30 March, 2018"
+
+project:
+  repo: repos/GraphRepo/
+  start_date: #"1 February, 2018"
+  end_date: #"30 March, 2018"
+  project_id: 'graphrepo'

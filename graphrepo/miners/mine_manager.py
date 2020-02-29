@@ -11,13 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+from py2neo import Graph, NodeMatcher, RelationshipMatcher
 from graphrepo.config import Config
 from graphrepo.logger import Logger
 from graphrepo.singleton import Singleton
 from graphrepo import miners
 from graphrepo.miners import mappers
-from py2neo import Graph, NodeMatcher, RelationshipMatcher
 
 
 LG = Logger()
@@ -25,8 +24,8 @@ LG = Logger()
 
 class MineManager():
   """MineManageer class - This class manages custom
-  miners. For At the moment we instantiate all miners,
-  but other managers which handle different teams of miners
+  miners. At the moment we instantiate all miners,
+  but other managers which handle different 'teams of miners'
   can be created.
   """
 

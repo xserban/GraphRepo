@@ -13,7 +13,6 @@
 # limitations under the License.
 
 """This module is a mapping to a neo4j node for a method"""
-import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 
@@ -22,10 +21,11 @@ class Method(CustomNode):
   """Method node
   """
 
-  def __init__(self, method, graph=None):
+  def __init__(self, method, project_id=None, graph=None):
     """Instantiates a method object and creates an unique
     hash
     :param method: PyDriller Method object
+    :param project_id: a string identifying the project a file belogns to
     """
     self.node_type = "Method"
     self.node_index = "name"
@@ -33,7 +33,8 @@ class Method(CustomNode):
     self.method = method
     self.metrics = self.get_metrics()
 
-    super().__init__(self.node_type, name=self.method.name, **self.metrics)
+    super().__init__(self.node_type, name=self.method.name,
+                     project_id=project_id, **self.metrics)
     if graph is not None:
       self.index(graph)
 
