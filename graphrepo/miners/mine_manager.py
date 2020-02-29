@@ -24,8 +24,8 @@ LG = Logger()
 
 class MineManager():
   """MineManageer class - This class manages custom
-  miners. For At the moment we instantiate all miners,
-  but other managers which handle different teams of miners
+  miners. At the moment we instantiate all miners,
+  but other managers which handle different 'teams of miners'
   can be created.
   """
 

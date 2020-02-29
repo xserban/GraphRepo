@@ -5,7 +5,7 @@ neo:
   db_pwd: neo4jj
 
 project:
-  repo: pydriller/
-  start_date: "1 February, 2018"
-  end_date: "30 March, 2018"
-  project_id: 'pydriller'
+  repo: repos/GraphRepo/
+  start_date: #"1 February, 2018"
+  end_date: #"30 March, 2018"
+  project_id: 'graphrepo'
