@@ -37,8 +37,16 @@ class Commit(mdl.CustomNode):
 
         self.commit = commit
         self.indexed = False
+
+        author_datetime = self.commit.author_date.strftime(
+            "%Y/%m/%d, %H:%M:%S")
+        author_date = self.commit.author_date.strftime("%Y/%m/%d")
+        author_time = self.commit.author_date.strftime("%H:%M")
         mdl.CustomNode.__init__(self, self.node_type,
                                 hash=self.commit.hash,
+                                author_datetime=author_datetime,
+                                author_date=author_date,
+                                author_time=author_time,
                                 project_id=self.project_id)
 
         if graph is not None:
@@ -65,21 +73,9 @@ class Commit(mdl.CustomNode):
             # attributes are updated (e.g. loc or complexity)
             change = mdl.File(chg, self.project_id, graph=graph)
             rel.UpdateFile(rel_from=self, rel_to=change, graph=graph)
-
-    def index_changed_methods(self, graph):
-        """Indexes all methods changed by a commig
-        :param graph: py2neo graph object
-        """
-        self.check_self(graph)
-        # all_methods = []
-        # for chg in self.commit.modifications:
-        #   # collect methods changed
-        #   pass
-
-    def parse_changed_methods(self, change):
-        """Given a commit change, parses methods
-        touched by the commit"""
-        pass
+            # index file methods and add relationship to change
+            # methods in this commit
+            change.index_methods(graph, self)
 
     def index_author(self, graph):
         """Indexes the commit author node in the graph

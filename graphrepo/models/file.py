@@ -48,7 +48,6 @@ class File(CustomNode):
 
         if graph is not None:
             self.index(graph)
-            self.index_methods(graph)
 
         if file_type is True:
             self.index_type(graph=graph)
@@ -75,13 +74,18 @@ class File(CustomNode):
             'token_count': self.file.token_count if self.file.token_count else -1,
         }
 
-    def index_methods(self, graph):
-        """Indexes latest methods
+    def index_methods(self, graph, commit=False):
+        """Indexes latest methods and adds a relation
+        between commit and the methods changed in the commit
+        if the commit object is given
         :param graph: py2neo Graph object
+        :param commit:
         """
         for met in self.file.methods:
             method = Method(met, self.project_id, graph=graph)
             rel.HasMethod(rel_from=self, rel_to=method, graph=graph)
+            if met in self.file.changed_methods:
+                rel.UpdateMethod(rel_from=commit, rel_to=method, graph=graph)
 
 
 class Filetype(CustomNode):

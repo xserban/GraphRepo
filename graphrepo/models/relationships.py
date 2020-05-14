@@ -98,44 +98,17 @@ class HasMethod(CustomRelationship):
         super().__init__(rel_from, rel_to, graph, *args, **kwargs)
 
 
-class UpdatedMethod(CustomRelationship):
+class UpdateMethod(CustomRelationship):
     def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
         """Instantiates an UpdateMethod relationship and creates a Neo4j relationship
         :param rel_from: Update object
         :param rel_to: Method Node
         :param graph: Py2neo Graph
         """
-        pass
-
-
-class AddedMethod(CustomRelationship):
-    def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
-        """Instantiates an AddMethod relationship and creates a Neo4j relationship
-        :param rel_from: Update object
-        :param rel_to: Method Node
-        :param graph: Py2neo Graph
-        """
-        pass
-
-
-class RenamedMethod(CustomRelationship):
-    def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
-        """Instantiates a RenameMethod relationship and creates a Neo4j relationship
-        :param rel_from: Update object
-        :param rel_to: Method Node
-        :param graph: Py2neo Graph
-        """
-        pass
-
-
-class RemovedMethod(CustomRelationship):
-    def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
-        """Instantiates a RemoveMethod relationship and creates a Neo4j relationship
-        :param rel_from: Update object
-        :param rel_to: Method Node
-        :param graph: Py2neo Graph
-        """
-        pass
+        method_metrics = rel_to.get_metrics()
+        super().__init__(rel_from, rel_to, graph,
+                         *args, **kwargs,
+                         **method_metrics)
 
 
 class Filetype(CustomRelationship):
