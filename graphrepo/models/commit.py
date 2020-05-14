@@ -19,164 +19,175 @@ from graphrepo import models as mdl
 
 
 class Commit(mdl.CustomNode):
-  """Commit OGM  - Mapps Commit from PyDriller to py2neo
-  """
-
-  def __init__(self, commit, config, graph=None, repo=None):
-    """Instantiates a commit. If a graph is given
-    the node is created in the graph
-    :param commit: pydriller Commit object
-    :param config: a Config object
-    :param graph: py2neo Graph object
-    :param repo: pydriller RepositoryMining object
+    """Commit OGM  - Mapps Commit from PyDriller to py2neo
     """
-    self.node_type = "Commit"
-    self.node_index = "hash"
-    self.config = config
-    self.project_id = config.PROJECT_ID
 
-    self.commit = commit
-    self.indexed = False
-    mdl.CustomNode.__init__(self, self.node_type,
-                            hash=self.commit.hash,
-                            project_id=self.project_id)
+    def __init__(self, commit, config, graph=None, repo=None):
+        """Instantiates a commit. If a graph is given
+        the node is created in the graph
+        :param commit: pydriller Commit object
+        :param config: a Config object
+        :param graph: py2neo Graph object
+        :param repo: pydriller RepositoryMining object
+        """
+        self.node_type = "Commit"
+        self.node_index = "hash"
+        self.config = config
+        self.project_id = config.PROJECT_ID
 
-    if graph is not None:
-      self.index_all_data(graph=graph, repo=repo)
+        self.commit = commit
+        self.indexed = False
+        mdl.CustomNode.__init__(self, self.node_type,
+                                hash=self.commit.hash,
+                                project_id=self.project_id)
 
-  def index_files_changed(self, graph):
-    """Indexes the files changed by a commit
-    :param graph: py2neo graph object
-    """
-    self.check_self(graph)
-    for chg in self.commit.modifications:
-      change = mdl.File(chg, self.project_id, graph=graph)
-      rel.Update(rel_from=self, rel_to=change, graph=graph)
-      # Whenever a commit touches a method, the method
-      # attributes are updated (e.g. loc or complexity)
-      self.index_all_file_methods(graph, chg, change)
+        if graph is not None:
+            self.index_all_data(graph=graph, repo=repo)
 
-  def index_all_file_methods(self, graph, modification, file):
-    """Indexes all methods from a commit file
-    :param graph: py2neo graph object
-    """
-    for met in modification.methods:
-      method = mdl.Method(met, self.project_id, graph=graph)
-      rel.HasMethod(rel_from=file, rel_to=method, graph=graph)
+    def update_attributes(self, graph):
+        """Updates custom attributes for commit node
+        :param graph: py2neo graph object
+        """
+        self['dmm_unit_size'] = self.commit.dmm_unit_size
+        self['dmm_unit_complexity'] = self.commit.dmm_unit_complexity
+        self['dmm_unit_interfacing'] = self.commit.dmm_unit_interfacing
 
-  def index_changed_methods(self, graph):
-    """Indexes all methods changed by a commig
-    :param graph: py2neo graph object
-    """
-    self.check_self(graph)
-    # all_methods = []
-    # for chg in self.commit.modifications:
-    #   # collect methods changed
-    #   pass
+        graph.push(self)
 
-  def parse_changed_methods(self, change):
-    """Given a commit change, parses methods
-    touched by the commit"""
-    pass
+    def index_files_changed(self, graph):
+        """Indexes the files changed by a commit
+        :param graph: py2neo graph object
+        """
+        self.check_self(graph)
+        for chg in self.commit.modifications:
+            change = mdl.File(chg, self.project_id, graph=graph)
+            rel.Update(rel_from=self, rel_to=change, graph=graph)
+            # Whenever a commit touches a method, the method
+            # attributes are updated (e.g. loc or complexity)
+            self.index_all_file_methods(graph, chg, change)
 
-  def index_author(self, graph):
-    """Indexes the commit author node in the graph
-    and adds relationship to this commit
-    :params graph: py2neo graph object
-    """
-    self.check_self(graph)
-    dev = mdl.Developer(self.commit.author, graph=graph)
-    rel.Authorship(rel_from=dev, rel_to=self, graph=graph)
+    def index_all_file_methods(self, graph, modification, file):
+        """Indexes all methods from a commit file
+        :param graph: py2neo graph object
+        """
+        for met in modification.methods:
+            method = mdl.Method(met, self.project_id, graph=graph)
+            rel.HasMethod(rel_from=file, rel_to=method, graph=graph)
 
-  def index_parents(self, graph, repo):
-    """This method chooses between indexing a parent
-    relation or indexing a branch relationship between
-    parent commits.
-    :param graph: py2neo graph
-    """
-    if self.config.BRANCH_AS_NODE is True:
-      self.index_parent(graph, repo)
-    else:
-      self.index_parent_branch(graph, repo)
+    def index_changed_methods(self, graph):
+        """Indexes all methods changed by a commig
+        :param graph: py2neo graph object
+        """
+        self.check_self(graph)
+        # all_methods = []
+        # for chg in self.commit.modifications:
+        #   # collect methods changed
+        #   pass
 
-  def index_parent(self, graph=None, repo=None):
-    """For each parent of the commit, this method requests
-    a commit object from pydriller's RepositoryMining object
-    and indexes some data. If index_all_data is used, this method
-    is applied recursively to all parents, however, this is
-    very slow.
-    :param graph: py2neo graph object
-    :param repo: PyDriller RepositoryMining object
-    """
-    self.check_self(graph)
-    for parent in self.commit.parents:
-      commit = mdl.Commit(repo.get_commit(parent), self.config)
-      commit.index_author(graph)
-      commit.index_date(graph)
-      # commit.index_all_data(graph, repo)
-      rel.Parent(rel_from=commit, rel_to=self, graph=graph)
-      # index branches
-      branches = self.commit.branches
-      for branch in branches:
-        brn = mdl.Branch(
-            name=branch, project_id=self.project_id, graph=graph)
-        rel.BelongsToBranch(rel_from=self, rel_to=brn,
-                            graph=graph, name=branch)
+    def parse_changed_methods(self, change):
+        """Given a commit change, parses methods
+        touched by the commit"""
+        pass
 
-  def index_parent_branch(self, graph, repo):
-    """For each parent of the commit, this method requests
-    a commit object from pydriller's RepositoryMining object
-    and indexes a branch relationship between the two and
-    the parent commit data
-    :param graph: py2neo Graph object
-    :param repo: Pydriller RepositoryMining object
-    """
-    self.check_self(graph)
-    for parent in self.commit.parents:
-      commit = mdl.Commit(repo.get_commit(parent), self.config)
-      commit.index_author(graph)
-      commit.index_date(graph)
-      common_branches = self._common_branch(commit)
-      for branch in common_branches:
-        rel.BelongsToBranch(rel_from=commit, rel_to=self,
-                            graph=graph, name=branch)
+    def index_author(self, graph):
+        """Indexes the commit author node in the graph
+        and adds relationship to this commit
+        :params graph: py2neo graph object
+        """
+        self.check_self(graph)
+        dev = mdl.Developer(self.commit.author, graph=graph)
+        rel.Authorship(rel_from=dev, rel_to=self, graph=graph)
 
-  def index_date(self, graph):
-    """Splits the date in year, month and day and creates
-    the graph nodes and relationships
-    :param graph: py2neo graph object
-    """
-    self.check_self(graph)
+    def index_parents(self, graph, repo):
+        """This method chooses between indexing a parent
+        relation or indexing a branch relationship between
+        parent commits.
+        :param graph: py2neo graph
+        """
+        if self.config.BRANCH_AS_NODE is True:
+            self.index_parent(graph, repo)
+        else:
+            self.index_parent_branch(graph, repo)
 
-    date = self.commit.author_date
-    day = mdl.Day(date, self.project_id,  graph=graph)
-    month = mdl.Month(date, self.project_id, graph=graph)
-    year = mdl.Year(date, self.project_id, graph=graph)
+    def index_parent(self, graph=None, repo=None):
+        """For each parent of the commit, this method requests
+        a commit object from pydriller's RepositoryMining object
+        and indexes some data. If index_all_data is used, this method
+        is applied recursively to all parents, however, this is
+        very slow.
+        :param graph: py2neo graph object
+        :param repo: PyDriller RepositoryMining object
+        """
+        self.check_self(graph)
+        for parent in self.commit.parents:
+            commit = mdl.Commit(repo.get_commit(parent), self.config)
+            commit.index_author(graph)
+            commit.index_date(graph)
+            # commit.index_all_data(graph, repo)
+            rel.Parent(rel_from=commit, rel_to=self, graph=graph)
+            # index branches
+            branches = self.commit.branches
+            for branch in branches:
+                brn = mdl.Branch(
+                    name=branch, project_id=self.project_id, graph=graph)
+                rel.BelongsToBranch(rel_from=self, rel_to=brn,
+                                    graph=graph, name=branch)
 
-    rel.YearMonth(rel_from=year, rel_to=month, graph=graph)
-    rel.YearMonth(rel_from=year, rel_to=month, graph=graph)
-    rel.MonthDay(rel_from=month, rel_to=day, graph=graph)
-    rel.DayCommit(rel_from=day, rel_to=self, graph=graph)
+    def index_parent_branch(self, graph, repo):
+        """For each parent of the commit, this method requests
+        a commit object from pydriller's RepositoryMining object
+        and indexes a branch relationship between the two and
+        the parent commit data
+        :param graph: py2neo Graph object
+        :param repo: Pydriller RepositoryMining object
+        """
+        self.check_self(graph)
+        for parent in self.commit.parents:
+            commit = mdl.Commit(repo.get_commit(parent), self.config)
+            commit.index_author(graph)
+            commit.index_date(graph)
+            common_branches = self._common_branch(commit)
+            for branch in common_branches:
+                rel.BelongsToBranch(rel_from=commit, rel_to=self,
+                                    graph=graph, name=branch)
 
-  def index_all_data(self, graph, repo=None):
-    """Indexes all the data for a commit
-    :param graph: py2neo graph object
-    :param repo: PyDriller RepositoryMining class for the
-      current repo
-    """
-    self.check_self(graph)
-    self.index_author(graph)
-    self.index_date(graph)
-    self.index_files_changed(graph)
+    def index_date(self, graph):
+        """Splits the date in year, month and day and creates
+        the graph nodes and relationships
+        :param graph: py2neo graph object
+        """
+        self.check_self(graph)
 
-    if repo is not None:
-      self.index_parents(graph, repo)
+        date = self.commit.author_date
+        day = mdl.Day(date, self.project_id,  graph=graph)
+        month = mdl.Month(date, self.project_id, graph=graph)
+        year = mdl.Year(date, self.project_id, graph=graph)
 
-  def _common_branch(self, ot_commit):
-    """Searches for a common branch between one commit
-    and self
-    :param ot_commit: another commit
-    """
-    oth_branches = ot_commit.commit.branches
-    curr_branches = self.commit.branches
-    return list((oth_branches).intersection(curr_branches))
+        rel.YearMonth(rel_from=year, rel_to=month, graph=graph)
+        rel.YearMonth(rel_from=year, rel_to=month, graph=graph)
+        rel.MonthDay(rel_from=month, rel_to=day, graph=graph)
+        rel.DayCommit(rel_from=day, rel_to=self, graph=graph)
+
+    def index_all_data(self, graph, repo=None):
+        """Indexes all the data for a commit
+        :param graph: py2neo graph object
+        :param repo: PyDriller RepositoryMining class for the
+          current repo
+        """
+        self.update_attributes(graph=graph)
+        self.check_self(graph)
+        self.index_author(graph)
+        self.index_date(graph)
+        self.index_files_changed(graph)
+
+        if repo is not None:
+            self.index_parents(graph, repo)
+
+    def _common_branch(self, ot_commit):
+        """Searches for a common branch between one commit
+        and self
+        :param ot_commit: another commit
+        """
+        oth_branches = ot_commit.commit.branches
+        curr_branches = self.commit.branches
+        return list((oth_branches).intersection(curr_branches))
