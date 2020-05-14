@@ -45,6 +45,7 @@ class File(CustomNode):
 
         if graph is not None:
             self.index(graph)
+            self.update_attributes(graph)
 
         if file_type is True:
             self.index_type(graph=graph)
@@ -56,6 +57,20 @@ class File(CustomNode):
         """
         self.file_type = Filetype(self.file, self.project_id, graph=graph)
         rel.Filetype(self.file_type, self, graph=graph)
+
+    def update_attributes(self, graph):
+        """Updates file attributes
+        :param graph: py2neo Graph object
+        """
+        self['old_path'] = self.file.old_path if self.file.old_path else ''
+        self['new_path'] = self.file.new_path if self.file.new_path else ''
+        self['source_code'] = self.file.source_code if self.file.source_code else ''
+        self['source_code_before'] = self.file.source_code_before if self.file.source_code_before else ''
+        self['nloc'] = self.file.nloc if self.file.nloc else -1
+        self['complexity'] = self.file.complexity if self.file.complexity else -1
+        self['token_count'] = self.file.token_count if self.file.token_count else -1
+
+        graph.push(self)
 
 
 class Filetype(CustomNode):
