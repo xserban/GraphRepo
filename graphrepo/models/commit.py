@@ -61,19 +61,10 @@ class Commit(mdl.CustomNode):
         """
         self.check_self(graph)
         for chg in self.commit.modifications:
-            change = mdl.File(chg, self.project_id, graph=graph)
-            rel.UpdateFile(rel_from=self, rel_to=change, graph=graph)
             # Whenever a commit touches a method, the method
             # attributes are updated (e.g. loc or complexity)
-            self.index_all_file_methods(graph, chg, change)
-
-    def index_all_file_methods(self, graph, modification, file):
-        """Indexes all methods from a commit file
-        :param graph: py2neo graph object
-        """
-        for met in modification.methods:
-            method = mdl.Method(met, self.project_id, graph=graph)
-            rel.HasMethod(rel_from=file, rel_to=method, graph=graph)
+            change = mdl.File(chg, self.project_id, graph=graph)
+            rel.UpdateFile(rel_from=self, rel_to=change, graph=graph)
 
     def index_changed_methods(self, graph):
         """Indexes all methods changed by a commig

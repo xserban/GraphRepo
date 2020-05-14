@@ -17,6 +17,7 @@ import hashlib
 
 import graphrepo.models.relationships as rel
 from graphrepo.models.custom_node import CustomNode
+from graphrepo.models.method import Method
 
 
 class File(CustomNode):
@@ -47,6 +48,7 @@ class File(CustomNode):
 
         if graph is not None:
             self.index(graph)
+            self.index_methods(graph)
 
         if file_type is True:
             self.index_type(graph=graph)
@@ -72,6 +74,14 @@ class File(CustomNode):
             'complexity': self.file.complexity if self.file.complexity else -1,
             'token_count': self.file.token_count if self.file.token_count else -1,
         }
+
+    def index_methods(self, graph):
+        """Indexes latest methods
+        :param graph: py2neo Graph object
+        """
+        for met in self.file.methods:
+            method = Method(met, self.project_id, graph=graph)
+            rel.HasMethod(rel_from=self, rel_to=method, graph=graph)
 
 
 class Filetype(CustomNode):
