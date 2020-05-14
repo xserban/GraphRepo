@@ -48,9 +48,10 @@ class Commit(mdl.CustomNode):
         """Updates custom attributes for commit node
         :param graph: py2neo graph object
         """
-        self['dmm_unit_size'] = self.commit.dmm_unit_size
-        self['dmm_unit_complexity'] = self.commit.dmm_unit_complexity
-        self['dmm_unit_interfacing'] = self.commit.dmm_unit_interfacing
+        self['is_merge'] = 1 if self.commit.merge else 0
+        self['dmm_unit_size'] = self.commit.dmm_unit_size if self.commit.dmm_unit_size else -1
+        self['dmm_unit_complexity'] = self.commit.dmm_unit_complexity if self.commit.dmm_unit_complexity else -1
+        self['dmm_unit_interfacing'] = self.commit.dmm_unit_interfacing if self.commit.dmm_unit_interfacing else -1
 
         graph.push(self)
 
