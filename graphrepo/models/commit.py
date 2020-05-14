@@ -62,7 +62,7 @@ class Commit(mdl.CustomNode):
         self.check_self(graph)
         for chg in self.commit.modifications:
             change = mdl.File(chg, self.project_id, graph=graph)
-            rel.Update(rel_from=self, rel_to=change, graph=graph)
+            rel.UpdateFile(rel_from=self, rel_to=change, graph=graph)
             # Whenever a commit touches a method, the method
             # attributes are updated (e.g. loc or complexity)
             self.index_all_file_methods(graph, chg, change)
