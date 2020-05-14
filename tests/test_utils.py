@@ -1,4 +1,4 @@
-# Copyright 2019 NullConvergence
+# Copyright 2020 NullConvergence
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,21 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import yaml
 
-from datetime import datetime
+import os
+from graphrepo.utils import parse_config
 
 
-def parse_config(path):
-  with open(path, 'r') as ymlfile:
-    conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
-
-  neo = conf['neo']
-  project = conf['project']
-
-  project['start_date'] = datetime.strptime(
-      project['start_date'], '%d %B, %Y') if project['start_date'] else None
-  project['end_date'] = datetime.strptime(
-      project['end_date'], '%d %B, %Y') if project['end_date'] else None
-
-  return neo, project
+class TestUtils:
+    def test_parse_config(self):
+        folder = os.path.dirname(os.path.abspath(__file__))
+        neo, project = parse_config(os.path.join(folder, 'cnfg_init.yml'))
+        assert neo['db_url'] == 'localhost'
+        assert neo['db_user'] == 'neo4j'
+        assert project['repo'] == './gr-test/'

@@ -17,37 +17,29 @@ import time
 import os
 import yaml
 from graphrepo.driller import Driller
+from graphrepo.utils import parse_config
 from datetime import datetime
 
 
 def parse_args():
-  parser = argparse.ArgumentParser()
-  parser.add_argument('--config', default='config.yml', type=str)
-  return parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', default='config.yml', type=str)
+    return parser.parse_args()
 
 
 def main():
-  start = time.time()
-  args = parse_args()
-  folder = os.path.dirname(os.path.abspath(__file__))
-  with open(os.path.join(folder, args.config), 'r') as ymlfile:
-    conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
+    start = time.time()
+    args = parse_args()
+    folder = os.path.dirname(os.path.abspath(__file__))
+    neo, project = parse_args(os.path.join(folder, args.config))
 
-  neo = conf['neo']
-  project = conf['project']
-
-  project['start_date'] = datetime.strptime(
-      project['start_date'], '%d %B, %Y') if project['start_date'] else None
-  project['end_date'] = datetime.strptime(
-      project['end_date'], '%d %B, %Y') if project['end_date'] else None
-
-  driller = Driller()
-  driller.configure(
-      **neo, **project
-  )
-  driller.drill()
-  print('Indexing took {} s.'.format(time.time() - start))
+    driller = Driller()
+    driller.configure(
+        **neo, **project
+    )
+    driller.drill()
+    print('Indexing took {} s.'.format(time.time() - start))
 
 
 if __name__ == '__main__':
-  main()
+    main()
