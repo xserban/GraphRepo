@@ -22,4 +22,4 @@ class TestUtils:
         neo, project = parse_config(os.path.join(folder, 'cnfg_init.yml'))
         assert neo['db_url'] == 'localhost'
         assert neo['db_user'] == 'neo4j'
-        assert project['repo'] == './gr-test/'
+        assert project['repo'] == 'tests/gr-test'

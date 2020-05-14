@@ -24,10 +24,24 @@ class TestDriller:
     def test_configure(self):
         folder = os.path.dirname(os.path.abspath(__file__))
         neo, project = parse_config(os.path.join(folder, 'cnfg_init.yml'))
-
         test_driller = Driller()
         test_driller.configure(**neo, **project)
+
         assert test_driller.config.DB_URL == 'localhost'
-        assert test_driller.config.REPO == './gr-test/'
+        assert test_driller.config.REPO == 'tests/gr-test'
+
         test_driller.connect()
         assert test_driller.graph is not None
+
+    def test_indexing(self):
+        folder = os.path.dirname(os.path.abspath(__file__))
+        neo, project = parse_config(os.path.join(folder, 'cnfg_init.yml'))
+        test_driller = Driller()
+
+        test_driller.configure(**neo, **project)
+        test_driller.connect()
+
+        test_driller.drill()
+        records = [r for r in test_driller.graph.run(
+            "MATCH(n) RETURN n")]
+        assert len(records) == 22

@@ -5,7 +5,7 @@ neo:
   db_pwd: neo4jj
 
 project:
-  repo: ./gr-test/
-  start_date: #"1 February, 2018"
-  end_date: #"30 March, 2018"
+  repo: tests/gr-test
+  start_date: "14 May, 2020"
+  end_date: "14 March, 2020"
   project_id: 'graph_repo_test'
