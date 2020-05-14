@@ -1,0 +1,3 @@
+[submodule "tests/gr-test"]
+	path = tests/gr-test
+	url = https://github.com/NullConvergence/gr-test
