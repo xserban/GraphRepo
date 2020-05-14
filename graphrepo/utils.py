@@ -11,3 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import yaml
+
+from datetime import datetime
+
+
+def parse_config(path):
+  with open(path, 'r') as ymlfile:
+    conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
+
+  neo = conf['neo']
+  project = conf['project']
+
+  project['start_date'] = datetime.strptime(
+      project['start_date'], '%d %B, %Y') if project['start_date'] else None
+  project['end_date'] = datetime.strptime(
+      project['end_date'], '%d %B, %Y') if project['end_date'] else None
+
+  return neo, project

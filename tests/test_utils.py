@@ -1,4 +1,4 @@
-# Copyright 2019 NullConvergence
+# Copyright 2020 NullConvergence
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-import unittest
+import os
+from graphrepo.utils import parse_config
 
-class CustomTest(unittest.TestCase):
-    def setUp(self):
-        self.test_start = time.time()
-        # always use the same reandom seed
-        # during tests
-        print("Test: ", self.id, " started.")
 
-    def tearDown(self):
-        print("Test: ", self.id, "took ", time.time() -
-              self.test_start, " seconds.")
-
+class TestUtils:
+    def test_parse_config(self):
+        folder = os.path.dirname(os.path.abspath(__file__))
+        neo, project = parse_config(os.path.join(folder, 'cnfg_init.yml'))
+        assert neo['db_url'] == 'localhost'
+        assert neo['db_user'] == 'neo4j'
+        assert project['repo'] == 'tests/gr-test'
