@@ -1,8 +1,8 @@
-# GraphRepo
+# GraphRepo [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/SE-ML/awesome-seml/blob/master/contributing.md) [![BCH compliance](https://bettercodehub.com/edge/badge/NullConvergence/GraphRepo?branch=develop)](https://bettercodehub.com/)
 
 This tool maps a Github repository to a Neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
 Whenever we instantiate a new model, if a py2neo graph object is given to its constructor, a neo4j node is created.
-The new miners and mappers enable queries to Neo4j from GraphRepo. You can write your own miners for specific queries or data aggregation.
+The new miners and mappers enable queries to Neo4j from GraphRepo. You can write your own miners for specific queries or data aggregation. Writing custom miners instead of querying Neo4j outside GraphRepo has several advangages: (1) reproducibility - sharing a list of repos and a custom miner would be sufficient to reproduce research results, (2) flexibility - write custom mappings and aggregations in python, which are not possible in Neo4j (among with miners one can also define custom mappers, which can be any aggregation function or transformation to any custom data type), (3) increased scalability/elasticity for big data - the custom miners and mappers can make use of big data technologies, such as Spark or scientific computational libraries such as Numpy to scale processing on big data (instead of scaling Neo4j nodes).  
 
 ###  Running the project
 
