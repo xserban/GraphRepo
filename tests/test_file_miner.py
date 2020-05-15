@@ -45,8 +45,16 @@ class TestFileMiner:
         assert readme['name'] == 'README.MD'
 
         # get file history
-        update_history = f_miner.get_change_history(
-            {'hash': '82f8febc140d8a07927358e738e7bcb89e162b5612c5b2b769606fe2'})
+        file_ = f_miner.query(
+            hash='82f8febc140d8a07927358e738e7bcb89e162b5612c5b2b769606fe2')
+        update_history = f_miner.get_change_history(file_)
         assert len(update_history) == 5
+
+        # test file get methods
+        current_m = f_miner.get_current_methods(file_)
+        assert len(current_m) == 2
+
+        past_m = f_miner.get_past_methods(file_)
+        assert len(past_m) == 1
 
         test_driller.clean()

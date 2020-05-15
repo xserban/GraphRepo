@@ -32,11 +32,25 @@ class FileMiner(DefaultMiner):
         """
         return list(self.node_matcher.match("File"))
 
-    def get_change_history(self, file_id):
+    def get_change_history(self, file):
         """Returns all updated relationships
-        :param file_id: a dictionary where the key is a file attribute from neo4j
-          and the value is the desired attribute value, e.g. {hash:  'asd'}
+        :param file: a Py2Neo File object
         :return: list of update file relationships
         """
-        file_ = self.query(**file_id)
-        return list(self.rel_matcher.match([None, file_], "UpdateFile"))
+        return list(self.rel_matcher.match([None, file], "UpdateFile"))
+
+    def get_current_methods(self, file):
+        """Returns all current methods
+        :param file: Py2Neo File object
+        :returrn: list of Method objects
+        """
+        return [rel.end_node
+                for rel in self.graph.match([file, None], "HasMethod")]
+
+    def get_past_methods(self, file):
+        """Returns methods that were removed from the file
+          :param file: Py2Neo File object
+          :returrn: list of Method objects
+          """
+        return [rel.end_node
+                for rel in self.graph.match([file, None], "HadMethod")]
