@@ -23,7 +23,7 @@ from datetime import datetime
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='config.yml', type=str)
+    parser.add_argument('--config', default='configs/graphrepo.yml', type=str)
     return parser.parse_args()
 
 

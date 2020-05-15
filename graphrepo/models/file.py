@@ -105,12 +105,13 @@ class File(CustomNode):
             if met not in self.file.methods:
                 method = Method(met, self.project_id, graph=graph)
                 # add relationship from commit to method
-                # TODO: check this
                 rel.UpdateMethod(rel_from=commit, rel_to=method,
                                  type='DELETE', graph=graph, *args, **kwargs)
                 # replace relationship from file to method from HasMethod to HadMethod
                 has_rel = graph.match_one([self, method], rel.HasMethod)
-                graph.separate(has_rel)
+                # TODO: Test this better
+                if has_rel:
+                    graph.separate(has_rel)
                 rel.HadMethod(rel_from=self, rel_to=method, graph=graph)
 
     def _get_method_type(self, met):
