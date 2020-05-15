@@ -44,4 +44,6 @@ class TestDriller:
         test_driller.drill()
         records = [r for r in test_driller.graph.run(
             "MATCH(n) RETURN n")]
-        assert len(records) == 22
+        assert len(records) == 25
+
+        test_driller.clean()

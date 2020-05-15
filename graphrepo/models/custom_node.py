@@ -19,23 +19,23 @@ from py2neo.data import Node
 
 
 class CustomNode(Node):
-  """Parent class for all custom Nodes"""
+    """Parent class for all custom Nodes"""
 
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    self.indexed = False
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.indexed = False
 
-  def check_self(self, graph):
-    """Checks if the node corresponding to this instance
-    is indexed in the database
-    :param graph: py2neo graph object
-    """
-    if not self.indexed:
-      graph.merge(self, self.node_type, self.node_index)
-      self.indexed = True
+    def check_self(self, graph):
+        """Checks if the node corresponding to this instance
+        is indexed in the database
+        :param graph: py2neo graph object
+        """
+        if not self.indexed:
+            graph.merge(self, self.node_type, self.node_index)
+            self.indexed = True
 
-  def index(self, graph):
-    """Adds graph node for this object
-    :param graph: py2neo graph
-    """
-    graph.merge(self, self.node_type, self.node_index)
+    def index(self, graph):
+        """Adds graph node for this object
+        :param graph: py2neo graph
+        """
+        graph.merge(self, self.node_type, self.node_index)

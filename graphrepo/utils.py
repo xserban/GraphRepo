@@ -17,15 +17,15 @@ from datetime import datetime
 
 
 def parse_config(path):
-  with open(path, 'r') as ymlfile:
-    conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
+    with open(path, 'r') as ymlfile:
+        conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
-  neo = conf['neo']
-  project = conf['project']
+    neo = conf['neo']
+    project = conf['project']
 
-  project['start_date'] = datetime.strptime(
-      project['start_date'], '%d %B, %Y') if project['start_date'] else None
-  project['end_date'] = datetime.strptime(
-      project['end_date'], '%d %B, %Y') if project['end_date'] else None
+    project['start_date'] = datetime.strptime(
+        project['start_date'], '%d %B, %Y %H:%M') if project['start_date'] else None
+    project['end_date'] = datetime.strptime(
+        project['end_date'], '%d %B, %Y %H:%M') if project['end_date'] else None
 
-  return neo, project
+    return neo, project
