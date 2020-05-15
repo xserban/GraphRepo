@@ -14,11 +14,9 @@
 
 import argparse
 import time
-import os
-import yaml
+from datetime import datetime
 from graphrepo.driller import Driller
 from graphrepo.utils import parse_config
-from datetime import datetime
 
 
 def parse_args():

@@ -91,7 +91,7 @@ class File(CustomNode):
                                  type=type_, graph=graph,
                                  *args, **kwargs)
 
-        if len(self.file.methods):
+        if self.file.methods:
             self.update_deleted_methods(graph, commit, *args, **kwargs)
 
     def update_deleted_methods(self, graph, commit, *args, **kwargs):

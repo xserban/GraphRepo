@@ -22,7 +22,7 @@ from graphrepo.miners import mappers
 LG = Logger()
 
 
-class MineManager():
+class MineManager(metaclass=Singleton):
     """MineManageer class - This class manages custom
     miners. At the moment we instantiate all miners,
     but other managers which handle different 'teams of miners'
@@ -38,7 +38,7 @@ class MineManager():
 
     def configure(self, db_url="localhost",
                   port=13000, db_user="neo4j",
-                  db_pwd="neo4j", *args, **kwargs):
+                  db_pwd="neo4j"):
         """Sets the application constants"""
         # TODO: validate inputs
         self.config.DB_URL = db_url

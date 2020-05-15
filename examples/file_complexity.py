@@ -18,14 +18,11 @@
 # If it is not indexed, please run 'index_all.py' before with the pydriller config
 ###
 import argparse
-import yaml
-import time
 import os
 import pandas as pd
 import plotly.express as px
 
 from datetime import datetime
-from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.miners import MineManager
 from graphrepo.utils import parse_config
 

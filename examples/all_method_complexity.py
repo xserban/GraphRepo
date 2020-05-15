@@ -18,8 +18,6 @@
 # If it is not indexed, please run 'index_all.py' before with the pydriller config
 ###
 import argparse
-import yaml
-import time
 import os
 import pandas as pd
 import plotly.express as px

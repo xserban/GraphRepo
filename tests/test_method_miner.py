@@ -16,10 +16,10 @@ import os
 import pytest
 import yaml
 
+from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.driller import Driller
 from graphrepo.utils import parse_config
 from graphrepo.miners.method import MethodMiner
-from py2neo import NodeMatcher, RelationshipMatcher
 
 
 class TestMethodMiner:
