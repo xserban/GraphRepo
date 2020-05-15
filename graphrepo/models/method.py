@@ -18,39 +18,41 @@ from graphrepo.models.custom_node import CustomNode
 
 
 class Method(CustomNode):
-  """Method node
-  """
-
-  def __init__(self, method, project_id=None, graph=None):
-    """Instantiates a method object and creates an unique
-    hash
-    :param method: PyDriller Method object
-    :param project_id: a string identifying the project a file belogns to
+    """Method node
     """
-    self.node_type = "Method"
-    self.node_index = "name"
 
-    self.method = method
-    self.metrics = self.get_metrics()
+    def __init__(self, method, project_id=None, graph=None):
+        """Instantiates a method object and creates an unique
+        hash
+        :param method: PyDriller Method object
+        :param project_id: a string identifying the project a file belogns to
+        """
+        self.node_type = "Method"
+        self.node_index = "name"
 
-    super().__init__(self.node_type, name=self.method.name,
-                     project_id=project_id, **self.metrics)
-    if graph is not None:
-      self.index(graph)
+        self.method = method
+        self.metrics = self.get_metrics()
 
-  def get_metrics(self):
-    """Creates and returns a dic with different metrics for a method
-    :returns: dic
-    """
-    return {
-        'parameters': self.method.parameters,
-        'complexity': self.method.complexity,
-        'nloc': self.method.nloc,
-        'fan_in': self.method.fan_in,
-        'fan_out': self.method.fan_out,
-        'general_fan_out': self.method.general_fan_out,
-        'length': self.method.length,
-        'token_count': self.method.token_count,
-        'start_line': self.method.start_line,
-        'end_line': self.method.end_line
-    }
+        super().__init__(self.node_type, name=self.method.name,
+                         file_name=self.method.filename,
+                         long_name=self.method.long_name,
+                         project_id=project_id, **self.metrics)
+        if graph is not None:
+            self.index(graph)
+
+    def get_metrics(self):
+        """Creates and returns a dic with different metrics for a method
+        :returns: dic
+        """
+        return {
+            'parameters': self.method.parameters,
+            'complexity': self.method.complexity,
+            'nloc': self.method.nloc,
+            'fan_in': self.method.fan_in,
+            'fan_out': self.method.fan_out,
+            'general_fan_out': self.method.general_fan_out,
+            'length': self.method.length,
+            'token_count': self.method.token_count,
+            'start_line': self.method.start_line,
+            'end_line': self.method.end_line
+        }

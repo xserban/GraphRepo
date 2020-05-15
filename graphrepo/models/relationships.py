@@ -98,15 +98,25 @@ class HasMethod(CustomRelationship):
         super().__init__(rel_from, rel_to, graph, *args, **kwargs)
 
 
-class UpdateMethod(CustomRelationship):
+class HadMethod(CustomRelationship):
     def __init__(self, rel_from, rel_to, graph, *args, **kwargs):
+        """Instantiates a HadMethod relationship and creates a Neo4j relationship
+        :param rel_from: Update object
+        :param rel_to: Method Node
+        :param graph: Py2neo Graph
+        """
+        super().__init__(rel_from, rel_to, graph, *args, **kwargs)
+
+
+class UpdateMethod(CustomRelationship):
+    def __init__(self, rel_from, rel_to, graph, type='UPDATE', *args, **kwargs):
         """Instantiates an UpdateMethod relationship and creates a Neo4j relationship
         :param rel_from: Update object
         :param rel_to: Method Node
         :param graph: Py2neo Graph
         """
         method_metrics = rel_to.get_metrics()
-        super().__init__(rel_from, rel_to, graph,
+        super().__init__(rel_from, rel_to, graph, type=type,
                          *args, **kwargs,
                          **method_metrics)
 
