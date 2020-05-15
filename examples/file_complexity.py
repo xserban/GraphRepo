@@ -26,7 +26,7 @@ import plotly.express as px
 
 from datetime import datetime
 from py2neo import NodeMatcher, RelationshipMatcher
-from graphrepo.driller import Driller
+from graphrepo.miner import Miner
 from graphrepo.utils import parse_config
 
 
@@ -37,30 +37,23 @@ def parse_args():
 
 
 def main():
-    start = time.time()
     args = parse_args()
     folder = os.path.dirname(os.path.abspath(__file__))
-    neo, project = parse_config(os.path.join(folder, args.config))
+    neo, _ = parse_config(os.path.join(folder, args.config))
 
-    driller = Driller()
-    driller.configure(
-        **neo, **project
+    miner = Miner()
+    miner.configure(
+        **neo
     )
-    driller.connect()
 
-    node_matcher = NodeMatcher(driller.graph)
-    rel_matcher = RelationshipMatcher(driller.graph)
+    file_miner = miner.manager.file_miner
+    file_ = file_miner.query(name="commit.py")
+    updated_file_rels = file_miner.get_change_history(file_)
 
-    # This query can also be implemented faster, but this is an
-    # educational example
-    # get file
-    file_ = node_matcher.match("File", name="commit.py").first()
-    # get update file relationships and plot evolution
-    updated_file_rels = list(rel_matcher.match([None, file_], "UpdateFile"))
-    # sort update relationships
+    # sort update relationships and transform data for plotting
     updated_file_rels.sort(key=lambda x: datetime.strptime(
         x['author_datetime'], "%Y/%m/%d, %H:%M:%S"))
-    # get complexity and nloc to plot
+
     complexity = [x['complexity'] for x in updated_file_rels]
     nloc = [x['nloc'] for x in updated_file_rels]
     dts = [x['author_datetime'] for x in updated_file_rels]

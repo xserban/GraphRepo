@@ -19,38 +19,38 @@ from graphrepo.miner import Miner
 
 
 def parse_args():
-  parser = argparse.ArgumentParser()
-  parser.add_argument('--config', default='config.yml', type=str)
-  return parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', default='config.yml', type=str)
+    return parser.parse_args()
 
 
 def main():
-  args = parse_args()
-  folder = os.path.dirname(os.path.abspath(__file__))
-  with open(os.path.join(folder, args.config), 'r') as ymlfile:
-    conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
+    args = parse_args()
+    folder = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(folder, args.config), 'r') as ymlfile:
+        conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
-  miner = Miner()
-  miner.configure(
-      **conf['neo']
-  )
-  # get all nodes and relationships from the manager
-  nodes, rels = miner.manager.get_all_data(map=True, merge=False)
-  print("The DB has a total of {} nodes and {} relationships".format(
-      len(nodes), len(rels)))
+    miner = Miner()
+    miner.configure(
+        **conf['neo']
+    )
+    # get all nodes and relationships from the manager
+    nodes, rels = miner.manager.get_all_data(map=True, merge=False)
+    print("The DB has a total of {} nodes and {} relationships".format(
+        len(nodes), len(rels)))
 
-  # get all commits
-  commits = miner.manager.commit_miner.get_all()
-  print("The DB has a total of {} commits".format(len(commits)))
+    # get all commits
+    commits = miner.manager.commit_miner.get_all()
+    print("The DB has a total of {} commits".format(len(commits)))
 
-  # get all developers
-  devs = miner.manager.dev_miner.get_all()
-  print("The DB has a total of {} developers".format(len(devs)))
+    # get all developers
+    devs = miner.manager.dev_miner.get_all()
+    print("The DB has a total of {} developers".format(len(devs)))
 
-  # get all filess
-  files = miner.manager.file_miner.get_all()
-  print("The DB has a total of {} commits".format(len(files)))
+    # get all filess
+    files = miner.manager.file_miner.get_all()
+    print("The DB has a total of {} commits".format(len(files)))
 
 
 if __name__ == '__main__':
-  main()
+    main()

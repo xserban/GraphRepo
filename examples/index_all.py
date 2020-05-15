@@ -30,8 +30,7 @@ def parse_args():
 def main():
     start = time.time()
     args = parse_args()
-    folder = os.path.dirname(os.path.abspath(__file__))
-    neo, project = parse_config(os.path.join(folder, args.config))
+    neo, project = parse_config(args.config)
 
     driller = Driller()
     driller.configure(
