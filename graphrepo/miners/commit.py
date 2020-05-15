@@ -17,11 +17,11 @@ from graphrepo.miners.default import DefaultMiner
 
 
 class CommitMiner(DefaultMiner):
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-  def query(self, **kwargs):
-    return self.node_matcher.match("Commit", **kwargs)
+    def query(self, **kwargs):
+        return self.node_matcher.match("Commit", **kwargs)
 
-  def get_all(self):
-    return self.node_matcher.match("Commit")
+    def get_all(self):
+        return self.node_matcher.match("Commit")

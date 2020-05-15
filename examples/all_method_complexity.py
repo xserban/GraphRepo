@@ -24,7 +24,7 @@ import os
 import pandas as pd
 import plotly.express as px
 
-from graphrepo.miner import Miner
+from graphrepo.miners import MineManager
 from graphrepo.utils import parse_config
 
 
@@ -39,17 +39,17 @@ def main():
     folder = os.path.dirname(os.path.abspath(__file__))
     neo, _ = parse_config(os.path.join(folder, args.config))
 
-    miner = Miner()
-    miner.configure(
+    mine_manager = MineManager()
+    mine_manager.configure(
         **neo
     )
 
-    file_ = miner.manager.file_miner.query(name="commit.py")
-    methods = miner.manager.file_miner.get_current_methods(file_)
+    file_ = mine_manager.file_miner.query(name="commit.py")
+    methods = mine_manager.file_miner.get_current_methods(file_)
 
     m_changes = []
     for m in methods:
-        changes = miner.manager.method_miner.get_change_history(m)
+        changes = mine_manager.method_miner.get_change_history(m)
         mc = [{'complexity': x['complexity'], 'date':  x['author_date'],
                'name': m['name']} for x in changes]
         m_changes = m_changes + mc

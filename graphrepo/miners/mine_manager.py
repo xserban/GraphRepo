@@ -29,12 +29,50 @@ class MineManager():
     can be created.
     """
 
-    def __init__(self, graph):
+    def __init__(self):
         """Initializes the properties of this class"""
-        self.graph = graph
-        self.node_matcher = NodeMatcher(graph)
-        self.rel_matcher = RelationshipMatcher(graph)
-        self.init_miners()
+        self.config = Config()
+        self.graph = None
+        self.node_matcher = None
+        self.rel_matcher = None
+
+    def configure(self, db_url="localhost",
+                  port=13000, db_user="neo4j",
+                  db_pwd="neo4j", *args, **kwargs):
+        """Sets the application constants"""
+        # TODO: validate inputs
+        self.config.DB_URL = db_url
+        self.config.PORT = port
+        self.config.DB_USER = db_user
+        self.config.DB_PWD = db_pwd
+        self.connect()
+
+    def connect(self):
+        """Instantiates the connection to Neo4j and stores
+        the graph internally.
+        Throws exception if the connection can not pe realized
+        """
+        try:
+            self.graph = Graph(host=self.config.DB_URL,
+                               user=self.config.DB_USER,
+                               password=self.config.DB_PWD,
+                               http_port=self.config.PORT)
+            self.node_matcher = NodeMatcher(self.graph)
+            self.rel_matcher = RelationshipMatcher(self.graph)
+            self.init_miners()
+        except Exception as exc:
+            LG.log_and_raise(exc)
+
+    def check_connection(self):
+        """Checks if there is a db connection and raises
+        ReferenceError if not.
+        """
+        try:
+            self.connect()
+        except:
+            raise ReferenceError("There is no valid "
+                                 "database connection. Please "
+                                 "configure and connect first.")
 
     def init_miners(self):
         """Initializes all miners"""
@@ -78,10 +116,3 @@ class MineManager():
                 return nodes+rels, None
 
         return nodes, rels
-
-    def remove_all_data(self, project_id):
-        """Removes all elements from a graph given a project id
-        :param project_id: the project ids for the nodes to be removed
-        """
-        pass
-        # self.graph.run()

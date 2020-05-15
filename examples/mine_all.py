@@ -15,12 +15,13 @@
 import argparse
 import os
 import yaml
-from graphrepo.miner import Miner
+# from graphrepo.miner import Miner
+from graphrepo.miners import MineManager
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='config.yml', type=str)
+    parser.add_argument('--config', default='configs/pydriller.yml', type=str)
     return parser.parse_args()
 
 
@@ -30,25 +31,26 @@ def main():
     with open(os.path.join(folder, args.config), 'r') as ymlfile:
         conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
-    miner = Miner()
+    miner = MineManager()
     miner.configure(
         **conf['neo']
     )
+
     # get all nodes and relationships from the manager
-    nodes, rels = miner.manager.get_all_data(map=True, merge=False)
+    nodes, rels = miner.get_all_data(map=True, merge=False)
     print("The DB has a total of {} nodes and {} relationships".format(
         len(nodes), len(rels)))
 
     # get all commits
-    commits = miner.manager.commit_miner.get_all()
+    commits = miner.commit_miner.get_all()
     print("The DB has a total of {} commits".format(len(commits)))
 
     # get all developers
-    devs = miner.manager.dev_miner.get_all()
+    devs = miner.dev_miner.get_all()
     print("The DB has a total of {} developers".format(len(devs)))
 
     # get all filess
-    files = miner.manager.file_miner.get_all()
+    files = miner.file_miner.get_all()
     print("The DB has a total of {} commits".format(len(files)))
 
 

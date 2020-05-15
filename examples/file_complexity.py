@@ -26,7 +26,7 @@ import plotly.express as px
 
 from datetime import datetime
 from py2neo import NodeMatcher, RelationshipMatcher
-from graphrepo.miner import Miner
+from graphrepo.miners import MineManager
 from graphrepo.utils import parse_config
 
 
@@ -41,12 +41,12 @@ def main():
     folder = os.path.dirname(os.path.abspath(__file__))
     neo, _ = parse_config(os.path.join(folder, args.config))
 
-    miner = Miner()
-    miner.configure(
+    mine_manager = MineManager()
+    mine_manager.configure(
         **neo
     )
 
-    file_miner = miner.manager.file_miner
+    file_miner = mine_manager.file_miner
     file_ = file_miner.query(name="commit.py")
     updated_file_rels = file_miner.get_change_history(file_)
 
