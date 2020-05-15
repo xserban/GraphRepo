@@ -121,5 +121,5 @@ class UpdateMethod(CustomRelationship):
                          **method_metrics)
 
 
-class Filetype(CustomRelationship):
+class FileType(CustomRelationship):
     pass

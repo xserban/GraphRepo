@@ -38,16 +38,17 @@ class Commit(mdl.CustomNode):
         self.commit = commit
         self.indexed = False
 
-        author_datetime = self.commit.author_date.strftime(
-            "%Y/%m/%d, %H:%M:%S")
-        author_date = self.commit.author_date.strftime("%Y/%m/%d")
-        author_time = self.commit.author_date.strftime("%H:%M")
+        self.author_dates = {
+            'author_datetime': self.commit.author_date.strftime(
+                "%Y/%m/%d, %H:%M:%S"),
+            'author_date':  self.commit.author_date.strftime("%Y/%m/%d"),
+            'author_time': self.commit.author_date.strftime("%H:%M")
+
+        }
         mdl.CustomNode.__init__(self, self.node_type,
                                 hash=self.commit.hash,
-                                author_datetime=author_datetime,
-                                author_date=author_date,
-                                author_time=author_time,
-                                project_id=self.project_id)
+                                project_id=self.project_id,
+                                ** self.author_dates)
 
         if graph is not None:
             self.index_all_data(graph=graph, repo=repo)
@@ -72,10 +73,11 @@ class Commit(mdl.CustomNode):
             # Whenever a commit touches a method, the method
             # attributes are updated (e.g. loc or complexity)
             change = mdl.File(chg, self.project_id, graph=graph)
-            rel.UpdateFile(rel_from=self, rel_to=change, graph=graph)
+            rel.UpdateFile(rel_from=self, rel_to=change,
+                           graph=graph, **self.author_dates)
             # index file methods and add relationship to change
             # methods in this commit
-            change.index_methods(graph, self)
+            change.index_methods(graph, self, **self.author_dates)
 
     def index_author(self, graph):
         """Indexes the commit author node in the graph

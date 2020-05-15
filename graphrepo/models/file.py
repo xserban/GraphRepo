@@ -57,8 +57,8 @@ class File(CustomNode):
         relationship
         :param graph: py2neo Graph object
         """
-        self.file_type = Filetype(self.file, self.project_id, graph=graph)
-        rel.Filetype(self.file_type, self, graph=graph)
+        self.file_type = FileType(self.file, self.project_id, graph=graph)
+        rel.FileType(self.file_type, self, graph=graph)
 
     def get_update_attributes(self):
         """Updates file attributes
@@ -74,7 +74,7 @@ class File(CustomNode):
             'token_count': self.file.token_count if self.file.token_count else -1,
         }
 
-    def index_methods(self, graph, commit=False):
+    def index_methods(self, graph, commit=None, *args, **kwargs):
         """Indexes latest methods and adds a relation
         between commit and the methods changed in the commit
         if the commit object is given
@@ -88,12 +88,13 @@ class File(CustomNode):
             if met in self.file.changed_methods:
                 type_ = self._get_method_type(met)
                 rel.UpdateMethod(rel_from=commit, rel_to=method,
-                                 type=type_, graph=graph)
+                                 type=type_, graph=graph,
+                                 *args, **kwargs)
 
         if len(self.file.methods):
-            self.update_deleted_methods(graph, commit)
+            self.update_deleted_methods(graph, commit, *args, **kwargs)
 
-    def update_deleted_methods(self, graph, commit):
+    def update_deleted_methods(self, graph, commit, *args, **kwargs):
         """Indexes latest methods and adds a relation
         between commit and the methods changed in the commit
         if the commit object is given
@@ -106,7 +107,7 @@ class File(CustomNode):
                 # add relationship from commit to method
                 # TODO: check this
                 rel.UpdateMethod(rel_from=commit, rel_to=method,
-                                 type='DELETE', graph=graph)
+                                 type='DELETE', graph=graph, *args, **kwargs)
                 # replace relationship from file to method from HasMethod to HadMethod
                 has_rel = graph.match_one([self, method], rel.HasMethod)
                 graph.separate(has_rel)
@@ -117,11 +118,11 @@ class File(CustomNode):
         type_ = "ADD"
         for m in self.file.methods_before:
             if m.name == met.name:
-                return "UPDATE"
+                return "MODIFY"
         return type_
 
 
-class Filetype(CustomNode):
+class FileType(CustomNode):
     """Filetype OGM Node - Maps file types to py2neo object
     """
 
@@ -132,7 +133,7 @@ class Filetype(CustomNode):
         :param project_id: a string identifying the project a file belogns to
         :param graph: py2neo graph object
         """
-        self.node_type = "Filetype"
+        self.node_type = "FileType"
         self.node_index = "hash"
 
         _name = '.' + file.filename.split('.')[-1:][0]
