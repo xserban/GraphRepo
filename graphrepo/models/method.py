@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """This module is a mapping to a neo4j node for a method"""
+import hashlib
 
 from graphrepo.models.custom_node import CustomNode
 
@@ -28,12 +29,17 @@ class Method(CustomNode):
         :param project_id: a string identifying the project a file belogns to
         """
         self.node_type = "Method"
-        self.node_index = "name"
+        self.node_index = "hash"
 
         self.method = method
         self.metrics = self.get_metrics()
 
-        super().__init__(self.node_type, name=self.method.name,
+        _fmname = self.method.filename + "_" + self.method.name
+        _hash = hashlib.sha224(_fmname.encode('utf-8')).hexdigest()
+
+        super().__init__(self.node_type,
+                         hash=_hash,
+                         name=self.method.name,
                          file_name=self.method.filename,
                          long_name=self.method.long_name,
                          project_id=project_id, **self.metrics)

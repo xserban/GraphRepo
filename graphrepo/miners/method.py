@@ -17,11 +17,24 @@ from graphrepo.miners.default import DefaultMiner
 
 
 class MethodMiner(DefaultMiner):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, graph, node_matcher, rel_matcher, *args, **kwargs):
+        super().__init__(graph, node_matcher, rel_matcher, *args, **kwargs)
 
     def query(self, **kwargs):
-        return self.node_matcher.match("Method", **kwargs)
+        """Searches for a method using the arguments in kwargs.
+        If no kwargs are given it returns the first method found
+        """
+        return self.node_matcher.match("Method", **kwargs).first()
 
     def get_all(self):
-        return self.node_matcher.match("Method")
+        """Returns all node of type Method
+        :return: list of method
+        """
+        return list(self.node_matcher.match("Method"))
+
+    def get_change_history(self, method):
+        """Returns all UpdateMethod relationships
+          :param method: a Py2Neo Method Object
+          :return: list of UpdateMethod relationships
+          """
+        return list(self.rel_matcher.match([None, method], "UpdateMethod"))
