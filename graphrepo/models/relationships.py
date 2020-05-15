@@ -109,7 +109,7 @@ class HadMethod(CustomRelationship):
 
 
 class UpdateMethod(CustomRelationship):
-    def __init__(self, rel_from, rel_to, graph, type='UPDATE', *args, **kwargs):
+    def __init__(self, rel_from, rel_to, graph, type='ADD', *args, **kwargs):
         """Instantiates an UpdateMethod relationship and creates a Neo4j relationship
         :param rel_from: Update object
         :param rel_to: Method Node

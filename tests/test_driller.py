@@ -45,3 +45,5 @@ class TestDriller:
         records = [r for r in test_driller.graph.run(
             "MATCH(n) RETURN n")]
         assert len(records) == 25
+
+        test_driller.clean()

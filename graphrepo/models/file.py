@@ -86,10 +86,11 @@ class File(CustomNode):
             method = Method(met, self.project_id, graph=graph)
             rel.HasMethod(rel_from=self, rel_to=method, graph=graph)
             if met in self.file.changed_methods:
-                type_ = "UPDATE" if met in self.file.methods_before else "ADD"
+                type_ = self._get_method_type(met)
                 rel.UpdateMethod(rel_from=commit, rel_to=method,
                                  type=type_, graph=graph)
-        if self.file.methods:
+
+        if len(self.file.methods):
             self.update_deleted_methods(graph, commit)
 
     def update_deleted_methods(self, graph, commit):
@@ -103,12 +104,21 @@ class File(CustomNode):
             if met not in self.file.methods:
                 method = Method(met, self.project_id, graph=graph)
                 # add relationship from commit to method
+                # TODO: check this
                 rel.UpdateMethod(rel_from=commit, rel_to=method,
                                  type='DELETE', graph=graph)
                 # replace relationship from file to method from HasMethod to HadMethod
                 has_rel = graph.match_one([self, method], rel.HasMethod)
                 graph.separate(has_rel)
                 rel.HadMethod(rel_from=self, rel_to=method, graph=graph)
+
+    def _get_method_type(self, met):
+        """Checks if the method existed before and it is updated"""
+        type_ = "ADD"
+        for m in self.file.methods_before:
+            if m.name == met.name:
+                return "UPDATE"
+        return type_
 
 
 class Filetype(CustomNode):
