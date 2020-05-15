@@ -6,6 +6,6 @@ neo:
 
 project:
   repo: tests/gr-test
-  start_date: "14 May, 2020"
-  end_date: "15 May, 2020"
+  start_date: "14 May, 2020 00:00"
+  end_date: "15 May, 2020 23:00"
   project_id: 'graph_repo_test'

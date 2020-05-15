@@ -16,17 +16,17 @@ from abc import abstractmethod
 
 
 class DefaultMiner(object):
-  """The miners are currently synchronous, but
-  ideally they will be async in the future"""
+    """The miners are currently synchronous, but
+    ideally they will be async in the future"""
 
-  def __init__(self, graph, node_matcher, rel_matcher, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    self.graph = graph
-    self.node_matcher = node_matcher
-    self.rel_matcher = rel_matcher
+    def __init__(self, graph, node_matcher, rel_matcher, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.graph = graph
+        self.node_matcher = node_matcher
+        self.rel_matcher = rel_matcher
 
-  @abstractmethod
-  def get_all(self):
-    """This method returns all artifacts
-    found by a miner"""
-    raise NotImplementedError
+    @abstractmethod
+    def get_all(self):
+        """This method returns all artifacts
+        found by a miner"""
+        raise NotImplementedError

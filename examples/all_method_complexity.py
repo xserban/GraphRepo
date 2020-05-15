@@ -24,9 +24,7 @@ import os
 import pandas as pd
 import plotly.express as px
 
-from datetime import datetime
-from py2neo import NodeMatcher, RelationshipMatcher
-from graphrepo.driller import Driller
+from graphrepo.miner import Miner
 from graphrepo.utils import parse_config
 
 
@@ -37,28 +35,23 @@ def parse_args():
 
 
 def main():
-    start = time.time()
     args = parse_args()
     folder = os.path.dirname(os.path.abspath(__file__))
-    neo, project = parse_config(os.path.join(folder, args.config))
+    neo, _ = parse_config(os.path.join(folder, args.config))
 
-    driller = Driller()
-    driller.configure(
-        **neo, **project
+    miner = Miner()
+    miner.configure(
+        **neo
     )
-    driller.connect()
 
-    node_matcher = NodeMatcher(driller.graph)
-    rel_matcher = RelationshipMatcher(driller.graph)
+    file_ = miner.manager.file_miner.query(name="commit.py")
+    methods = miner.manager.file_miner.get_current_methods(file_)
 
-    file_ = node_matcher.match("File", name="commit.py").first()
-    methods = [rel.end_node for rel in rel_matcher.graph.match(
-        [file_, None], "HasMethod")]
     m_changes = []
     for m in methods:
-        changed_rel = list(rel_matcher.graph.match([None, m], "UpdateMethod"))
+        changes = miner.manager.method_miner.get_change_history(m)
         mc = [{'complexity': x['complexity'], 'date':  x['author_date'],
-               'name': m['name']} for x in changed_rel]
+               'name': m['name']} for x in changes]
         m_changes = m_changes + mc
 
     df = pd.DataFrame(m_changes)

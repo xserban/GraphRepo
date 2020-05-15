@@ -50,6 +50,9 @@ class MineManager():
             self.file_miner = miners.FileMiner(graph=self.graph,
                                                node_matcher=self.node_matcher,
                                                rel_matcher=self.rel_matcher)
+            self.method_miner = miners.MethodMiner(graph=self.graph,
+                                                   node_matcher=self.node_matcher,
+                                                   rel_matcher=self.rel_matcher)
 
         except Exception as exc:
             LG.log_and_raise(exc)
