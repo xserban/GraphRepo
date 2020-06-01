@@ -41,9 +41,7 @@ class Commit(mdl.CustomNode):
         self.author_dates = {
             'author_datetime': self.commit.author_date.strftime(
                 "%Y/%m/%d, %H:%M:%S"),
-            'author_date':  self.commit.author_date.strftime("%Y/%m/%d"),
-            'author_time': self.commit.author_date.strftime("%H:%M")
-
+            'timestamp':  self.commit.author_date.timestamp(),
         }
         mdl.CustomNode.__init__(self, self.node_type,
                                 hash=self.commit.hash,
