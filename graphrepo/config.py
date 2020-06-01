@@ -19,30 +19,31 @@ from graphrepo.singleton import Singleton
 
 
 class Config(metaclass=Singleton):
-  """This class contains all config flags"""
-  DB_URL = ""
-  PORT = 0
-  DB_USER = ""
-  DB_PWD = ""
-  REPO = ""
-  START_DATE = None
-  END_DATE = None
-  PROJECT_ID = None
-  # If True, each branch will be indexed as a node
-  # and commits will be linked by a Parent relationship
-  # If False, then the commits are linked by a Branch
-  # relationship
-  BRANCH_AS_NODE = True
+    """This class contains all config flags"""
+    DB_URL = ""
+    PORT = 0
+    DB_USER = ""
+    DB_PWD = ""
+    REPO = ""
+    START_DATE = None
+    END_DATE = None
+    PROJECT_ID = None
+    # If True, each branch will be indexed as a node
+    # and commits will be linked by a Parent relationship
+    # If False, then the commits are linked by a Branch
+    # relationship
+    BRANCH_AS_NODE = True
+    INDEX_DATE_NODES = False
 
-  def check_config(self):
-    """Checks if the config properties are set and
-    raises ValueError if any value misses"""
+    def check_config(self):
+        """Checks if the config properties are set and
+        raises ValueError if any value misses"""
 
-    if self.DB_URL == "":
-      raise ValueError("Database URL is not set.")
+        if self.DB_URL == "":
+            raise ValueError("Database URL is not set.")
 
-    if self.PORT == 0:
-      raise ValueError("Database port is not set.")
+        if self.PORT == 0:
+            raise ValueError("Database port is not set.")
 
-    if self.DB_USER == "" or self.DB_PWD == "":
-      raise ValueError("Database credentials are not set.")
+        if self.DB_USER == "" or self.DB_PWD == "":
+            raise ValueError("Database credentials are not set.")

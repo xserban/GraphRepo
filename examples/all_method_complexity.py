@@ -14,8 +14,7 @@
 
 
 ###
-# !!! This file uses the pydriller repo and assumes the repo is already indexed in Neo4j
-# If it is not indexed, please run 'index_all.py' before with the pydriller config
+# This file assumes the project from the config file was already indexed
 ###
 import argparse
 import os
@@ -35,14 +34,15 @@ def parse_args():
 def main():
     args = parse_args()
     folder = os.path.dirname(os.path.abspath(__file__))
-    neo, _ = parse_config(os.path.join(folder, args.config))
+    neo, pr = parse_config(os.path.join(folder, args.config))
 
     mine_manager = MineManager()
     mine_manager.configure(
         **neo
     )
 
-    file_ = mine_manager.file_miner.query(name="commit.py")
+    file_ = mine_manager.file_miner.query(project_id=pr['project_id'],
+                                          name="commit.py")
     methods = mine_manager.file_miner.get_current_methods(file_)
 
     m_changes = []

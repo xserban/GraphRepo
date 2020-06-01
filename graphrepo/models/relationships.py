@@ -70,22 +70,8 @@ class UpdateFile(CustomRelationship):
         :param rel_to: File object
         :param graph: Py2neo Graph object
         """
-        metrics = self.get_metrics(rel_to)
-        attributes = rel_to.get_update_attributes()
         super().__init__(rel_from, rel_to, graph,
-                         *args, **kwargs,
-                         **metrics,  **attributes)
-
-    def get_metrics(self, change):
-        """Creates and returns a dic with different metrics for a file
-        :param commit: Commit object
-        :returns: dic
-        """
-        return {
-            'added': change.file.added,
-            'removed': change.file.removed,
-            'type': change.file.change_type.name,
-        }
+                         *args, **kwargs)
 
 
 class HasMethod(CustomRelationship):
@@ -115,10 +101,8 @@ class UpdateMethod(CustomRelationship):
         :param rel_to: Method Node
         :param graph: Py2neo Graph
         """
-        method_metrics = rel_to.get_metrics()
         super().__init__(rel_from, rel_to, graph, type=type,
-                         *args, **kwargs,
-                         **method_metrics)
+                         *args, **kwargs)
 
 
 class FileType(CustomRelationship):

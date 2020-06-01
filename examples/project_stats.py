@@ -1,4 +1,4 @@
-# Copyright 2019 NullConvergence
+# Copyright 2020 NullConvergence
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import os
 import pandas as pd
 import plotly.express as px
 
-from datetime import datetime
 from graphrepo.miners import MineManager
 from graphrepo.utils import parse_config
 
@@ -42,27 +41,13 @@ def main():
         **neo
     )
 
-    file_miner = mine_manager.file_miner
-    file_ = file_miner.query(project_id=pr['project_id'],
-                             name="commit.py")
-    updated_file_rels = file_miner.get_change_history(file_)
+    # get number of developers
 
-    # sort update relationships and transform data for plotting
-    updated_file_rels.sort(key=lambda x: datetime.strptime(
-        x['author_datetime'], "%Y/%m/%d, %H:%M:%S"))
+    # get number of commits
 
-    complexity = [x['complexity'] for x in updated_file_rels]
-    nloc = [x['nloc'] for x in updated_file_rels]
-    dts = [x['author_datetime'] for x in updated_file_rels]
+    # get number of files
 
-    fig = px.line(pd.DataFrame({'date': dts, 'complexity': complexity}),
-                  x='date', y='complexity',
-                  title='Complexity over time for the commit.py file')
-    fig.show()
-
-    fig_2 = px.line(pd.DataFrame({'date': dts, 'nloc': nloc}),
-                    x='date', y='nloc', title="NLOC over time for the commit.py file")
-    fig_2.show()
+    # get files by file types
 
 
 if __name__ == '__main__':

@@ -13,8 +13,7 @@
 # limitations under the License.
 
 """This module is a mapping to a neo4j node for a method"""
-import hashlib
-
+from graphrepo.utils import get_method_hash
 from graphrepo.models.custom_node import CustomNode
 
 
@@ -22,43 +21,23 @@ class Method(CustomNode):
     """Method node
     """
 
-    def __init__(self, method, project_id=None, graph=None):
+    def __init__(self, method, file, project_id=None, graph=None, *args, **kwargs):
         """Instantiates a method object and creates an unique
         hash
         :param method: PyDriller Method object
+        :param file: Parent file
         :param project_id: a string identifying the project a file belogns to
         """
         self.node_type = "Method"
         self.node_index = "hash"
 
         self.method = method
-        self.metrics = self.get_metrics()
-
-        _fmname = self.method.filename + "_" + self.method.name
-        _hash = hashlib.sha224(_fmname.encode('utf-8')).hexdigest()
 
         super().__init__(self.node_type,
-                         hash=_hash,
+                         hash=get_method_hash(self.method, file),
                          name=self.method.name,
                          file_name=self.method.filename,
                          long_name=self.method.long_name,
-                         project_id=project_id, **self.metrics)
+                         project_id=project_id, *args, **kwargs)
         if graph is not None:
             self.index(graph)
-
-    def get_metrics(self):
-        """Creates and returns a dic with different metrics for a method
-        :returns: dic
-        """
-        return {
-            'parameters': self.method.parameters,
-            'complexity': self.method.complexity,
-            'nloc': self.method.nloc,
-            'fan_in': self.method.fan_in,
-            'fan_out': self.method.fan_out,
-            'general_fan_out': self.method.general_fan_out,
-            'length': self.method.length,
-            'token_count': self.method.token_count,
-            'start_line': self.method.start_line,
-            'end_line': self.method.end_line
-        }

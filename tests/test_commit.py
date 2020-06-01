@@ -45,22 +45,23 @@ class TestCommit:
         assert len(all_devs) == 2
 
         all_files = list(node_matcher.match("File"))
-        assert len(all_files) == 5
+        assert len(all_files) == 6
 
-        all_file_types = list(node_matcher.match("  "))
+        all_file_types = list(node_matcher.match("FileType"))
         assert len(all_file_types) == 3
 
         all_methods = list(node_matcher.match("Method"))
-        assert len(all_methods) == 2
+        assert len(all_methods) == 5
 
-        all_days = list(node_matcher.match("Day"))
-        assert len(all_days) == 2
+        if project['index_date_nodes']:
+            all_days = list(node_matcher.match("Day"))
+            assert len(all_days) == 2
 
-        all_months = list(node_matcher.match("Month"))
-        assert len(all_months) == 1
+            all_months = list(node_matcher.match("Month"))
+            assert len(all_months) == 1
 
-        all_years = list(node_matcher.match("Year"))
-        assert len(all_years) == 1
+            all_years = list(node_matcher.match("Year"))
+            assert len(all_years) == 1
 
         test_driller.clean()
 
@@ -78,22 +79,13 @@ class TestCommit:
         rel_matcher = RelationshipMatcher(test_driller.graph)
 
         all_branch = list(rel_matcher.match(None, "BelongsToBranch"))
-        assert len(all_branch) == 7
+        assert len(all_branch) == 8
 
         all_authorship = list(rel_matcher.match(None, "Authorship"))
         assert len(all_authorship) == 8
 
         all_parent = list(rel_matcher.match(None, "Parent"))
         assert len(all_parent) == 8
-
-        all_ym = list(rel_matcher.match(None, "YearMonth"))
-        assert len(all_ym) == 1
-
-        all_md = list(rel_matcher.match(None, "MonthDay"))
-        assert len(all_md) == 2
-
-        all_dc = list(rel_matcher.match(None, "DayCommit"))
-        assert len(all_dc) == 8
 
         all_updadedfile = list(rel_matcher.match(None, "UpdateFile"))
         assert len(all_updadedfile) == 9
@@ -102,13 +94,23 @@ class TestCommit:
         assert len(all_hasmethod) == 2
 
         all_hadmethod = list(rel_matcher.match(None, "HadMethod"))
-        assert len(all_hadmethod) == 1
+        assert len(all_hadmethod) == 3
 
         all_updatemethod = list(rel_matcher.match(None, "UpdateMethod"))
-        assert len(all_updatemethod) == 6
+        assert len(all_updatemethod) == 9
 
         all_filetype = list(rel_matcher.match(None, "FileType"))
-        assert len(all_filetype) == 5
+        assert len(all_filetype) == 6
+
+        if project['index_date_nodes']:
+            all_ym = list(rel_matcher.match(None, "YearMonth"))
+            assert len(all_ym) == 1
+
+            all_md = list(rel_matcher.match(None, "MonthDay"))
+            assert len(all_md) == 2
+
+            all_dc = list(rel_matcher.match(None, "DayCommit"))
+            assert len(all_dc) == 8
 
         test_driller.clean()
 
@@ -133,7 +135,7 @@ class TestCommit:
         assert update_file_rel['complexity'] == 2
         assert update_file_rel['nloc'] == 8
         assert update_file_rel['old_path'] == 'gr_test/default_class.py'
-        assert update_file_rel['new_path'] == 'gr_test/default_class.py'
+        assert update_file_rel['path'] == 'gr_test/default_class.py'
         assert update_file_rel['token_count'] == 42
         assert update_file_rel['type'] == 'MODIFY'
         assert update_file_rel['removed'] == 6

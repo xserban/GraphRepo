@@ -15,7 +15,7 @@
 """ This module uses pydriller to search a repository
 and indexes it in neo4j
 """
-from py2neo import Graph
+from py2neo import Graph, NodeMatcher
 from pydriller import RepositoryMining, GitRepository
 from graphrepo.config import Config
 from graphrepo.logger import Logger
@@ -37,22 +37,18 @@ class Driller(metaclass=Singleton):
         self.config = Config()
         self.graph = None
 
-    def configure(self, db_url="localhost",
-                  port=13000, db_user="neo4j",
-                  db_pwd="neo4j", repo="pydriller/",
-                  start_date=None,
-                  end_date=None,
-                  project_id=None):
+    def configure(self, *args, **kwargs):
         """Sets the application constants"""
         # TODO: validate inputs
-        self.config.DB_URL = db_url
-        self.config.PORT = port
-        self.config.DB_USER = db_user
-        self.config.DB_PWD = db_pwd
-        self.config.REPO = repo
-        self.config.START_DATE = start_date
-        self.config.END_DATE = end_date
-        self.config.PROJECT_ID = project_id
+        self.config.DB_URL = kwargs['db_url']
+        self.config.PORT = kwargs['port']
+        self.config.DB_USER = kwargs['db_user']
+        self.config.DB_PWD = kwargs['db_pwd']
+        self.config.REPO = kwargs['repo']
+        self.config.START_DATE = kwargs['start_date']
+        self.config.END_DATE = kwargs['end_date']
+        self.config.PROJECT_ID = kwargs['project_id']
+        self.config.INDEX_DATE_NODES = kwargs['index_date_nodes']
 
     def connect(self):
         """Instantiates the connection to Neo4j and stores
@@ -63,7 +59,7 @@ class Driller(metaclass=Singleton):
             self.graph = Graph(host=self.config.DB_URL,
                                user=self.config.DB_USER,
                                password=self.config.DB_PWD,
-                               http_port=self.config.PORT)
+                               port=self.config.PORT)
         except Exception as exc:
             LG.log_and_raise(exc)
 
@@ -86,10 +82,11 @@ class Driller(metaclass=Singleton):
         try:
             self.config.check_config()
             self.check_connection()
+            node_matcher = NodeMatcher(self.graph)
 
             commits, rep_obj = self._drill()
             for com in commits:
-                com.index_all_data(self.graph, rep_obj)
+                com.index_all_data(self.graph, node_matcher, rep_obj)
         except Exception as exc:
             LG.log_and_raise(exc)
         else:

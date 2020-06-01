@@ -38,7 +38,7 @@ class TestFileMiner:
         f_miner = FileMiner(test_driller.graph, n_matcher, r_matcher)
 
         all_files = f_miner.get_all()
-        assert len(all_files) == 5
+        assert len(all_files) == 6
 
         # get readme file
         readme = f_miner.query(name='README.MD')
@@ -46,13 +46,13 @@ class TestFileMiner:
 
         # get file history
         file_ = f_miner.query(
-            hash='82f8febc140d8a07927358e738e7bcb89e162b5612c5b2b769606fe2')
+            hash='3bb6694eb3d4b721b8b3aa178c3da5b23437a0e901f9e1d1d3fa66ec')
         update_history = f_miner.get_change_history(file_)
-        assert len(update_history) == 5
+        assert len(update_history) == 3
 
         # test file get methods
         current_m = f_miner.get_current_methods(file_)
-        assert len(current_m) == 2
+        assert len(current_m) == 1
 
         past_m = f_miner.get_past_methods(file_)
         assert len(past_m) == 1

@@ -1,13 +1,12 @@
-
 neo:
-  db_url: localhost
+  db_url: 192.168.178.75
   port: 7687
   db_user: neo4j
   db_pwd: neo4jj
 
 project:
-  repo: repos/GraphRepo/
+  repo: repos/pytorch/
   start_date: #"1 February, 2018"
   end_date: #"30 March, 2018"
-  project_id: 'graphrepo'
+  project_id: 'pytorch'
   index_date_nodes: False

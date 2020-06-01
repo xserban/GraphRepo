@@ -38,13 +38,13 @@ class TestMethodMiner:
         m_miner = MethodMiner(test_driller.graph, n_matcher, r_matcher)
 
         all_methods = m_miner.get_all()
-        assert len(all_methods) == 8
+        assert len(all_methods) == 5
 
         m = m_miner.query(
-            hash='975de94eb6c28f79ba732a65e026410bf7a6fd2824afe5ff7bd955f3')
+            hash='0096fc15c7a226f2096c726ee7dfe1d83888a04d11996011ced01af8')
         assert m['name'] == 'get_name'
 
         history = m_miner.get_change_history(m)
-        assert len(history) == 3
+        assert len(history) == 2
 
         test_driller.clean()

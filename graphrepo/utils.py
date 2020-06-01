@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import yaml
-
+import hashlib
 from datetime import datetime
 
 
@@ -29,3 +29,110 @@ def parse_config(path):
         project['end_date'], '%d %B, %Y %H:%M') if project['end_date'] else None
 
     return neo, project
+
+
+def get_day_hash(date):
+    return hashlib.sha224(
+        (str(date.month) + str(date.year)
+         + str(date.day)).encode('utf-8')).hexdigest()
+
+
+def get_month_hash(date):
+    return hashlib.sha224(
+        (str(date.month) + str(date.year)).encode('utf-8')).hexdigest()
+
+
+def get_file_hash_neo(file):
+    n = ''
+    if file['old_path'] and not file['path']:
+        n = n+file['old_path']
+    else:
+        n = n+file['path']
+
+    n = n+file['name']
+    return hashlib.sha224(str(n).encode('utf-8')).hexdigest()
+
+
+def get_file_hash(file):
+    n = ''
+    if file.old_path and not file.new_path:
+        n = n+file.old_path
+    else:
+        n = n+file.new_path
+
+    n = n+file.filename
+    return hashlib.sha224(str(n).encode('utf-8')).hexdigest()
+
+
+def get_file_type_hash(name):
+    return hashlib.sha224(str(name).encode('utf-8')).hexdigest()
+
+
+def get_method_hash(method, file):
+    try:
+        fhash = get_file_hash(file)
+    except Exception as e:
+        fhash = get_file_hash_neo(file)
+    _fmname = fhash + "_" + method.name
+    return hashlib.sha224(_fmname.encode('utf-8')).hexdigest()
+
+
+def get_file_attributes(file):
+    return {
+        'old_path': file.old_path if file.old_path else '',
+        'path': file.new_path if file.new_path else '',
+        'source_code': file.source_code if file.source_code else '',
+        'source_code_before':  file.source_code_before if file.source_code_before else '',
+        'nloc': file.nloc if file.nloc else -1,
+        'complexity': file.complexity if file.complexity else -1,
+        'token_count': file.token_count if file.token_count else -1,
+    }
+
+
+def get_file_change(file):
+    return str(file.change_type).split(".")[1]
+
+
+def update_file_attributes(changes, change_type, file, graph):
+    for k, v in changes.items():
+        file[k] = v
+    file['type'] = change_type
+    graph.push(file)
+
+
+def get_file_metrics(file):
+    return {
+        'added': file.added,
+        'removed': file.removed,
+        'type': file.change_type.name,
+    }
+
+
+def get_method_metrics(method):
+    return {
+        'parameters': method.parameters,
+        'complexity': method.complexity,
+        'nloc': method.nloc,
+        'fan_in': method.fan_in,
+        'fan_out': method.fan_out,
+        'general_fan_out': method.general_fan_out,
+        'length': method.length,
+        'token_count': method.token_count,
+        'start_line': method.start_line,
+        'end_line': method.end_line
+    }
+
+
+def update_method_attributes(metrics, node, graph):
+    for k, v in metrics.items():
+        node[k] = v
+    graph.push(node)
+
+
+def get_method_type(method, m_before, m_current):
+    if method.name in m_before and method.name not in m_current:
+        return "DELETE"
+    elif method.name in m_before and method.name in m_current:
+        return "MODIFY"
+    else:
+        return "ADD"
