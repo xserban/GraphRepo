@@ -66,8 +66,6 @@
 #     assert 973 == len(all_commits_with_nothing) == len(
 #         all_commits_with_everything) == len(all_commits_with_metrics)
 #     ​
-
-
 # ​
 
 
