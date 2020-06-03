@@ -7,5 +7,6 @@ neo:
 project:
   repo: repos/hadoop/
   start_date: "1 January, 2017 00:00"
-  end_date: "1 February, 2017 23:59"
+  end_date: "1 February, 2018 23:59"
   project_id: hadoop
+  batch_size: 200

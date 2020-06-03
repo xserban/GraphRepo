@@ -23,8 +23,8 @@ from graphrepo.utils import parse_config
 class TestDriller:
     def test_configure(self):
         folder = os.path.dirname(os.path.abspath(__file__))
-        neo, project = parse_config(os.path.join(folder, 'cnfg_init.yml'))
-        test_driller = Driller(**neo, **project)
+        test_driller = Driller(os.path.join(folder, 'cnfg_init.yml'))
+        test_driller.drill_batch()
 
         assert test_driller.config.DB_URL == 'localhost'
         assert test_driller.config.REPO == 'tests/gr-test'

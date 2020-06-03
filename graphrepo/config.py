@@ -30,6 +30,17 @@ class Config(metaclass=Singleton):
     PROJECT_ID = None
     BATCH_SIZE = 100
 
+    def configure(self, *args, **kwargs):
+        self.DB_URL = kwargs['db_url']
+        self.PORT = kwargs['port']
+        self.DB_USER = kwargs['db_user']
+        self.DB_PWD = kwargs['db_pwd']
+        self.REPO = kwargs['repo']
+        self.START_DATE = kwargs['start_date']
+        self.END_DATE = kwargs['end_date']
+        self.PROJECT_ID = kwargs['project_id']
+        self.BATCH_SIZE = kwargs['batch_size']
+
     def check_config(self):
         """Checks if the config properties are set and
         raises ValueError if any value misses"""

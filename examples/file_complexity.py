@@ -34,15 +34,10 @@ def parse_args():
 
 def main():
     args = parse_args()
-    folder = os.path.dirname(os.path.abspath(__file__))
-    neo, pr = parse_config(os.path.join(folder, args.config))
-    mine_manager = MineManager()
-    mine_manager.configure(
-        **neo
-    )
+    mine_manager = MineManager(config_path=args.config)
 
     file_miner = mine_manager.file_miner
-    file_ = file_miner.query(project_id=pr['project_id'],
+    file_ = file_miner.query(pproject_id=mine_manager.config.PROJECT_ID,
                              name="commit.py")
     updated_file_rels = file_miner.get_change_history(file_)
 

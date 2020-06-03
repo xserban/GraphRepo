@@ -11,6 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+"""
+import graphrepo.utils as utl
 from py2neo import Graph, NodeMatcher, RelationshipMatcher
 from graphrepo.config import Config
 from graphrepo.logger import Logger
@@ -29,23 +32,20 @@ class MineManager(metaclass=Singleton):
     can be created.
     """
 
-    def __init__(self):
+    def __init__(self, config_path):
         """Initializes the properties of this class"""
-        self.config = Config()
-        self.graph = None
-        self.node_matcher = None
-        self.rel_matcher = None
-
-    def configure(self, db_url="localhost",
-                  port=13000, db_user="neo4j",
-                  db_pwd="neo4j"):
-        """Sets the application constants"""
-        # TODO: validate inputs
-        self.config.DB_URL = db_url
-        self.config.PORT = port
-        self.config.DB_USER = db_user
-        self.config.DB_PWD = db_pwd
-        self.connect()
+        try:
+            if not config_path:
+                raise FileNotFoundError
+            neo, project = utl.parse_config(config_path)
+            self.config = Config()
+            self.config.configure(**neo, **project)
+            self.graph = None
+            self.node_matcher = None
+            self.rel_matcher = None
+            self.connect()
+        except Exception as exc:
+            LG.log_and_raise(exc)
 
     def connect(self):
         """Instantiates the connection to Neo4j and stores
