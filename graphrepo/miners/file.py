@@ -45,12 +45,13 @@ class FileMiner(DefaultMiner):
         :returrn: list of Method objects
         """
         return [rel.end_node
-                for rel in self.graph.match([file, None], "HasMethod")]
+                for rel in self.graph.match([file, None], "Method")]
 
     def get_past_methods(self, file):
         """Returns methods that were removed from the file
           :param file: Py2Neo File object
           :returrn: list of Method objects
           """
-        return [rel.end_node
-                for rel in self.graph.match([file, None], "HadMethod")]
+        # return [rel.end_node
+        #         for rel in self.graph.match([file, None], "HadMethod")]
+        pass

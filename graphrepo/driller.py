@@ -82,8 +82,8 @@ class Driller(metaclass=Singleton):
     def drill_batch(self, index=True):
         start = datetime.now()
         print('Driller started at: \t', start)
-        commits, devs, dev_com, branches, branches_com, files, com_files, \
-            methods, files_methods, com_methods = [], [], [], [], [], [], [], [], [], []
+        commits, parents, devs, dev_com, branches, branches_com, files, com_files, \
+            methods, files_methods, com_methods = [], [], [], [], [], [], [], [], [], [], []
         for commit in RepositoryMining(self.config.REPO,
                                        since=self.config.START_DATE,
                                        to=self.config.END_DATE).traverse_commits():
@@ -93,6 +93,9 @@ class Driller(metaclass=Singleton):
             com = utl.format_commit(commit, self.config.PROJECT_ID)
             commits.append(com)
             dev_com.append(utl.format_author_commit(dev, com, timestamp))
+            for parent in commit.parents:
+                parents.append(utl.format_parent_commit(
+                    com['hash'], parent))
             for branch in commit.branches:
                 br_ = utl.format_branch(branch, self.config.PROJECT_ID)
                 branches.append(br_)
@@ -113,6 +116,7 @@ class Driller(metaclass=Singleton):
                     com_methods.append(utl.format_commit_method(com['hash'],
                                                                 met['hash'], method, timestamp))
         data_ = {'commits': commits,
+                 'parents': parents,
                  'developers': devs,
                  'dev_commits': dev_com,
                  'branches': branches,
@@ -132,7 +136,7 @@ class Driller(metaclass=Singleton):
             self.config.check_config()
             self.check_connection()
             b_utl.index_all(
-                self.graph, batch_size=self.config.BATCH_SIZE,  **kwargs)
+                self.graph, batch_size=self.config.BATCH_SIZE, **kwargs)
         except Exception as exc:
             LG.log_and_raise(exc)
         else:

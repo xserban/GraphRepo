@@ -36,7 +36,7 @@ class CustomRelationship(Relationship):
         graph.create(self)
 
 
-class BelongsToBranch(CustomRelationship):
+class BranchCommit(CustomRelationship):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

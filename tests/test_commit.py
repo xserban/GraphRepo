@@ -30,12 +30,9 @@ class TestCommit:
     def test_nodes_index(self):
         folder = os.path.dirname(os.path.abspath(__file__))
         neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-        test_driller = Driller()
+        test_driller = Driller(**neo, **project)
+        test_driller.drill_batch()
 
-        test_driller.configure(**neo, **project)
-        test_driller.connect()
-
-        test_driller.drill()
         # test that all nodes were indexed
         node_matcher = NodeMatcher(test_driller.graph)
         all_commits = list(node_matcher.match("Commit"))
@@ -47,29 +44,25 @@ class TestCommit:
         all_files = list(node_matcher.match("File"))
         assert len(all_files) == 6
 
-        all_file_types = list(node_matcher.match("FileType"))
-        assert len(all_file_types) == 3
-
         all_methods = list(node_matcher.match("Method"))
         assert len(all_methods) == 5
+
+        all_branches = list(node_matcher.match("Branch"))
+        assert len(all_branches) == 2
 
         test_driller.clean()
 
     def test_rel_index(self):
         folder = os.path.dirname(os.path.abspath(__file__))
         neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-        test_driller = Driller()
-
-        test_driller.configure(**neo, **project)
-        test_driller.connect()
-
-        test_driller.drill()
+        test_driller = Driller(**neo, **project)
+        test_driller.drill_batch()
 
         # test that all relationships were indexed
         rel_matcher = RelationshipMatcher(test_driller.graph)
 
-        all_branch = list(rel_matcher.match(None, "BelongsToBranch"))
-        assert len(all_branch) == 8
+        all_branch = list(rel_matcher.match(None, "BranchCommit"))
+        assert len(all_branch) == 16
 
         all_authorship = list(rel_matcher.match(None, "Authorship"))
         assert len(all_authorship) == 8
@@ -80,37 +73,26 @@ class TestCommit:
         all_updadedfile = list(rel_matcher.match(None, "UpdateFile"))
         assert len(all_updadedfile) == 9
 
-        all_hasmethod = list(rel_matcher.match(None, "HasMethod"))
-        assert len(all_hasmethod) == 2
-
-        all_hadmethod = list(rel_matcher.match(None, "HadMethod"))
-        assert len(all_hadmethod) == 3
+        all_hasmethod = list(rel_matcher.match(None, "Method"))
+        assert len(all_hasmethod) == 5
 
         all_updatemethod = list(rel_matcher.match(None, "UpdateMethod"))
         assert len(all_updatemethod) == 9
-
-        all_filetype = list(rel_matcher.match(None, "FileType"))
-        assert len(all_filetype) == 6
-
 
         test_driller.clean()
 
     def test_custom_attributes_rel(self):
         folder = os.path.dirname(os.path.abspath(__file__))
         neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-        test_driller = Driller()
-
-        test_driller.configure(**neo, **project)
-        test_driller.connect()
-
-        test_driller.drill()
+        test_driller = Driller(**neo, **project)
+        test_driller.drill_batch()
 
         node_matcher = NodeMatcher(test_driller.graph)
         rel_matcher = RelationshipMatcher(test_driller.graph)
 
         commit = node_matcher.match(
             "Commit", hash="7a0d1eac6dd6a7af7ff0b0f4927b9beaedaacd52").first()
-        assert commit['dmm_unit_complexity'] == 1
+        assert commit['is_merge'] == 0
 
         update_file_rel = rel_matcher.match([commit], "UpdateFile").first()
         assert update_file_rel['complexity'] == 2
@@ -124,7 +106,7 @@ class TestCommit:
 
         update_method_rel = rel_matcher.match(
             [commit], 'UpdateMethod').first()
-        assert update_method_rel['type'] == 'DELETE'
+        # assert update_method_rel['type'] == 'DELETE'
         assert update_method_rel['nloc'] == 5
         assert update_method_rel['complexity'] == 2
         assert update_method_rel['token_count'] == 21

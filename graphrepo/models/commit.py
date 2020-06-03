@@ -174,8 +174,8 @@ class Commit(mdl.CustomNode):
             if not brn:
                 brn = mdl.Branch(
                     name=branch, project_id=self.project_id, graph=graph)
-            rel.BelongsToBranch(rel_from=self, rel_to=brn,
-                                graph=graph, name=branch)
+            rel.BranchCommit(rel_from=self, rel_to=brn,
+                             graph=graph, name=branch)
 
     def index_parent_branch(self, graph, repo):
         """For each parent of the commit, this method requests
@@ -192,8 +192,8 @@ class Commit(mdl.CustomNode):
             commit.index_date(graph)
             common_branches = self._common_branch(commit)
             for branch in common_branches:
-                rel.BelongsToBranch(rel_from=commit, rel_to=self,
-                                    graph=graph, name=branch)
+                rel.BranchCommit(rel_from=commit, rel_to=self,
+                                 graph=graph, name=branch)
 
     def index_date(self, graph, matcher):
         """Splits the date in year, month and day and creates

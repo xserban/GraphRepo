@@ -176,6 +176,13 @@ def format_commit(c, project_id):
     }
 
 
+def format_parent_commit(c_hash, parent_hash):
+    return {
+        'child_hash': c_hash,
+        'parent_hash': parent_hash
+    }
+
+
 def format_branch(name, project_id):
     return {
         'hash':  hashlib.sha224(str(name).encode('utf-8')).hexdigest(),
