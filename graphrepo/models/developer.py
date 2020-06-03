@@ -33,7 +33,8 @@ class Developer(CustomNode):
         self.node_index = "email"
 
         self.actor = actor
-        super().__init__(self.node_type, name=self.actor.name,
+        super().__init__(self.node_type,
+                         name=self.actor.name,
                          email=self.actor.email)
         if graph is not None:
             self.index(graph)

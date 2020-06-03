@@ -236,9 +236,6 @@ class Commit(mdl.CustomNode):
         self.index_parents(graph, repo, matcher)
         self.index_branch(graph, matcher)
 
-        if self.config.INDEX_DATE_NODES:
-            self.index_date(graph, matcher)
-
     def _common_branch(self, ot_commit):
         """Searches for a common branch between one commit
         and self

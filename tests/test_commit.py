@@ -53,16 +53,6 @@ class TestCommit:
         all_methods = list(node_matcher.match("Method"))
         assert len(all_methods) == 5
 
-        if project['index_date_nodes']:
-            all_days = list(node_matcher.match("Day"))
-            assert len(all_days) == 2
-
-            all_months = list(node_matcher.match("Month"))
-            assert len(all_months) == 1
-
-            all_years = list(node_matcher.match("Year"))
-            assert len(all_years) == 1
-
         test_driller.clean()
 
     def test_rel_index(self):
@@ -102,15 +92,6 @@ class TestCommit:
         all_filetype = list(rel_matcher.match(None, "FileType"))
         assert len(all_filetype) == 6
 
-        if project['index_date_nodes']:
-            all_ym = list(rel_matcher.match(None, "YearMonth"))
-            assert len(all_ym) == 1
-
-            all_md = list(rel_matcher.match(None, "MonthDay"))
-            assert len(all_md) == 2
-
-            all_dc = list(rel_matcher.match(None, "DayCommit"))
-            assert len(all_dc) == 8
 
         test_driller.clean()
 
