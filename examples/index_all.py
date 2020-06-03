@@ -26,18 +26,11 @@ def parse_args():
 
 
 def main():
-    start = time.time()
     args = parse_args()
-
     neo, project = parse_config(args.config)
 
-    driller = Driller()
-    driller.configure(
-        **neo, **project
-    )
-    print('Indexing started.')
-    driller.drill()
-    print('Indexing took {} s.'.format(time.time() - start))
+    driller = Driller(**neo, **project)
+    driller.drill_batch()
 
 
 if __name__ == '__main__':
