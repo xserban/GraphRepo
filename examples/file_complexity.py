@@ -36,7 +36,6 @@ def main():
     args = parse_args()
     folder = os.path.dirname(os.path.abspath(__file__))
     neo, pr = parse_config(os.path.join(folder, args.config))
-
     mine_manager = MineManager()
     mine_manager.configure(
         **neo
@@ -48,12 +47,11 @@ def main():
     updated_file_rels = file_miner.get_change_history(file_)
 
     # sort update relationships and transform data for plotting
-    updated_file_rels.sort(key=lambda x: datetime.strptime(
-        x['author_datetime'], "%Y/%m/%d, %H:%M:%S"))
+    updated_file_rels.sort(key=lambda x: x['timestamp'])
 
     complexity = [x['complexity'] for x in updated_file_rels]
     nloc = [x['nloc'] for x in updated_file_rels]
-    dts = [x['author_datetime'] for x in updated_file_rels]
+    dts = [datetime.fromtimestamp(x['timestamp']) for x in updated_file_rels]
 
     fig = px.line(pd.DataFrame({'date': dts, 'complexity': complexity}),
                   x='date', y='complexity',

@@ -1,5 +1,5 @@
 neo:
-  db_url: 192.168.178.75
+  db_url: localhost
   port: 7687
   db_user: neo4j
   db_pwd: neo4jj
@@ -9,4 +9,4 @@ project:
   start_date: #"1 February, 2018"
   end_date: #"30 March, 2018"
   project_id: 'pydriller'
-  index_date_nodes: False
+  batch_size: 200

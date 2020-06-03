@@ -9,4 +9,4 @@ project:
   start_date: "14 May, 2020 00:00"
   end_date: "15 May, 2020 23:00"
   project_id: 'graph_repo_test'
-  index_date_nodes: False
+  batch_size: 200

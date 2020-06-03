@@ -26,11 +26,8 @@ class TestFileMiner:
     def test_get_all(self):
         folder = os.path.dirname(os.path.abspath(__file__))
         neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-
-        test_driller = Driller()
-        test_driller.configure(**neo, **project)
-        test_driller.connect()
-        test_driller.drill()
+        test_driller = Driller(**neo, **project)
+        test_driller.drill_batch()
 
         n_matcher = NodeMatcher(test_driller.graph)
         r_matcher = RelationshipMatcher(test_driller.graph)
@@ -52,9 +49,6 @@ class TestFileMiner:
 
         # test file get methods
         current_m = f_miner.get_current_methods(file_)
-        assert len(current_m) == 1
-
-        past_m = f_miner.get_past_methods(file_)
-        assert len(past_m) == 1
+        assert len(current_m) == 2
 
         test_driller.clean()

@@ -24,6 +24,8 @@ import plotly.express as px
 from graphrepo.miners import MineManager
 from graphrepo.utils import parse_config
 
+from datetime import datetime
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -42,13 +44,14 @@ def main():
     )
 
     file_ = mine_manager.file_miner.query(project_id=pr['project_id'],
-                                          name="commit.py")
+                                          hash="e2eb7bf414cebe68f46fa88e4abe9ae5813e91c4e1e97570f8e41cf4")
     methods = mine_manager.file_miner.get_current_methods(file_)
 
     m_changes = []
     for m in methods:
         changes = mine_manager.method_miner.get_change_history(m)
-        mc = [{'complexity': x['complexity'], 'date':  x['author_date'],
+        mc = [{'complexity': x['complexity'],
+               'date':  datetime.fromtimestamp(x['timestamp']),
                'name': m['name']} for x in changes]
         m_changes = m_changes + mc
 

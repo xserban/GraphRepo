@@ -28,12 +28,7 @@ class Config(metaclass=Singleton):
     START_DATE = None
     END_DATE = None
     PROJECT_ID = None
-    # If True, each branch will be indexed as a node
-    # and commits will be linked by a Parent relationship
-    # If False, then the commits are linked by a Branch
-    # relationship
-    BRANCH_AS_NODE = True
-    INDEX_DATE_NODES = False
+    BATCH_SIZE = 100
 
     def check_config(self):
         """Checks if the config properties are set and

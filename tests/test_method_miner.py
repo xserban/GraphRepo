@@ -26,11 +26,8 @@ class TestMethodMiner:
     def test_get_all(self):
         folder = os.path.dirname(os.path.abspath(__file__))
         neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-
-        test_driller = Driller()
-        test_driller.configure(**neo, **project)
-        test_driller.connect()
-        test_driller.drill()
+        test_driller = Driller(**neo, **project)
+        test_driller.drill_batch()
 
         n_matcher = NodeMatcher(test_driller.graph)
         r_matcher = RelationshipMatcher(test_driller.graph)
@@ -41,7 +38,7 @@ class TestMethodMiner:
         assert len(all_methods) == 5
 
         m = m_miner.query(
-            hash='0096fc15c7a226f2096c726ee7dfe1d83888a04d11996011ced01af8')
+            hash='1d48a073fb3e9a40f3be72057db6d41e61727293df9bb6daa3880485')
         assert m['name'] == 'get_name'
 
         history = m_miner.get_change_history(m)
