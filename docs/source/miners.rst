@@ -1,4 +1,4 @@
-.. _miners_toplevel:
+.. _MINERS:
 
 ==================
 Miners
@@ -26,6 +26,3 @@ Using a config file (see `Configuration`), the ``Minemanager`` can be initialize
     # miner.dev_miner
     # miner.file_miner
     # miner.method_miner
-
-
-For a list of default queries, specific to all miners see ...

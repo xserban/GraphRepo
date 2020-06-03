@@ -1,4 +1,4 @@
-.. _driller_toplevel:
+.. _DRILLER:
 
 ==================
 Driller
@@ -15,7 +15,7 @@ Given a config file, it:
 * indexes the data in Neo4j.
 
 
-In order to index the data, you will need a config file (see `Configuration`) and the
+In order to index the data, you will need a config file (see :ref:`CONFIGURATION`) and the
 following code::
 
     from graphrepo.driller import Driller
@@ -24,7 +24,7 @@ following code::
     driller.drill_batch()
 
 
-For a complete example, see ...
+For a complete example, see :ref:`EXAMPLES`.
 
 
 In the future, we plan to develop a parallel Driller,which indexes the data in Neo4j on the fly.

@@ -1,4 +1,4 @@
-.. _ds_toplevel:
+.. _DS:
 
 ==================
 Data Structure

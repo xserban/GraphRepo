@@ -1,8 +1,8 @@
-.. _installation_toplevel:
+.. _INSTALLATION:
 
-==================
+========================
 Overview & Installation
-==================
+========================
 
 GraphRepo is a tool to index a git repository in Neo4j and mine the repository data.
 Under the hood it uses `PyDriller <https://github.com/ishepard/pydriller>`_ to parse the data from a repository.
@@ -15,7 +15,7 @@ Requirements
 * Docker (Optional) - we recommend to use Docker for Neo4j (as indicated below)
 
 Installation - using pip
-====================
+=========================
 
 Assuming python and pip are installed, use:
 
@@ -25,7 +25,7 @@ Assuming python and pip are installed, use:
 
 
 Installation - clone source code (dev version)
-===========
+===============================================
 
 The latest development version can be cloned from Github::
 
@@ -48,4 +48,4 @@ Run the tests::
 $ pytest
 
 
-Or see the `Examples asd>`_
+Or see the :ref:`EXAMPLES`.

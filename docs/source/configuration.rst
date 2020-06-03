@@ -1,4 +1,4 @@
-.. _conf_toplevel:
+.. _CONFIGURATION:
 
 ==================
 Configuration
@@ -16,7 +16,7 @@ as follows::
       port: 7687 # the Neo4j port
       db_user: neo4j # Neo4j authentication username
       db_pwd: neo4jj # Neo4j authentication password
-      batch_size: 100 # a batch size for inserting the records in Neo4j - this setting depends on the Neo4j resources
+      batch_size: 100 # the batch size for inserting the records in Neo4j - this setting depends on the Neo4j resources
 
     project:
       repo: repos/pydriller/ # the repository filepath
@@ -48,7 +48,7 @@ This decision allows to mine information about developers that work at different
 without merging data from different databases.
 
 
-For examples of config files, see ...
+For examples of config files, see the projects repository, ``examples/configs/pydriller.yml``.
 
 
 

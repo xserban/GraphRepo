@@ -1,4 +1,4 @@
-.. _examples_toplevel:
+.. _EXAMPLES:
 
 ==================
 Examples
@@ -10,8 +10,8 @@ use GraphRepo to index and mine data.
 1. Index data
 ==============
 
-In this example we index all data from PyDriller in Neo4j.
-The example assumes you are running a Neo4j instance in Docker, as indicated here ...
+In this example, we index all data from PyDriller in Neo4j.
+The example assumes you are running a Neo4j instance in Docker, as indicated in :ref:`CONFIGURATION`.
 
 In order to run the example, clone the projects using the following commands::
 
