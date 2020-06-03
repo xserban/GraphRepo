@@ -2,4 +2,4 @@ component_depth: 1
 languages:
 - python
 exclude:
-  examples/
+- examples/.*
