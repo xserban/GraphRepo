@@ -46,7 +46,7 @@ class Driller(metaclass=Singleton):
         except Exception as exc:
             LG.log_and_raise(exc)
 
-    def connect(self):
+    def _connect(self):
         """Instantiates the connection to Neo4j and stores
         the graph internally.
         Throws exception if the connection can not pe realized
@@ -114,7 +114,7 @@ class Driller(metaclass=Singleton):
     def index_batch(self, *args, **kwargs):
         try:
             self.config.check_config()
-            self.check_connection()
+            self._check_connection()
             b_utl.index_all(
                 self.graph, batch_size=self.config.BATCH_SIZE, **kwargs)
         except Exception as exc:
@@ -122,12 +122,12 @@ class Driller(metaclass=Singleton):
         else:
             return
 
-    def check_connection(self):
+    def _check_connection(self):
         """Checks if there is a db connection and raises
         ReferenceError if not.
         """
         try:
-            self.connect()
+            self._connect()
         except:
             raise ReferenceError("There is no valid "
                                  "database connection. Please "
@@ -138,7 +138,7 @@ class Driller(metaclass=Singleton):
         """
         try:
             self.config.check_config()
-            self.check_connection()
+            self._check_connection()
 
             self.graph.run("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
         except Exception as exc:
