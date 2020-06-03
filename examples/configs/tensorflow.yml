@@ -9,4 +9,3 @@ project:
   start_date: #"1 February, 2018"
   end_date: #"30 March, 2018"
   project_id: 'tensorflow'
-  index_date_nodes: False
