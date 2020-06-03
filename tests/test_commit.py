@@ -18,7 +18,6 @@ import yaml
 
 from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.driller import Driller
-from graphrepo.utils import parse_config
 
 
 class TestCommit:
@@ -27,8 +26,7 @@ class TestCommit:
 
     def test_nodes_index(self):
         folder = os.path.dirname(os.path.abspath(__file__))
-        neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-        test_driller = Driller(**neo, **project)
+        test_driller = Driller(os.path.join(folder, 'cnfg_simple.yml'))
         test_driller.drill_batch()
 
         # test that all nodes were indexed
@@ -52,8 +50,7 @@ class TestCommit:
 
     def test_rel_index(self):
         folder = os.path.dirname(os.path.abspath(__file__))
-        neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-        test_driller = Driller(**neo, **project)
+        test_driller = Driller(os.path.join(folder, 'cnfg_simple.yml'))
         test_driller.drill_batch()
 
         # test that all relationships were indexed
@@ -81,8 +78,7 @@ class TestCommit:
 
     def test_custom_attributes_rel(self):
         folder = os.path.dirname(os.path.abspath(__file__))
-        neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-        test_driller = Driller(**neo, **project)
+        test_driller = Driller(os.path.join(folder, 'cnfg_simple.yml'))
         test_driller.drill_batch()
 
         node_matcher = NodeMatcher(test_driller.graph)

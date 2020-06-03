@@ -32,24 +32,19 @@ class Driller(metaclass=Singleton):
     because it holds the connection to Neo4j in self.graph
     """
 
-    def __init__(self, *args, **kwargs):
-        """Initializes the properties of this class"""
-        self.config = Config()
-        self.graph = None
-        self.configure(*args, **kwargs)
-
-    def configure(self, *args, **kwargs):
-        """Sets the application constants"""
-        # TODO: validate inputs
-        self.config.DB_URL = kwargs['db_url']
-        self.config.PORT = kwargs['port']
-        self.config.DB_USER = kwargs['db_user']
-        self.config.DB_PWD = kwargs['db_pwd']
-        self.config.REPO = kwargs['repo']
-        self.config.START_DATE = kwargs['start_date']
-        self.config.END_DATE = kwargs['end_date']
-        self.config.PROJECT_ID = kwargs['project_id']
-        self.config.BATCH_SIZE = kwargs['batch_size']
+    def __init__(self, config_path):
+        """Initializes the properties of this class
+        :param config_path: path to yml config file
+        """
+        try:
+            if not config_path:
+                raise FileNotFoundError
+            neo, project = utl.parse_config(config_path)
+            self.config = Config()
+            self.graph = None
+            self.config.configure(**neo, **project)
+        except Exception as exc:
+            LG.log_and_raise(exc)
 
     def connect(self):
         """Instantiates the connection to Neo4j and stores

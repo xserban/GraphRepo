@@ -26,14 +26,8 @@ def parse_args():
 
 def main():
     args = parse_args()
-    folder = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(folder, args.config), 'r') as ymlfile:
-        conf = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
-    miner = MineManager()
-    miner.configure(
-        **conf['neo']
-    )
+    miner = MineManager(config_path=args.config)
 
     # get all nodes and relationships from the manager
     nodes, rels = miner.get_all_data(map=False, merge=False)
@@ -48,9 +42,9 @@ def main():
     devs = miner.dev_miner.get_all()
     print("The DB has a total of {} developers".format(len(devs)))
 
-    # get all filess
+    # get all files
     files = miner.file_miner.get_all()
-    print("The DB has a total of {} commits".format(len(files)))
+    print("The DB has a total of {} files".format(len(files)))
 
 
 if __name__ == '__main__':

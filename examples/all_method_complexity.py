@@ -35,15 +35,9 @@ def parse_args():
 
 def main():
     args = parse_args()
-    folder = os.path.dirname(os.path.abspath(__file__))
-    neo, pr = parse_config(os.path.join(folder, args.config))
+    mine_manager = MineManager(config_path=args.config)
 
-    mine_manager = MineManager()
-    mine_manager.configure(
-        **neo
-    )
-
-    file_ = mine_manager.file_miner.query(project_id=pr['project_id'],
+    file_ = mine_manager.file_miner.query(project_id=mine_manager.config.PROJECT_ID,
                                           hash="e2eb7bf414cebe68f46fa88e4abe9ae5813e91c4e1e97570f8e41cf4")
     methods = mine_manager.file_miner.get_current_methods(file_)
 

@@ -16,7 +16,6 @@ import argparse
 import time
 from datetime import datetime
 from graphrepo.driller import Driller
-from graphrepo.utils import parse_config
 
 
 def parse_args():
@@ -27,9 +26,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    neo, project = parse_config(args.config)
-
-    driller = Driller(**neo, **project)
+    driller = Driller(config_path=args.config)
     driller.drill_batch()
 
 

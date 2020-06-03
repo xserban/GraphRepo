@@ -25,8 +25,7 @@ from graphrepo.miners.method import MethodMiner
 class TestMethodMiner:
     def test_get_all(self):
         folder = os.path.dirname(os.path.abspath(__file__))
-        neo, project = parse_config(os.path.join(folder, 'cnfg_simple.yml'))
-        test_driller = Driller(**neo, **project)
+        test_driller = Driller(os.path.join(folder, 'cnfg_simple.yml'))
         test_driller.drill_batch()
 
         n_matcher = NodeMatcher(test_driller.graph)
