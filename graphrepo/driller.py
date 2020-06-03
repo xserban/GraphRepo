@@ -21,7 +21,6 @@ from py2neo import Graph, NodeMatcher
 from pydriller import RepositoryMining, GitRepository
 from graphrepo.config import Config
 from graphrepo.logger import Logger
-from graphrepo.models.commit import Commit
 from graphrepo.singleton import Singleton
 from datetime import datetime
 LG = Logger()
@@ -64,20 +63,6 @@ class Driller(metaclass=Singleton):
                                port=self.config.PORT)
         except Exception as exc:
             LG.log_and_raise(exc)
-
-    def _drill(self):
-        """Parses all commits
-        :returns: a tupple containing a list of commits and
-          a Pydriller GitRepository commit
-        """
-        rep_obj = GitRepository(self.config.REPO)
-        commits = []
-        for commit in RepositoryMining(self.config.REPO,
-                                       since=self.config.START_DATE,
-                                       to=self.config.END_DATE).traverse_commits():
-            commits.append(Commit(commit, self.config))
-
-        return commits, rep_obj
 
     def drill_batch(self, index=True):
         start = datetime.now()
@@ -137,21 +122,6 @@ class Driller(metaclass=Singleton):
             self.check_connection()
             b_utl.index_all(
                 self.graph, batch_size=self.config.BATCH_SIZE, **kwargs)
-        except Exception as exc:
-            LG.log_and_raise(exc)
-        else:
-            return
-
-    def drill(self):
-        """Gets commits and indexes them to Neo4j Database"""
-        try:
-            self.config.check_config()
-            self.check_connection()
-            node_matcher = NodeMatcher(self.graph)
-
-            commits, rep_obj = self._drill()
-            for com in commits:
-                com.index_all_data(self.graph, node_matcher, rep_obj)
         except Exception as exc:
             LG.log_and_raise(exc)
         else:

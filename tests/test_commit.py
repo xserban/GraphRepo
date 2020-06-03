@@ -15,12 +15,10 @@
 import os
 import pytest
 import yaml
-import graphrepo.models.relationships as rel
 
 from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.driller import Driller
 from graphrepo.utils import parse_config
-from graphrepo import models as mdl
 
 
 class TestCommit:
