@@ -6,10 +6,10 @@ For a complete overview, see the [documentation](https://graphrepo.readthedocs.i
 
 ###  1. Installation & First run
 
-#### 1. Prereq
+#### 1.1 Prereq
 The only requirement is to have Python and Docker installed on your system.
 
-#### 1.1 Install the production release with pip using the following command. Please be aware that the final release may miss some functionality.
+#### 1.2 Install the production release with pip using the following command. Please be aware that the final release may miss some functionality.
 
 ```
 $ pip install graphrepo
