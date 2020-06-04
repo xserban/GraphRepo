@@ -1,10 +1,10 @@
 # GraphRepo ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square) [![BCH compliance](https://bettercodehub.com/edge/badge/NullConvergence/GraphRepo?branch=develop)](https://bettercodehub.com/)
 
-This tool maps a Github repository to a Neo4j database. Each entity in a repository has a custom model (which can be found in [graphrepo/models](https://github.com/NullConvergence/GraphRepo/tree/develop/graphrepo/models)).
-Whenever we instantiate a new model, if a py2neo graph object is given to its constructor, a neo4j node is created.
-The new miners and mappers enable queries to Neo4j from GraphRepo. You can write your own miners for specific queries or data aggregation. Writing custom miners instead of querying Neo4j outside GraphRepo has several advantages: (1) reproducibility - sharing a list of repositories and a custom miner would be sufficient to reproduce research results, (2) flexibility - write custom mappings and aggregations in python, which are not possible in Neo4j (among with miners one can also define custom mappers, which can be any aggregation function or transformation to any custom data type), (3) increased scalability/elasticity for big data - the custom miners and mappers can make use of big data technologies, such as Spark or scientific computational libraries such as Numpy to scale processing on big data (instead of scaling Neo4j nodes).
+This tool indexes git repositories to a Neo4j database.
+For a complete overview, see the [documentation](https://graphrepo.readthedocs.io/en/latest/).
 
-###  Running the project
+
+###  1. Installation & First run
 
 #### 1. Prereq
 The only requirement is to have Python and Docker installed on your system.
@@ -19,11 +19,11 @@ $ pip install graphrepo
 ```
 $ git clone --recurse-submodules https://github.com/NullConvergence/GraphRepo
 $ cd graphrepo/
-$ python setup.py develop
+$ pip install -r requirements.txt
 ```
 
 
-#### 1.2 Run and configure Neo4j
+#### 1.3 Run and configure Neo4j
 
 The following instructions assume the Docker daemon is running on your machine.
 
@@ -36,30 +36,33 @@ The default one is *neo4j*.
 
 
 
-#### 2. Index and vizualize a repo
+#### 1.4. Index and vizualize a repo
 
-Please configure the constants in [examples/config.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/config.yml), then run the file using the
-following command:
-
-```
-$ python index_all.py
-```
-
-Go to [http://localhost:7474](http://localhost:7474) and use the first query from Section 2.
-
-
-#### 3. Mine data from the repo
-Please configure the constants in [examples/config.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/config.yml), then run the miners using the
-following command:
+Please clone a project configure the constants in a config file, e.g., clone
+the [pydriller] project in the ``repos`` folder and update the yaml file at [examples/configs/pydriller.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/configs/pydriller.yml).
+Then index the repo using:
 
 ```
-$ python mine_all.py
+$ python -m examples.index_all --config=examples/configs/pydriller.yml
+```
+
+Go to [http://<neo4j-address>:7474](http://<>:7474) and use the first query from Section 3.
+
+
+#### 1.5. Retrieve all data from Neo4j
+
+Assuming you succeded in step 1.4, use the follwing command to retrieve all indexed data:
+
+```
+$ python -m examples.mine_all --config=examples/configs/pydriller.yml
 ```
 
 
+### 2. Other examples
 
+For a comprehensive introduction and more examples, see the [documentation](https://graphrepo.readthedocs.io/en/latest/examples.html).
 
-### 2. Useful Neo4j queries
+### 3. Useful Neo4j queries
 
 #### 2.1 Match all nodes in a graph
 ```
