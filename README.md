@@ -58,9 +58,11 @@ $ python -m examples.mine_all --config=examples/configs/pydriller.yml
 ```
 
 
-### 2. Other examples
+### 2. Examples
 
 For a comprehensive introduction and more examples, see the [documentation](https://graphrepo.readthedocs.io/en/latest/examples.html).
+
+
 
 ### 3. Useful Neo4j queries
 
