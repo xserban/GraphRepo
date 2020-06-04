@@ -16,7 +16,7 @@ custom mappers. For example, one can write a mapper using PySpark on raw data ex
 from Neo4j and use the Apache Spark engine for scalability.
 
 .. image:: /GraphRepoArchLong.svg
-   :width: 500
+   :width: 400
    :align: center
 
 Specific information about each component can be found using the links above.
