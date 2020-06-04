@@ -8,6 +8,7 @@ The resulting Neo4j data Structure consists of 5 node types and 6 relationship t
 
 .. image:: /GraphRepoDS.svg
    :width: 300
+   :align: center
 
 
 Nodes
