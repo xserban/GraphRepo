@@ -33,7 +33,10 @@ def index_parent_commits(graph, parents, batch_size=100):
 def index_authors(graph, authors, batch_size=100):
     query = """
     UNWIND {authors} AS a
-    MERGE (:Developer { hash: a.hash})
+    MERGE (:Developer { hash: a.hash,
+                        email: a.email,
+                        name: a.name
+                      })
     """
     if batch_size:
         for b in batch(authors, batch_size):
@@ -45,7 +48,9 @@ def index_authors(graph, authors, batch_size=100):
 def index_branches(graph, branches, batch_size=100):
     query = """
     UNWIND {branches} AS a
-    MERGE (:Branch { hash: a.hash, name:a.name, project_id: a.project_id})
+    MERGE (:Branch { hash: a.hash,
+                     name:a.name,
+                     project_id: a.project_id})
     """
     for b in batch(branches, batch_size):
         graph.run(query, branches=b)
