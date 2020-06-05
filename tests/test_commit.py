@@ -59,7 +59,7 @@ class TestCommit:
         all_branch = list(rel_matcher.match(None, "BranchCommit"))
         assert len(all_branch) == 16
 
-        all_authorship = list(rel_matcher.match(None, "Authorship"))
+        all_authorship = list(rel_matcher.match(None, "Author"))
         assert len(all_authorship) == 8
 
         all_parent = list(rel_matcher.match(None, "Parent"))

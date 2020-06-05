@@ -85,10 +85,10 @@ Each method is indexed as a node with the following attributes::
 Relationships
 ==============
 
-Authorship
+Author
 -----------
 
-An Authorship relationship exists between each commit and its author.
+An Author relationship exists between each commit and its author.
 The direction is from Commit to Author and the relationship attributes are::
 
   {

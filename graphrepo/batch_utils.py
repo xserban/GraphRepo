@@ -88,7 +88,7 @@ def index_author_commits(graph, ac, batch_size=100):
     UNWIND {ac} AS a
     MATCH (x:Developer),(y:Commit)
     WHERE x.hash = a.author_hash AND y.hash = a.commit_hash
-    MERGE (x)-[r:Authorship{timestamp: a.timestamp}]->(y)
+    MERGE (x)-[r:Author{timestamp: a.timestamp}]->(y)
     """
     for b in batch(ac, batch_size):
         graph.run(query, ac=b)
