@@ -28,13 +28,18 @@ $ pip install -r requirements.txt
 The following instructions assume the Docker daemon is running on your machine.
 
 ```
-$ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data/exp:/data --volume=$HOME/neo4j/logs/exp:/logs --env NEO4J_AUTH=neo4j/neo4jj neo4j:3.0
+$ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data/exp:/data --volume=$HOME/neo4j/logs/exp:/logs --env NEO4J_AUTH=neo4j/neo4jj  neo4j:3.0
 ```
 
 Open a browser window and go to [http://localhost:7474](http://localhost:7474). Here you can configure the neo4j password.
 The default one is *neo4j*.
 
+##### Optionally, configure Neo4j to allow larger heap size using the following attributes with the command above:
 
+```
+--env NEO4J_dbms_memory_pagecache_size=4g
+--env NEO4J_dbms_memory_heap_max__size=4g
+```
 
 #### 1.4. Index and vizualize a repo
 
