@@ -4,7 +4,7 @@
 Overview & Installation
 ========================
 
-GraphRepo is a tool to index a git repository in Neo4j and mine the repository data.
+GraphRepo is a tool to index git repositorie in Neo4j, query and aggregate the data.
 Under the hood it uses `PyDriller <https://github.com/ishepard/pydriller>`_ to parse the data from a repository.
 
 Requirements

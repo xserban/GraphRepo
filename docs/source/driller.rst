@@ -7,7 +7,7 @@ Driller
 The Driller component parses the repository data and indexes it in Neo4j.
 Under the hood it uses PyDriller to get all data from a repository.
 
-At the moment, the Driller performs the following activities, in a sequential order.
+At the moment, the Driller performs the following activities in a sequential order.
 Given a config file, it:
 
 * establishes a connection to Neo4j (or raises an exception if the connection fails),
@@ -26,5 +26,3 @@ following code::
 
 For a complete example, see :ref:`EXAMPLES`.
 
-
-In the future, we plan to develop a parallel Driller,which indexes the data in Neo4j on the fly.

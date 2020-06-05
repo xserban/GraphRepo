@@ -28,8 +28,8 @@ as follows::
 Neo4j configuration
 ===========
 
-GraphRepo connects to Neo4j using the Bold REST API from `py2neo asd>`_.
-Currently the only attributes needed to connect are the url+port and the authentication credentials.
+GraphRepo connects to Neo4j using the Bold REST API from `py2neo <https://py2neo.org/v4/>`_.
+Currently the only attributes needed to connect to Neo4j are the url+port and the authentication credentials.
 All other configurations (e.g., setting the user permissions) are done on the database side.
 
 
@@ -37,16 +37,14 @@ Repository configuration
 ===========
 
 In order to insert a repository in the database, it has to be cloned on the local machine (where GraphRepo will run).
-Afterwards, we can link the cloned repository with GraphRepo using the ``project.repo`` attribute in the config file.
+Afterwards, it can be linked with GraphRepo using the ``project.repo`` attribute in the config file.
 
-Moreover, if we don't want to use all the repository data (e.g., if the repository is very large), we can configure
+If one does not want to use all the repository data (e.g., if the repository is very large), it can configure
 the index dates using the ``project.start_date`` and ``project.end_date`` attributes
 
 The ``project.project_id`` attribute is used to give each project a unique identifier.
-Currently, GraphRepo indexes all repositories in the same database.
-This decision allows to mine information about developers that work at different projects (think of teams of developers)
-without merging data from different databases.
-
+Currently, GraphRepo indexes all repositories in the same database, in order to allow information about teams of developers that work
+on distinct projects to be mined without merging databases.
 
 For examples of config files, see the projects repository, ``examples/configs/pydriller.yml``.
 
