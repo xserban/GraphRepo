@@ -17,11 +17,185 @@ from graphrepo.miners.default import DefaultMiner
 
 
 class DeveloperMiner(DefaultMiner):
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-  def query(self, **kwargs):
-    return self.node_matcher.match("Developer", **kwargs)
+    def query(self, **kwargs):
+        """Queries developers by any arguments given in kwargs
+        For example kwargs can be {'hash': 'example-hash'} or
+        {'email': 'example-email'}
+        :param kwargs: any parameter and value, between hash, name or email
+        :returns: list of nodes matched
+        """
+        return list(self.node_matcher.match("Developer", **kwargs))
 
-  def get_all(self):
-    return self.node_matcher.match("Developer")
+    def get_commits(self, dev_hash, project_id=None,
+                    start_date=None, end_date=None, dic=True):
+        """Returns all commits authored by a developer.
+        Optionally, it also filters by project id
+        :param dev_hash: developer unique identifier
+        :param project_id: optional; if present the
+          query returns the commits from a project
+        :param start_date: optional timestamp; filter commits
+          beginning with this date
+        :param end_date: optional timestamp; filter commits
+          untill this date
+        :param dic: optional; boolean for converting data to dictionary
+          or returning it as py2neo records - the py2neo raw
+          records can be used in mappers
+        :returns: list of commits
+        """
+        com_filter, where = self._format_query_id_date(project_id,
+                                                       start_date, end_date)
+        query = """
+        MATCH (d:Developer {{hash: "{0}"}})
+              -[r:Author]->
+              (c:Commit {1})
+        {2}
+        RETURN c;
+      """.format(dev_hash, com_filter, where)
+        dt_ = self.graph.run(query)
+        return dt_ if not dic else [dict(x['c']) for x in dt_.data()]
+
+    def get_files(self, dev_hash, project_id=None,
+                  start_date=None, end_date=None, dic=True):
+        """Returns all files edited by a developer.
+        Optionally it also filters by project_id
+        :params dev_hash: developer unique identifier
+        :params project_id: optional; if present the query
+          returns the files from a specific project
+        :param start_date: optional timestamp; filter files
+          beginning with this date
+        :param end_date: optional timestamp; filter files
+          untill this date
+        :param dic: optional; boolean for converting data to dictionary
+                  or returning it as py2neo records - the py2neo raw
+                  records can be used in mappers
+        :returns: list of files
+        """
+        com_filter, where = self._format_query_id_date(project_id,
+                                                       start_date, end_date)
+        query = """
+        MATCH (d:Developer {{hash: "{0}"}})
+              -[r:Author]->
+              (c:Commit {1})
+              -[UpdateFile]->
+              (f: File)
+        {2}
+        RETURN collect(distinct f);
+        """.format(dev_hash, com_filter, where)
+        dt_ = self.graph.run(query)
+        return dt_ if not dic else [dict(x) for x in dt_.data()[
+            0]['collect(distinct f)']]
+
+    def get_files_updates(self, dev_hash, project_id=None,
+                          start_date=None, end_date=None, dic=True):
+        """Returns all file update information (e.g. file complexity),
+        for all files edited by a developer.
+        Optionally it also filters by project_id
+        :params dev_hash: developer unique identifier
+        :params project_id: optional; if present the query
+          returns the files from a specific project
+        :param start_date: optional timestamp; filter files
+          beginning with this date
+        :param end_date: optional timestamp; filter files
+          untill this date
+        :param dic: optional; boolean for converting data to dictionary
+                  or returning it as py2neo records - the py2neo raw
+                  records can be used in mappers
+        :returns: list of file updates
+        """
+        com_filter, where = self._format_query_id_date(project_id,
+                                                       start_date, end_date)
+        query = """
+        MATCH (d:Developer {{hash: "{0}"}})
+              -[r:Author]->
+              (c:Commit {1})
+              -[fu: UpdateFile]->
+              (f: File)
+        {2}
+        RETURN fu;
+        """.format(dev_hash, com_filter, where)
+
+        dt_ = self.graph.run(query)
+        return dt_ if not dic else [dict(x['fu']) for x in dt_.data()]
+
+    def get_methods(self, dev_hash, project_id=None,
+                    start_date=None, end_date=None, dic=True):
+        """Returns all methods updated by a developer.
+        Optionally it also filters by project_id
+        :params dev_hash: developer unique identifier
+        :params project_id: optional; if present the query
+          returns the files from a specific project
+        :param start_date: optional timestamp; filter files
+          beginning with this date
+        :param end_date: optional timestamp; filter files
+          untill this date
+        :param dic: optional; boolean for converting data to dictionary
+                  or returning it as py2neo records - the py2neo raw
+                  records can be used in mappers
+        :returns: list of methods
+        """
+        com_filter, where = self._format_query_id_date(project_id,
+                                                       start_date, end_date)
+        query = """
+        MATCH (d:Developer {{hash: "{0}"}})
+              -[r:Author]->
+              (c:Commit {1})
+              -[um: UpdateMethod]->
+              (m: Method)
+        {2}
+        RETURN m;
+        """.format(dev_hash, com_filter, where)
+
+        dt_ = self.graph.run(query)
+        return dt_ if not dic else [dict(x['m']) for x in dt_.data()]
+
+    def get_method_updates(self, dev_hash, project_id=None,
+                           start_date=None, end_date=None, dic=True):
+        """Returns all method update information, for all
+        methods update by a developer.
+        Optionally it also filters by project_id
+        :params dev_hash: developer unique identifier
+        :params project_id: optional; if present the query
+          returns the files from a specific project
+        :param start_date: optional timestamp; filter files
+          beginning with this date
+        :param end_date: optional timestamp; filter files
+          untill this date
+        :param dic: optional; boolean for converting data to dictionary
+                  or returning it as py2neo records - the py2neo raw
+                  records can be used in mappers
+        :returns: list of method updates
+        """
+        com_filter, where = self._format_query_id_date(project_id,
+                                                       start_date, end_date)
+        query = """
+        MATCH (d:Developer {{hash: "{0}"}})
+              -[r:Author]->
+              (c:Commit {1})
+              -[um: UpdateMethod]->
+              ()
+        {2}
+        RETURN um;
+        """.format(dev_hash, com_filter, where)
+
+        dt_ = self.graph.run(query)
+        return dt_ if not dic else [dict(x['um']) for x in dt_.data()]
+
+    def get_all(self):
+        return self.node_matcher.match("Developer")
+
+    def _format_query_id_date(self, project_id, start_date, end_date):
+        """Formats query with id and dates"""
+        com_filter, where = "", ""
+        if project_id:
+            com_filter += """{{project_id: "{0}"}}""".format(project_id)
+        if start_date:
+            where += "c.timestamp >= {0}".format(start_date)
+        if end_date:
+            where += " AND " if where else ""
+            where += "c.timestamp <= {0}".format(end_date)
+        where = "WHERE " + where if where else where
+
+        return com_filter, where
