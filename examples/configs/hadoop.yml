@@ -1,5 +1,5 @@
 neo:
-  db_url: 192.168.178.75
+  db_url: localhost
   port: 7687
   db_user: neo4j
   db_pwd: neo4jj
@@ -7,6 +7,6 @@ neo:
 project:
   repo: repos/hadoop/
   start_date: "1 January, 2017 00:00"
-  end_date: "1 February, 2018 23:59"
+  end_date: "1 January, 2018 00:00"
   project_id: hadoop
   batch_size: 200

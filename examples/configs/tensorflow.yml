@@ -1,11 +1,12 @@
 neo:
-  db_url: 192.168.178.75
+  db_url: localhost
   port: 7687
   db_user: neo4j
   db_pwd: neo4jj
 
 project:
   repo: repos/tensorflow/
-  start_date: #"1 February, 2018"
-  end_date: #"30 March, 2018"
+  start_date: "1 January, 2020 00:00"
+  end_date: "1 March, 2020 00:00"
   project_id: 'tensorflow'
+  batch_size: 200
