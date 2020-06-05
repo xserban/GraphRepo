@@ -35,11 +35,17 @@ def parse_args():
 def main():
     args = parse_args()
     mine_manager = MineManager(config_path=args.config)
-    cmts = mine_manager.dev_miner.get_files_updates(
+    files = mine_manager.dev_miner.get_files(
         "6cf1f138e29c1bf82810ad0b73012302e0d20c2f76a24e3b225017b0",
-        # mine_manager.config.PROJECT_ID
+        mine_manager.config.PROJECT_ID
     )
-    print(len(cmts))
+    print(len(files))
+
+    file_updates = mine_manager.dev_miner.get_files_updates(
+        "6cf1f138e29c1bf82810ad0b73012302e0d20c2f76a24e3b225017b0",
+        mine_manager.config.PROJECT_ID
+    )
+    print(len(file_updates))
 
 
 if __name__ == '__main__':
