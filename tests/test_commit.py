@@ -44,7 +44,7 @@ class TestCommit:
         assert len(all_methods) == 5
 
         all_branches = list(node_matcher.match("Branch"))
-        assert len(all_branches) == 2
+        assert len(all_branches) == 1
 
         test_driller.clean()
 
@@ -57,7 +57,7 @@ class TestCommit:
         rel_matcher = RelationshipMatcher(test_driller.graph)
 
         all_branch = list(rel_matcher.match(None, "BranchCommit"))
-        assert len(all_branch) == 16
+        assert len(all_branch) == 8
 
         all_authorship = list(rel_matcher.match(None, "Author"))
         assert len(all_authorship) == 8

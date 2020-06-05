@@ -52,7 +52,7 @@ class DeveloperMiner(DefaultMiner):
             RETURN c;
           """.format(dev_hash)
 
-        return list(self.graph.run(query))
+        return [dict(x['c']) for x in self.graph.run(query).data()]
 
     def get_files(self, dev_hash, project_id=None):
         """Returns all files edited by a developer.
@@ -79,14 +79,13 @@ class DeveloperMiner(DefaultMiner):
                   (f: File)
             RETURN collect(distinct f);
           """.format(dev_hash, project_id)
-        files = self.graph.run(query).data()[
-            0]['collect(distinct f)']  # here we transform the aggregation back to a list
-        return [dict(x) for x in files]  # map to list of dictionaries
+
+        return [dict(x) for x in self.graph.run(query).data()[
+            0]['collect(distinct f)']]  # map to list of dictionaries
 
     def get_files_updates(self, dev_hash, project_id=None):
-        """Returns all files, together with the update
-        information (e.g. file complexity), for all files
-        edited by a developer.
+        """Returns all file update information (e.g. file complexity),
+        for all files edited by a developer.
         Optionally it also filters by project_id
         :params dev_hash: developer unique identifier
         :params project_id: optional; if present the query
@@ -94,31 +93,78 @@ class DeveloperMiner(DefaultMiner):
         """
         if project_id:
             query = """
-          MATCH (d:Developer {{hash: "{0}"}})
-                -[r:Author]->
-                (c:Commit {{project_id: "{1}"}})
-                - [fu: UpdateFile] ->
-                (f: File)
-          RETURN fu;
-        """.format(dev_hash, project_id)
+            MATCH (d:Developer {{hash: "{0}"}})
+                  -[r:Author]->
+                  (c:Commit {{project_id: "{1}"}})
+                  -[fu: UpdateFile]->
+                  (f: File)
+            RETURN fu;
+          """.format(dev_hash, project_id)
+        else:
+            query = """
+            MATCH (d:Developer {{hash: "{0}"}})
+                  -[r:Author]->
+                  (c:Commit)
+                  -[fu: UpdateFile]->
+                  (f: File)
+            RETURN fu;
+          """.format(dev_hash, project_id)
+        return [dict(x['fu']) for x in self.graph.run(query).data()]
+
+    def get_methods(self, dev_hash, project_id=None):
+        """Returns all methods updated by a developer.
+        Optionally it also filters by project_id
+        :params dev_hash: developer unique identifier
+        :params project_id: optional; if present the query
+          returns the files from a specific project
+        """
+        if project_id:
+            query = """
+            MATCH (d:Developer {{hash: "{0}"}})
+                  -[r:Author]->
+                  (c:Commit {{project_id: "{1}"}})
+                  -[um: UpdateMethod]->
+                  (m: Method)
+            RETURN m;
+          """.format(dev_hash, project_id)
         else:
             query = """
           MATCH (d:Developer {{hash: "{0}"}})
                 -[r:Author]->
                 (c:Commit)
-                - [fu: UpdateFile] ->
-                (f: File)
-          RETURN fu;
+                -[um: UpdateMethod]->
+                (m: Method)
+          RETURN m;
         """.format(dev_hash, project_id)
-        updates = [dict(x) for x in self.graph.run(query).data()]  # .data()
-        print(updates[0])
-        return updates
+        return [dict(x['m']) for x in self.graph.run(query).data()]
 
-    def get_methods():
-        pass
-
-    def get_methods():
-        pass
+    def get_method_updates(self, dev_hash, project_id=None):
+        """Returns all method update information, for all
+        methods update by a developer.
+        Optionally it also filters by project_id
+        :params dev_hash: developer unique identifier
+        :params project_id: optional; if present the query
+          returns the files from a specific project
+        """
+        if project_id:
+            query = """
+            MATCH (d:Developer {{hash: "{0}"}})
+                  -[r:Author]->
+                  (c:Commit {{project_id: "{1}"}})
+                  -[um: UpdateMethod]->
+                  ()
+            RETURN um;
+          """.format(dev_hash, project_id)
+        else:
+            query = """
+          MATCH (d:Developer {{hash: "{0}"}})
+                -[r:Author]->
+                (c:Commit)
+                -[um: UpdateMethod]->
+                ()
+          RETURN um;
+        """.format(dev_hash, project_id)
+        return [dict(x['um']) for x in self.graph.run(query).data()]
 
     def get_all(self):
         return self.node_matcher.match("Developer")

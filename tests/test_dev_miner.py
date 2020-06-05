@@ -23,7 +23,7 @@ from graphrepo.miners.developer import DeveloperMiner
 
 
 class TestDevMiner:
-    def test_get_all(self):
+    def test_gets(self):
         folder = os.path.dirname(os.path.abspath(__file__))
         test_driller = Driller(os.path.join(folder, 'cnfg_simple.yml'))
         test_driller.drill_batch()
@@ -33,14 +33,29 @@ class TestDevMiner:
 
         dev_miner = DeveloperMiner(test_driller.graph, n_matcher, r_matcher)
 
-    def test_get_commits(self):
-        pass
+        all_devs = dev_miner.get_all()
+        assert len(all_devs) == 2
 
-    def test_get_files(self):
-        pass
+        all_commits = dev_miner.get_commits(
+            dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb")
+        assert len(all_commits) == 7
 
-    def test_get_files_updates(self):
-        pass
+        all_files = dev_miner.get_files(
+            dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb"
+        )
+        assert len(all_files) == 6
 
-    def test_get_methods(self):
-        pass
+        files_updates = dev_miner.get_files_updates(
+            dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb"
+        )
+        assert len(files_updates) == 9
+
+        all_methods = dev_miner.get_methods(
+            dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb"
+        )
+        assert len(all_methods) == 9
+
+        method_updates = dev_miner.get_method_updates(
+            dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb"
+        )
+        assert len(method_updates) == 9
