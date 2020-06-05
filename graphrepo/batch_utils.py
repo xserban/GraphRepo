@@ -10,7 +10,10 @@ def batch(iterable, n=1):
 def index_commits(graph, commits, batch_size=100):
     query = """
     UNWIND {commits} AS c
-    MERGE (:Commit { hash: c.hash, timestamp: c.timestamp, is_merge: c.is_merge, project_id: c.project_id})
+    MERGE (:Commit { hash: c.hash,
+                     timestamp: c.timestamp,
+                     is_merge: c.is_merge,
+                     project_id: c.project_id})
     """
     for b in batch(commits, batch_size):
         graph.run(query, commits=b)
@@ -62,7 +65,9 @@ def index_branch_commits(graph, bc, batch_size=100):
 def index_files(graph, files, batch_size=100):
     query = """
     UNWIND {files} AS f
-    MERGE (:File { hash: f.hash, project_id: f.project_id, type:f.type, name: f.name})
+    MERGE (:File { hash: f.hash,
+                   project_id: f.project_id,
+                   type:f.type, name: f.name})
     """
     if batch_size:
         for b in batch(files, batch_size):
@@ -74,7 +79,10 @@ def index_files(graph, files, batch_size=100):
 def index_methods(graph, methods, batch_size=100):
     query = """
     UNWIND {methods} AS f
-    MERGE (:Method { hash: f.hash, project_id: f.project_id, name: f.name, file_name: f.file_name})
+    MERGE (:Method { hash: f.hash,
+                     project_id: f.project_id,
+                     name: f.name,
+                     file_name: f.file_name})
     """
     if batch_size:
         for b in batch(methods, batch_size):
@@ -166,31 +174,47 @@ def create_index_authors(graph):
 
 
 def create_index_commits(graph):
-    query = """
+    hash_q = """
     CREATE INDEX ON :Commit(hash)
     """
-    graph.run(query)
+    pid_q = """
+    CREATE INDEX ON :Commit(project_id)
+    """
+    graph.run(hash_q)
+    graph.run(pid_q)
 
 
 def create_index_branches(graph):
-    query = """
+    hash_q = """
     CREATE INDEX ON :Branch(hash)
     """
-    graph.run(query)
+    pid_q = """
+    CREATE INDEX ON :Branch(project_id)
+    """
+    graph.run(hash_q)
+    graph.run(pid_q)
 
 
 def create_index_files(graph):
-    query = """
+    hash_q = """
     CREATE INDEX ON :File(hash)
     """
-    graph.run(query)
+    pid_q = """
+    CREATE INDEX ON :File(project_id)
+    """
+    graph.run(hash_q)
+    graph.run(pid_q)
 
 
 def create_index_methods(graph):
-    query = """
+    hash_q = """
     CREATE INDEX ON :Method(hash)
     """
-    graph.run(query)
+    pid_q = """
+    CREATE INDEX ON :Method(project_id)
+    """
+    graph.run(hash_q)
+    graph.run(pid_q)
 
 
 def index_all(graph, developers, commits, parents, dev_commits, branches,
