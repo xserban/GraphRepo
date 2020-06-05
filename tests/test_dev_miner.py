@@ -111,3 +111,5 @@ class TestDevMiner:
             end_date=end_date
         )
         assert len(method_updates_id_dates) == 9
+
+        test_driller.clean()

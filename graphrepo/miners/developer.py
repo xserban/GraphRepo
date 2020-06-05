@@ -14,6 +14,7 @@
 """This module mines developers and contains all related Neo4j queries"""
 
 from graphrepo.miners.default import DefaultMiner
+from graphrepo.miners.utils import format_commit_id_date
 
 
 class DeveloperMiner(DefaultMiner):
@@ -45,7 +46,7 @@ class DeveloperMiner(DefaultMiner):
           records can be used in mappers
         :returns: list of commits
         """
-        com_filter, where = self._format_query_id_date(project_id,
+        com_filter, where = self.format_commit_id_date(project_id,
                                                        start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
@@ -53,7 +54,7 @@ class DeveloperMiner(DefaultMiner):
               (c:Commit {1})
         {2}
         RETURN c;
-      """.format(dev_hash, com_filter, where)
+        """.format(dev_hash, com_filter, where)
         dt_ = self.graph.run(query)
         return dt_ if not dic else [dict(x['c']) for x in dt_.data()]
 
@@ -73,7 +74,7 @@ class DeveloperMiner(DefaultMiner):
                   records can be used in mappers
         :returns: list of files
         """
-        com_filter, where = self._format_query_id_date(project_id,
+        com_filter, where = self.format_commit_id_date(project_id,
                                                        start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
@@ -105,7 +106,7 @@ class DeveloperMiner(DefaultMiner):
                   records can be used in mappers
         :returns: list of file updates
         """
-        com_filter, where = self._format_query_id_date(project_id,
+        com_filter, where = self.format_commit_id_date(project_id,
                                                        start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
@@ -136,7 +137,7 @@ class DeveloperMiner(DefaultMiner):
                   records can be used in mappers
         :returns: list of methods
         """
-        com_filter, where = self._format_query_id_date(project_id,
+        com_filter, where = self.format_commit_id_date(project_id,
                                                        start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
@@ -168,7 +169,7 @@ class DeveloperMiner(DefaultMiner):
                   records can be used in mappers
         :returns: list of method updates
         """
-        com_filter, where = self._format_query_id_date(project_id,
+        com_filter, where = self.format_commit_id_date(project_id,
                                                        start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
@@ -185,17 +186,3 @@ class DeveloperMiner(DefaultMiner):
 
     def get_all(self):
         return self.node_matcher.match("Developer")
-
-    def _format_query_id_date(self, project_id, start_date, end_date):
-        """Formats query with id and dates"""
-        com_filter, where = "", ""
-        if project_id:
-            com_filter += """{{project_id: "{0}"}}""".format(project_id)
-        if start_date:
-            where += "c.timestamp >= {0}".format(start_date)
-        if end_date:
-            where += " AND " if where else ""
-            where += "c.timestamp <= {0}".format(end_date)
-        where = "WHERE " + where if where else where
-
-        return com_filter, where

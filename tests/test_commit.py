@@ -109,3 +109,5 @@ class TestCommit:
         assert update_method_rel['fan_out'] == 0
         assert update_method_rel['start_line'] == 11
         assert update_method_rel['end_line'] == 15
+
+        test_driller.clean()
