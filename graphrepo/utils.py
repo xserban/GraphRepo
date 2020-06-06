@@ -119,6 +119,7 @@ def format_commit_file(c_hash, f_hash, f, timestamp):
                 'timestamp': timestamp,
                 'old_path': f.old_path if f.old_path else '',
                 'path': f.new_path if f.new_path else '',
+                'diff': f.diff,
                 'source_code': str(f.source_code) if f.source_code else '',
                 'source_code_before':  str(f.source_code_before) if f.source_code_before else '',
                 'nloc': f.nloc if f.nloc else -1,
