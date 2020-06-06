@@ -20,9 +20,11 @@ import graphrepo.batch_utils as b_utl
 from py2neo import Graph, NodeMatcher
 from pydriller import RepositoryMining, GitRepository
 from graphrepo.config import Config
+from graphrepo.drill_cache import DrillCacheSequential
 from graphrepo.logger import Logger
 from graphrepo.singleton import Singleton
 from datetime import datetime
+from diskcache import Cache
 LG = Logger()
 
 
@@ -95,7 +97,9 @@ class Driller(metaclass=Singleton):
                         utl.format_file_method(fl['hash'], met['hash'])
                     )
                     com_methods.append(utl.format_commit_method(com['hash'],
-                                                                met['hash'], method, timestamp))
+                                                                met['hash'],
+                                                                method,
+                                                                timestamp))
         data_ = {'commits': commits,
                  'parents': parents,
                  'developers': devs,
@@ -123,6 +127,18 @@ class Driller(metaclass=Singleton):
         else:
             return
 
+    def index_cache(self, cache):
+       try:
+            self.config.check_config()
+            self._check_connection()
+            b_utl.index_cache(
+                self.graph, cache, batch_size=self.config.BATCH_SIZE)
+        except Exception as exc:
+            LG.log_and_raise(exc)
+        else:
+            return
+
+
     def _check_connection(self):
         """Checks if there is a db connection and raises
         ReferenceError if not.
@@ -144,3 +160,51 @@ class Driller(metaclass=Singleton):
             self.graph.run("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
         except Exception as exc:
             LG.log_and_raise(exc)
+
+    def drill_batch_cache_all(self, index=True):
+        cache = Cache()
+        data = self.drill_batch(index=False)
+        cache['data'] = data
+        if index:
+          self.index_cache(cache)
+        return cache
+
+    def drill_batch_cache_sequential(self, index=True):
+        start = datetime.now()
+        print('Driller started at: \t', start)
+        cache = DrillCacheSequential()
+        for commit in RepositoryMining(self.config.REPO,
+                                       since=self.config.START_DATE,
+                                       to=self.config.END_DATE).traverse_commits():
+            timestamp = commit.author_date.timestamp()
+            dev = utl.format_dev(commit)
+            cache.append_cache('developers', dev)
+            com = utl.format_commit(commit, self.config.PROJECT_ID)
+            cache.append_cache('commits', com)
+            cache.append_cache(
+                'dev_commits', utl.format_author_commit(dev, com, timestamp))
+            for parent in commit.parents:
+                cache.append_cache('parents', utl.format_parent_commit(
+                    com['hash'], parent))
+            for branch in commit.branches:
+                br_ = utl.format_branch(branch, self.config.PROJECT_ID)
+                cache.append_cache('branches', br_)
+                cache.append_cache('branches_commits', utl.format_branch_commit(
+                    br_['hash'], com['hash']))
+            for file in commit.modifications:
+                fl = utl.format_file(file, self.config.PROJECT_ID)
+                cache.append_cache('files', fl)
+                cache.append_cache('commit_files', utl.format_commit_file(
+                    com['hash'], fl['hash'], file, timestamp))
+                for method in file.changed_methods:
+                    met = utl.format_method(
+                        method, file, self.config.PROJECT_ID)
+                    cache.append_cache('methods', met)
+                    cache.append_cache(
+                        'file_methods', utl.format_file_method(fl['hash'], met['hash']))
+                    cache.append_cache('commit_methods', utl.format_commit_method(com['hash'],
+                                                                                  met['hash'], method, timestamp))
+        print('Driller finished in: \t', datetime.now() - start)
+        if index:
+            self.index_cache(cache)
+        return cache
