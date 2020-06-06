@@ -29,33 +29,27 @@ from graphrepo.utils import parse_config
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', default='configs/pydriller.yml', type=str)
+    parser.add_argument('--plot', default=False, type=bool)
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
+
+    if 'jax' in args.config:
+        file_query = {
+            'hash': '84a34a3b24d33ba7736a19f7009591d6d4af6aa4368680664fd3a5ae'}
+
+    start = datetime.now()
+
     mine_manager = MineManager(config_path=args.config)
-
-    file_miner = mine_manager.file_miner
-    file_ = file_miner.query(pproject_id=mine_manager.config.PROJECT_ID,
-                             name="commit.py")
-    updated_file_rels = file_miner.get_change_history(file_)
-
-    # sort update relationships and transform data for plotting
-    updated_file_rels.sort(key=lambda x: x['timestamp'])
-
+    updated_file_rels = mine_manager.file_miner.get_change_history(
+        file_hash=file_query['hash'])
     complexity = [x['complexity'] for x in updated_file_rels]
-    nloc = [x['nloc'] for x in updated_file_rels]
-    dts = [datetime.fromtimestamp(x['timestamp']) for x in updated_file_rels]
 
-    fig = px.line(pd.DataFrame({'date': dts, 'complexity': complexity}),
-                  x='date', y='complexity',
-                  title='Complexity over time for the commit.py file')
-    fig.show()
-
-    fig_2 = px.line(pd.DataFrame({'date': dts, 'nloc': nloc}),
-                    x='date', y='nloc', title="NLOC over time for the commit.py file")
-    fig_2.show()
+    print('File complexity took {}'.format(datetime.now() - start))
+    print('File changes', len(updated_file_rels))
+    # print(updated_file_rels.data)
 
 
 if __name__ == '__main__':

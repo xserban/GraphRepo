@@ -32,12 +32,19 @@ class FileMiner(DefaultMiner):
         """
         return list(self.node_matcher.match("File"))
 
-    def get_change_history(self, file):
+    def get_change_history(self, file_hash, dic=True):
         """Returns all updated relationships
-        :param file: a Py2Neo File object
+        :param file_hash: a string, unique identifier for file
+        :param dic: optional; boolean for converting data to dictionary
+          or returning it as py2neo records - the py2neo raw
+          records can be used in mappers
         :return: list of update file relationships
         """
-        return list(self.rel_matcher.match([None, file], "UpdateFile"))
+        query = """MATCH ()-[r:UpdateFile]->(f:File {{hash: "{0}"}})
+        return r
+        """.format(file_hash)
+        dt_ = self.graph.run(query)
+        return dt_ if not dic else [dict(x['r']) for x in dt_.data()]
 
     def get_current_methods(self, file):
         """Returns all current methods
