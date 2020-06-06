@@ -30,17 +30,24 @@ from datetime import datetime
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', default='configs/pydriller.yml', type=str)
+    parser.add_argument('--plot', default=False, type=bool)
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
 
+    # pydriller
+    file_query = {
+        'hash': 'e2eb7bf414cebe68f46fa88e4abe9ae5813e91c4e1e97570f8e41cf4'}
+    file_query = {
+        'hash': '3738c06335e8f7c316121467e2146700c572298e7d2c6ec58ff60513'}  # jax
+
     start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
 
     file_ = mine_manager.file_miner.query(project_id=mine_manager.config.PROJECT_ID,
-                                          hash="e2eb7bf414cebe68f46fa88e4abe9ae5813e91c4e1e97570f8e41cf4")
+                                          **file_query)
     methods = mine_manager.file_miner.get_current_methods(file_)
 
     m_changes = []
@@ -51,13 +58,15 @@ def main():
                'name': m['name']} for x in changes]
         m_changes = m_changes + mc
     print('All methods complexity took: {}'.format(datetime.now() - start))
+    print('Total methods: ', len(methods))
 
-    df = pd.DataFrame(m_changes)
-    df['date'] = pd.to_datetime(df.date)
-    df = df.sort_values(by='date')
-    fig = px.line(df, x="date", y="complexity", color="name",
-                  line_group="name", hover_name="name")
-    fig.show()
+    if args.plot:
+        df = pd.DataFrame(m_changes)
+        df['date'] = pd.to_datetime(df.date)
+        df = df.sort_values(by='date')
+        fig = px.line(df, x="date", y="complexity", color="name",
+                      line_group="name", hover_name="name")
+        fig.show()
 
 
 if __name__ == '__main__':

@@ -29,36 +29,44 @@ from graphrepo.utils import parse_config
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', default='configs/pydriller.yml', type=str)
+    parser.add_argument('--plot', default=False, type=bool)
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
 
+    file_query = {'name': 'commit.py'}  # pydriller
+    file_query = {
+        'hash': '3738c06335e8f7c316121467e2146700c572298e7d2c6ec58ff60513'}  # jax
+
     start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
 
     file_miner = mine_manager.file_miner
     file_ = file_miner.query(pproject_id=mine_manager.config.PROJECT_ID,
-                             name="commit.py")
+                             **file_query)
     updated_file_rels = file_miner.get_change_history(file_)
     complexity = [x['complexity'] for x in updated_file_rels]
     print('File complexity took {}'.format(datetime.now() - start))
+    print(len(updated_file_rels))
 
-    # sort update relationships and transform data for plotting
-    updated_file_rels.sort(key=lambda x: x['timestamp'])
+    if args.plot:
+        # sort update relationships and transform data for plotting
+        updated_file_rels.sort(key=lambda x: x['timestamp'])
 
-    nloc = [x['nloc'] for x in updated_file_rels]
-    dts = [datetime.fromtimestamp(x['timestamp']) for x in updated_file_rels]
+        nloc = [x['nloc'] for x in updated_file_rels]
+        dts = [datetime.fromtimestamp(x['timestamp'])
+               for x in updated_file_rels]
 
-    fig = px.line(pd.DataFrame({'date': dts, 'complexity': complexity}),
-                  x='date', y='complexity',
-                  title='Complexity over time for the commit.py file')
-    fig.show()
+        fig = px.line(pd.DataFrame({'date': dts, 'complexity': complexity}),
+                      x='date', y='complexity',
+                      title='Complexity over time for the commit.py file')
+        fig.show()
 
-    fig_2 = px.line(pd.DataFrame({'date': dts, 'nloc': nloc}),
-                    x='date', y='nloc', title="NLOC over time for the commit.py file")
-    fig_2.show()
+        fig_2 = px.line(pd.DataFrame({'date': dts, 'nloc': nloc}),
+                        x='date', y='nloc', title="NLOC over time for the commit.py file")
+        fig_2.show()
 
 
 if __name__ == '__main__':
