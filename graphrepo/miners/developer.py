@@ -46,8 +46,8 @@ class DeveloperMiner(DefaultMiner):
           records can be used in mappers
         :returns: list of commits
         """
-        com_filter, where = self.format_commit_id_date(project_id,
-                                                       start_date, end_date)
+        com_filter, where = format_commit_id_date(project_id,
+                                                  start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
@@ -74,8 +74,8 @@ class DeveloperMiner(DefaultMiner):
                   records can be used in mappers
         :returns: list of files
         """
-        com_filter, where = self.format_commit_id_date(project_id,
-                                                       start_date, end_date)
+        com_filter, where = format_commit_id_date(project_id,
+                                                  start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
@@ -106,8 +106,8 @@ class DeveloperMiner(DefaultMiner):
                   records can be used in mappers
         :returns: list of file updates
         """
-        com_filter, where = self.format_commit_id_date(project_id,
-                                                       start_date, end_date)
+        com_filter, where = format_commit_id_date(project_id,
+                                                  start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
@@ -137,8 +137,8 @@ class DeveloperMiner(DefaultMiner):
                   records can be used in mappers
         :returns: list of methods
         """
-        com_filter, where = self.format_commit_id_date(project_id,
-                                                       start_date, end_date)
+        com_filter, where = format_commit_id_date(project_id,
+                                                  start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
@@ -169,8 +169,8 @@ class DeveloperMiner(DefaultMiner):
                   records can be used in mappers
         :returns: list of method updates
         """
-        com_filter, where = self.format_commit_id_date(project_id,
-                                                       start_date, end_date)
+        com_filter, where = format_commit_id_date(project_id,
+                                                  start_date, end_date)
         query = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
