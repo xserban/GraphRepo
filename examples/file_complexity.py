@@ -34,17 +34,20 @@ def parse_args():
 
 def main():
     args = parse_args()
+
+    start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
 
     file_miner = mine_manager.file_miner
     file_ = file_miner.query(pproject_id=mine_manager.config.PROJECT_ID,
                              name="commit.py")
     updated_file_rels = file_miner.get_change_history(file_)
+    complexity = [x['complexity'] for x in updated_file_rels]
+    print('File complexity took {}'.format(datetime.now() - start))
 
     # sort update relationships and transform data for plotting
     updated_file_rels.sort(key=lambda x: x['timestamp'])
 
-    complexity = [x['complexity'] for x in updated_file_rels]
     nloc = [x['nloc'] for x in updated_file_rels]
     dts = [datetime.fromtimestamp(x['timestamp']) for x in updated_file_rels]
 

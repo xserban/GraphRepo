@@ -35,6 +35,8 @@ def parse_args():
 
 def main():
     args = parse_args()
+
+    start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
 
     file_ = mine_manager.file_miner.query(project_id=mine_manager.config.PROJECT_ID,
@@ -48,6 +50,7 @@ def main():
                'date':  datetime.fromtimestamp(x['timestamp']),
                'name': m['name']} for x in changes]
         m_changes = m_changes + mc
+    print('All methods complexity took: {}'.format(datetime.now() - start))
 
     df = pd.DataFrame(m_changes)
     df['date'] = pd.to_datetime(df.date)
