@@ -60,7 +60,7 @@ class Driller(metaclass=Singleton):
         except Exception as exc:
             LG.log_and_raise(exc)
 
-    def drill_batch(self, index=True):
+    def drill_batch(self, index=True, save_path=None):
         start = datetime.now()
         print('Driller started at: \t', start)
         commits, parents, devs, dev_com, branches, branches_com, files, com_files, \
@@ -108,6 +108,9 @@ class Driller(metaclass=Singleton):
                  'file_methods': files_methods,
                  'commit_methods': com_methods}
         print('Driller finished in: \t', datetime.now() - start)
+
+        if save_path:
+            utl.save_json(save_path, data_)
         if index:
             self.index_batch(**data_)
         return data_
@@ -118,6 +121,15 @@ class Driller(metaclass=Singleton):
             self._check_connection()
             b_utl.index_all(
                 self.graph, batch_size=self.config.BATCH_SIZE, **kwargs)
+        except Exception as exc:
+            LG.log_and_raise(exc)
+        else:
+            return
+
+    def index_from_file(self, file_path):
+        try:
+            data_ = utl.load_json(file_path)
+            self.index_batch(**data_)
         except Exception as exc:
             LG.log_and_raise(exc)
         else:
