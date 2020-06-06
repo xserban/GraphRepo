@@ -32,7 +32,7 @@ class MethodMiner(DefaultMiner):
         """
         return list(self.node_matcher.match("Method"))
 
-    def get_change_history(self, method_hash,  dic=True):
+    def get_change_history(self, method_hash, dic=True):
         """Returns all UpdateMethod relationships
           :param method_hash: method unique identifier
           :param dic: optional; boolean for converting data to dictionary
