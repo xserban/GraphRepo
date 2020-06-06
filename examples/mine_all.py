@@ -16,6 +16,7 @@ import argparse
 import os
 import yaml
 from graphrepo.miners import MineManager
+from datetime import datetime
 
 
 def parse_args():
@@ -27,12 +28,14 @@ def parse_args():
 def main():
     args = parse_args()
 
+    start = datetime.now()
     miner = MineManager(config_path=args.config)
 
     # get all nodes and relationships from the manager
     nodes, rels = miner.get_all_data(map=False, merge=False)
     print("The DB has a total of {} nodes and {} relationships".format(
         len(nodes), len(rels)))
+    print("All data took: {}".format(datetime.now() - start))
 
     # get all commits
     commits = miner.commit_miner.get_all()
