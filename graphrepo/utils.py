@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import json
 import yaml
 import hashlib
 from datetime import datetime
@@ -29,6 +30,16 @@ def parse_config(path):
         project['end_date'], '%d %B, %Y %H:%M') if project['end_date'] else None
 
     return neo, project
+
+
+def save_json(path, data):
+    with open(path, 'w') as outfile:
+        json.dump(data, outfile)
+
+
+def load_json(path):
+    with open(path) as json_file:
+        return json.load(json_file)
 
 
 def get_file_hash(file):

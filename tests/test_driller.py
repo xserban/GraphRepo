@@ -40,3 +40,21 @@ class TestDriller:
         assert len(records) == 22
 
         test_driller.clean()
+
+    def test_index_save(self):
+        folder = os.path.dirname(os.path.abspath(__file__))
+        test_driller = Driller(os.path.join(folder, 'cnfg_init.yml'))
+        test_driller.drill_batch(save_path='data/graphrepo.json')
+        records = [r for r in test_driller.graph.run(
+            "MATCH(n) RETURN n")]
+        assert len(records) == 22
+
+        test_driller.clean()
+
+        test_driller.index_from_file(file_path='data/graphrepo.json')
+        records = [r for r in test_driller.graph.run(
+            "MATCH(n) RETURN n")]
+        assert len(records) == 22
+
+        os.remove('data/graphrepo.json')
+        test_driller.clean()
