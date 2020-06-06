@@ -43,6 +43,7 @@ class Driller(metaclass=Singleton):
             self.config = Config()
             self.graph = None
             self.config.configure(**neo, **project)
+            self._connect()
         except Exception as exc:
             LG.log_and_raise(exc)
 
@@ -106,7 +107,7 @@ class Driller(metaclass=Singleton):
                  'methods': methods,
                  'file_methods': files_methods,
                  'commit_methods': com_methods}
-        print('Driller finished at: \t', datetime.now() - start)
+        print('Driller finished in: \t', datetime.now() - start)
         if index:
             self.index_batch(**data_)
         return data_

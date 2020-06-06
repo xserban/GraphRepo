@@ -112,25 +112,11 @@ def index_commit_files(graph, cf, batch_size=100):
     UNWIND {cf} AS a
     MATCH (x:Commit),(y:File)
     WHERE x.hash = a.commit_hash AND y.hash = a.file_hash
-    MERGE (x)-[r:UpdateFile{
-                timestamp: a['attributes']['timestamp'],
-                old_path: a['attributes']['old_path'],
-                path: a['attributes']['path'],
-                source_code: a['attributes']['source_code'],
-                source_code_before: a['attributes']['source_code_before'],
-                nloc: a['attributes']['nloc'],
-                complexity: a['attributes']['complexity'],
-                token_count: a['attributes']['token_count'],
-                added: a['attributes']['added'],
-                removed: a['attributes']['removed'],
-                type: a['attributes']['type']
-    }]->(y)
+    MERGE (x)-[r:UpdateFile{}]->(y)
+    ON CREATE SET r=a['attributes']
     """
-    if batch_size:
-        for b in batch(cf, batch_size):
-            graph.run(query, cf=b)
-    else:
-        graph.run(query, cf=cf)
+    for i, b in enumerate(batch(cf, batch_size)):
+        graph.run(query, cf=b)
 
 
 def index_file_methods(graph, cf, batch_size=100):
@@ -149,26 +135,11 @@ def index_commit_method(graph, cm, batch_size=100):
     UNWIND {cf} AS a
     MATCH (x:Commit),(y:Method)
     WHERE x.hash = a.commit_hash AND y.hash = a.method_hash
-    MERGE (x)-[r:UpdateMethod{
-                    timestamp: a['attributes']['timestamp'],
-                    long_name: a['attributes']['long_name'],
-                    parameters: a['attributes']['parameters'],
-                    complexity: a['attributes']['complexity'],
-                    nloc: a['attributes']['nloc'],
-                    fan_in: a['attributes']['fan_in'],
-                    fan_out: a['attributes']['fan_out'],
-                    general_fan_out: a['attributes']['general_fan_out'],
-                    length: a['attributes']['length'],
-                    token_count: a['attributes']['token_count'],
-                    start_line: a['attributes']['start_line'],
-                    end_line: a['attributes']['end_line']
-    }]->(y)
+    MERGE (x)-[r:UpdateMethod]->(y)
+    ON CREATE SET r=a['attributes']
     """
-    if batch_size:
-        for b in batch(cm, batch_size):
-            graph.run(query, cf=b)
-    else:
-        graph.run(query, cf=cm)
+    for i, b in enumerate(batch(cm, batch_size)):
+        graph.run(query, cf=b)
 
 
 def create_index_authors(graph):
@@ -247,16 +218,6 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     create_index_commits(graph)
     print('Indexed commits in: \t', datetime.now()-start)
 
-    print('Indexing ', len(parents), ' parent commits')
-    start = datetime.now()
-    index_parent_commits(graph, parents, batch_size)
-    print('Indexed commits in: \t', datetime.now()-start)
-
-    print('Indexing ', len(dev_commits), ' author_commits')
-    start = datetime.now()
-    index_author_commits(graph, dev_commits, batch_size)
-    print('Indexed author_commits in: \t', datetime.now()-start)
-
     print('Indexing ', len(branches), ' branches')
     start = datetime.now()
     index_branches(graph, branches, batch_size)
@@ -270,18 +231,23 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     create_index_files(graph)
     print('Indexed files in: \t', datetime.now()-start)
 
-    print('Indexing ', len(commit_files), ' commit_files')
-    start = datetime.now()
-    index_commit_files(graph, commit_files, batch_size)
-    print('Indexed commit_files in: \t', datetime.now()-start)
-
     print('Indexing ', len(methods), ' methods')
     start = datetime.now()
     index_methods(graph, methods, batch_size)
     create_index_methods(graph)
     print('Indexed methods in: \t', datetime.now()-start)
 
-    print('Indexing ', len(file_methods), ' file_methods')
+    print('Indexing ', len(parents), ' parent commits')
+    start = datetime.now()
+    index_parent_commits(graph, parents, batch_size)
+    print('Indexed commits in: \t', datetime.now()-start)
+
+    print('Indexing ', len(dev_commits), ' author_commits')
+    start = datetime.now()
+    index_author_commits(graph, dev_commits, batch_size)
+    print('Indexed author_commits in: \t', datetime.now()-start)
+
+    print('Indexings ', len(file_methods), ' file_methods')
     start = datetime.now()
     index_file_methods(graph, file_methods, batch_size)
     print('Indexed file_methods in: \t', datetime.now()-start)
@@ -290,5 +256,10 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     start = datetime.now()
     index_commit_method(graph, commit_methods, batch_size)
     print('Indexed commit_methods in: \t', datetime.now()-start)
+
+    print('Indexing ', len(commit_files), ' commit_files')
+    start = datetime.now()
+    index_commit_files(graph, commit_files, batch_size)
+    print('Indexed commit_files in: \t', datetime.now()-start)
 
     print('Indexing took: \t', datetime.now()-total)
