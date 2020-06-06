@@ -43,13 +43,11 @@ def main():
 
     start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
-    file_ = mine_manager.file_miner.query(project_id=mine_manager.config.PROJECT_ID,
-                                          **file_query)
-    methods = mine_manager.file_miner.get_current_methods(file_)
+    methods = mine_manager.file_miner.get_current_methods(file_query['hash'])
 
     m_changes = []
     for m in methods:
-        changes = mine_manager.method_miner.get_change_history(m)
+        changes = mine_manager.method_miner.get_change_history(m['hash'])
         mc = [{'complexity': x['complexity'],
                'date':  datetime.fromtimestamp(x['timestamp']),
                'name': m['name']} for x in changes]

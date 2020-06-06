@@ -32,9 +32,16 @@ class MethodMiner(DefaultMiner):
         """
         return list(self.node_matcher.match("Method"))
 
-    def get_change_history(self, method):
+    def get_change_history(self, method_hash,  dic=True):
         """Returns all UpdateMethod relationships
-          :param method: a Py2Neo Method Object
-          :return: list of UpdateMethod relationships
+          :param method_hash: method unique identifier
+          :param dic: optional; boolean for converting data to dictionary
+          or returning it as py2neo records - the py2neo raw
+          records can be used in mappers
+          :return: list of UpdateMethod relationships / dics
           """
-        return list(self.rel_matcher.match([None, method], "UpdateMethod"))
+        query = """MATCH ()-[r:UpdateMethod]->(m: Method{{hash: "{0}"}})
+        RETURN r
+          """.format(method_hash)
+        dt_ = self.graph.run(query)
+        return dt_ if not dic else [dict(x['r']) for x in dt_.data()]

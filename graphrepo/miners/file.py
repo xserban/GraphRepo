@@ -46,13 +46,19 @@ class FileMiner(DefaultMiner):
         dt_ = self.graph.run(query)
         return dt_ if not dic else [dict(x['r']) for x in dt_.data()]
 
-    def get_current_methods(self, file):
+    def get_current_methods(self, file_hash, dic=True):
         """Returns all current methods
-        :param file: Py2Neo File object
-        :returrn: list of Method objects
+        :param file_hash: a string, unique identifier for file
+        :param dic: optional; boolean for converting data to dictionary
+          or returning it as py2neo records - the py2neo raw
+          records can be used in mappers
+        :return: list of methods
         """
-        return [rel.end_node
-                for rel in self.graph.match([file, None], "Method")]
+        query = """MATCH (f:File {{hash: "{0}"}})-[r:Method]->(m:Method)
+        return m
+        """.format(file_hash)
+        dt_ = self.graph.run(query)
+        return dt_ if not dic else [dict(x['m']) for x in dt_.data()]
 
     def get_past_methods(self, file):
         """Returns methods that were removed from the file
