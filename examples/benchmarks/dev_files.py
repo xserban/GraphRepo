@@ -43,7 +43,7 @@ def main():
     mine_manager = MineManager(config_path=args.config)
     files = mine_manager.dev_miner.get_files(
         dev_query['hash'],
-        mine_manager.config.PROJECT_ID
+        mine_manager.config.ct.project_id
     )
     ft = [f['type'] for f in files]
     grouped = [{'file': x, 'count': len(
