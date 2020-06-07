@@ -13,12 +13,9 @@
 # limitations under the License.
 
 import os
-import pytest
-import yaml
 
 from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.driller import Driller
-from graphrepo.utils import parse_config
 from graphrepo.miners.file import FileMiner
 
 
@@ -41,13 +38,12 @@ class TestFileMiner:
         assert readme['name'] == 'README.MD'
 
         # get file history
-        file_ = f_miner.query(
-            hash='3bb6694eb3d4b721b8b3aa178c3da5b23437a0e901f9e1d1d3fa66ec')
-        update_history = f_miner.get_change_history(file_)
+        f_hash = '3bb6694eb3d4b721b8b3aa178c3da5b23437a0e901f9e1d1d3fa66ec'
+        update_history = f_miner.get_change_history(f_hash)
         assert len(update_history) == 3
 
         # test file get methods
-        current_m = f_miner.get_current_methods(file_)
+        current_m = f_miner.get_current_methods(f_hash)
         assert len(current_m) == 2
 
         test_driller.clean()

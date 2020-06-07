@@ -11,23 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+"""This module plots the method complexity evolution over time, for a file"""
 
 ###
 # This file assumes the project from the config file was already indexed
 ###
 import argparse
-import os
 import pandas as pd
 import plotly.express as px
 
 from graphrepo.miners import MineManager
-from graphrepo.utils import parse_config
 
 from datetime import datetime
 
 
 def parse_args():
+    """Parse args"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', default='configs/pydriller.yml', type=str)
     parser.add_argument('--plot', default=False, type=bool)
@@ -35,6 +34,7 @@ def parse_args():
 
 
 def main():
+    """Main"""
     args = parse_args()
 
     # pydriller
@@ -46,7 +46,7 @@ def main():
     start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
 
-    file_ = mine_manager.file_miner.query(project_id=mine_manager.config.PROJECT_ID,
+    file_ = mine_manager.file_miner.query(project_id=mine_manager.config.ct.project_id,
                                           **file_query)
     methods = mine_manager.file_miner.get_current_methods(file_)
 

@@ -13,12 +13,9 @@
 # limitations under the License.
 
 import os
-import pytest
-import yaml
 
 from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.driller import Driller
-from graphrepo.utils import parse_config
 from graphrepo.miners.method import MethodMiner
 
 
@@ -35,12 +32,11 @@ class TestMethodMiner:
 
         all_methods = m_miner.get_all()
         assert len(all_methods) == 5
+        m_hash = '1d48a073fb3e9a40f3be72057db6d41e61727293df9bb6daa3880485'
+        met = m_miner.query(hash=m_hash)
+        assert met['name'] == 'get_name'
 
-        m = m_miner.query(
-            hash='1d48a073fb3e9a40f3be72057db6d41e61727293df9bb6daa3880485')
-        assert m['name'] == 'get_name'
-
-        history = m_miner.get_change_history(m)
+        history = m_miner.get_change_history(m_hash)
         assert len(history) == 2
 
         test_driller.clean()

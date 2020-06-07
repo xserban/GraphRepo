@@ -11,16 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+from datetime import datetime
 import os
-import pytest
-import yaml
 
 from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.driller import Driller
-from graphrepo.utils import parse_config
 from graphrepo.miners.commit import CommitMiner
-from datetime import datetime
 
 
 class TestCommitMiner:

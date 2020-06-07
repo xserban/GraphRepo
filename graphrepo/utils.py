@@ -11,10 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Utils methods for GraphRepo"""
 import json
-import yaml
 import hashlib
 from datetime import datetime
+import yaml
+
+
+class Dotdict(dict):
+    """dot.notation access to dictionary attributes"""
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
 
 
 def parse_config(path):
@@ -25,9 +33,11 @@ def parse_config(path):
     project = conf['project']
 
     project['start_date'] = datetime.strptime(
-        project['start_date'], '%d %B, %Y %H:%M') if project['start_date'] else None
+        project['start_date'], '%d %B, %Y %H:%M') \
+        if project['start_date'] else None
     project['end_date'] = datetime.strptime(
-        project['end_date'], '%d %B, %Y %H:%M') if project['end_date'] else None
+        project['end_date'], '%d %B, %Y %H:%M') \
+        if project['end_date'] else None
 
     return neo, project
 
@@ -43,14 +53,14 @@ def load_json(path):
 
 
 def get_file_hash(file):
-    n = ''
+    name = ''
     if file.old_path and not file.new_path:
-        n = n+file.old_path
+        name = name+file.old_path
     else:
-        n = n+file.new_path
+        name = name+file.new_path
 
-    n = n+file.filename
-    return hashlib.sha224(str(n).encode('utf-8')).hexdigest()
+    name = name+file.filename
+    return hashlib.sha224(str(name).encode('utf-8')).hexdigest()
 
 
 def get_method_type(method, m_before, m_current):
@@ -72,19 +82,19 @@ def get_author_hash(email):
     return hashlib.sha224(email.encode('utf-8')).hexdigest()
 
 
-def format_dev(a):
+def format_dev(dev):
     return {
-        'name': a.author.name,
-        'email': a.author.email,
-        'hash': get_author_hash(a.author.email)
+        'name': dev.author.name,
+        'email': dev.author.email,
+        'hash': get_author_hash(dev.author.email)
     }
 
 
-def format_commit(c, project_id):
+def format_commit(com, project_id):
     return {
-        'hash': c.hash,
-        'is_merge': 1 if c.merge else 0,
-        'timestamp': c.author_date.timestamp(),
+        'hash': com.hash,
+        'is_merge': 1 if com.merge else 0,
+        'timestamp': com.author_date.timestamp(),
         'project_id': project_id
     }
 
@@ -104,78 +114,74 @@ def format_branch(name, project_id):
     }
 
 
-def format_author_commit(a, c, timestamp):
-    return {'commit_hash': c['hash'],
-            'author_hash': a['hash'],
+def format_author_commit(dev, com, timestamp):
+    return {'commit_hash': com['hash'],
+            'author_hash': dev['hash'],
             'timestamp': timestamp,
             }
 
 
-def format_branch_commit(b, c):
-    return {'branch_hash': b, 'commit_hash': c}
+def format_branch_commit(bhash, chash):
+    return {'branch_hash': bhash, 'commit_hash': chash}
 
 
-def format_file(f, project_id):
+def format_file(file, project_id):
     return {
-        'hash': get_file_hash(f),
-        'name': f.filename,
+        'hash': get_file_hash(file),
+        'name': file.filename,
         'project_id': project_id,
-        'type': '.' + f.filename.split('.')[-1:][0]
+        'type': '.' + file.filename.split('.')[-1:][0]
     }
 
 
-def format_commit_file(c_hash, f_hash, f, timestamp, index_code=True):
+def format_commit_file(c_hash, f_hash, file, timestamp, index_code=True):
     dt_ = {'commit_hash': c_hash, 'file_hash': f_hash,
            'attributes': {
                'timestamp': timestamp,
-               'old_path': f.old_path if f.old_path else '',
-               'path': f.new_path if f.new_path else '',
-               'diff': f.diff,
-               'nloc': f.nloc if f.nloc else -1,
-               'complexity': f.complexity if f.complexity else -1,
-               'token_count': f.token_count if f.token_count else -1,
-               'added': f.added,
-               'removed': f.removed,
-               'type': f.change_type.name}
-           }
+               'old_path': file.old_path if file.old_path else '',
+               'path': file.new_path if file.new_path else '',
+               'diff': file.diff,
+               'nloc': file.nloc if file.nloc else -1,
+               'complexity': file.complexity if file.complexity else -1,
+               'token_count': file.token_count if file.token_count else -1,
+               'added': file.added,
+               'removed': file.removed,
+               'type': file.change_type.name}}
 
     if index_code:
         dt_['attributes']['source_code'] = str(
-            f.source_code) if f.source_code else '',
+            file.source_code) if file.source_code else '',
         dt_['attributes']['source_code_before'] = str(
-            f.source_code_before) if f.source_code_before else '',
+            file.source_code_before) if file.source_code_before else '',
 
     return dt_
 
 
-def format_commit_method(c_hash, m_hash, m, timestamp):
+def format_commit_method(c_hash, m_hash, met, timestamp):
     return {
         'commit_hash': c_hash,
         'method_hash': m_hash,
         'attributes': {
             'timestamp': timestamp,
-            'long_name': m.long_name,
-            'parameters': m.parameters,
-            'complexity': m.complexity,
-            'nloc': m.nloc,
-            'fan_in': m.fan_in,
-            'fan_out': m.fan_out,
-            'general_fan_out': m.general_fan_out,
-            'length': m.length,
-            'token_count': m.token_count,
-            'start_line': m.start_line,
-            'end_line': m.end_line
-        }
-    }
+            'long_name': met.long_name,
+            'parameters': met.parameters,
+            'complexity': met.complexity,
+            'nloc': met.nloc,
+            'fan_in': met.fan_in,
+            'fan_out': met.fan_out,
+            'general_fan_out': met.general_fan_out,
+            'length': met.length,
+            'token_count': met.token_count,
+            'start_line': met.start_line,
+            'end_line': met.end_line}}
 
 
-def format_method(m, f, project_id):
+def format_method(met, fille, project_id):
     return {
-        'hash': get_method_hash(m, f),
-        'name': m.name,
-        'file_name': m.filename,
-        'project_id': project_id
-    }
+        'hash': get_method_hash(met, fille),
+        'name': met.name,
+        'file_name': met.filename,
+        'project_id': project_id}
 
 
 def format_file_method(f_hash, m_hash):

@@ -17,8 +17,7 @@ from graphrepo.miners.default import DefaultMiner
 
 
 class FileMiner(DefaultMiner):
-    def __init__(self, graph, node_matcher, rel_matcher, *args, **kwargs):
-        super().__init__(graph, node_matcher, rel_matcher, *args, **kwargs)
+    """This clas holds queries for the File nodes"""
 
     def query(self, **kwargs):
         """Searches for a file using the arguments in kwargs.
@@ -67,4 +66,3 @@ class FileMiner(DefaultMiner):
           """
         # return [rel.end_node
         #         for rel in self.graph.match([file, None], "HadMethod")]
-        pass
