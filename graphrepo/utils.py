@@ -124,22 +124,28 @@ def format_file(f, project_id):
     }
 
 
-def format_commit_file(c_hash, f_hash, f, timestamp):
-    return {'commit_hash': c_hash, 'file_hash': f_hash,
-            'attributes': {
-                'timestamp': timestamp,
-                'old_path': f.old_path if f.old_path else '',
-                'path': f.new_path if f.new_path else '',
-                'diff': f.diff,
-                'source_code': str(f.source_code) if f.source_code else '',
-                'source_code_before':  str(f.source_code_before) if f.source_code_before else '',
-                'nloc': f.nloc if f.nloc else -1,
-                'complexity': f.complexity if f.complexity else -1,
-                'token_count': f.token_count if f.token_count else -1,
-                'added': f.added,
-                'removed': f.removed,
-                'type': f.change_type.name}
-            }
+def format_commit_file(c_hash, f_hash, f, timestamp, index_code=True):
+    dt_ = {'commit_hash': c_hash, 'file_hash': f_hash,
+           'attributes': {
+               'timestamp': timestamp,
+               'old_path': f.old_path if f.old_path else '',
+               'path': f.new_path if f.new_path else '',
+               'diff': f.diff,
+               'nloc': f.nloc if f.nloc else -1,
+               'complexity': f.complexity if f.complexity else -1,
+               'token_count': f.token_count if f.token_count else -1,
+               'added': f.added,
+               'removed': f.removed,
+               'type': f.change_type.name}
+           }
+
+    if index_code:
+        dt_['attributes']['source_code'] = str(
+            f.source_code) if f.source_code else '',
+        dt_['attributes']['source_code_before'] = str(
+            f.source_code_before) if f.source_code_before else '',
+
+    return dt_
 
 
 def format_commit_method(c_hash, m_hash, m, timestamp):

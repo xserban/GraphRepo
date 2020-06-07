@@ -86,7 +86,7 @@ class Driller(metaclass=Singleton):
                 fl = utl.format_file(file, self.config.PROJECT_ID)
                 files.append(fl)
                 com_files.append(utl.format_commit_file(
-                    com['hash'], fl['hash'], file, timestamp))
+                    com['hash'], fl['hash'], file, timestamp, self.config.INDEX_CODE))
                 for method in file.changed_methods:
                     met = utl.format_method(
                         method, file, self.config.PROJECT_ID)

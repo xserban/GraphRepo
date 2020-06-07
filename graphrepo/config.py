@@ -28,7 +28,8 @@ class Config(metaclass=Singleton):
     START_DATE = None
     END_DATE = None
     PROJECT_ID = None
-    BATCH_SIZE = 100
+    BATCH_SIZE = 50
+    INDEX_CODE = True
 
     def configure(self, *args, **kwargs):
         self.DB_URL = kwargs['db_url']
@@ -40,6 +41,7 @@ class Config(metaclass=Singleton):
         self.END_DATE = kwargs['end_date']
         self.PROJECT_ID = kwargs['project_id']
         self.BATCH_SIZE = kwargs['batch_size']
+        self.INDEX_CODE = kwargs['index_code']
 
     def check_config(self):
         """Checks if the config properties are set and

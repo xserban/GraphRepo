@@ -20,7 +20,8 @@ from graphrepo.driller import Driller
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='configs/graphrepo.yml', type=str)
+    parser.add_argument(
+        '--config', default='examples/configs/pydriller.yml', type=str)
     return parser.parse_args()
 
 

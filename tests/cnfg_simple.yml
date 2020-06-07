@@ -10,3 +10,4 @@ project:
   end_date: "15 May, 2020 02:00"
   project_id: 'graph_repo_test'
   batch_size: 200
+  index_code: True
