@@ -9,4 +9,5 @@ project:
   start_date: "1 January, 2017 00:00"
   end_date: "1 January, 2018 00:00"
   project_id: hadoop
-  batch_size: 200
+  batch_size: 50
+  index_code: True
