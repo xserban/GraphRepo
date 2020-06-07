@@ -57,9 +57,9 @@ def main():
     mine_manager = MineManager(config_path=args.config)
     updated_file_rels = mine_manager.file_miner.get_change_history(
         file_hash=file_query['hash'])
-    complexity = [x['complexity'] for x in updated_file_rels]
+    nloc = [x['nloc'] for x in updated_file_rels]
 
-    print('File complexity took {}'.format(datetime.now() - start))
+    print('File nloc took {}'.format(datetime.now() - start))
     print('File changes', len(updated_file_rels))
     # print(updated_file_rels.data)
 
