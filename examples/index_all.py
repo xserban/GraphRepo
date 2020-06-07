@@ -11,20 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""This module is an example of indexing all data from a repository in Neo4j"""
 
 import argparse
-import time
-from datetime import datetime
 from graphrepo.driller import Driller
 
 
 def parse_args():
+    """Parse argument"""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='configs/graphrepo.yml', type=str)
+    parser.add_argument(
+        '--config', default='examples/configs/pydriller.yml', type=str)
     return parser.parse_args()
 
 
 def main():
+    """Main method"""
     args = parse_args()
     driller = Driller(config_path=args.config)
     driller.drill_batch()

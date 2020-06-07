@@ -17,13 +17,9 @@
 # This file assumes the project from the config file was already indexed
 ###
 import argparse
-import os
-import pandas as pd
-import plotly.express as px
 
 from datetime import datetime
 from graphrepo.miners import MineManager
-from graphrepo.utils import parse_config
 
 
 def parse_args():
@@ -52,11 +48,11 @@ def main():
     mine_manager = MineManager(config_path=args.config)
     method_updates = mine_manager.dev_miner.get_method_updates(
         dev_query['hash'],
-        mine_manager.config.PROJECT_ID
+        mine_manager.config.ct.project_id
     )
     complexity = [c['complexity']
                   for c in method_updates if c['complexity'] != -1]
-    avg = sum(complexity) / len(complexity)
+    _ = sum(complexity) / len(complexity)
 
     print('Dev file types took {}'.format(datetime.now() - start))
     print('Nr method updates', len(method_updates))

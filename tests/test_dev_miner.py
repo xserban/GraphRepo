@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime
 import os
-import pytest
-import yaml
 
 from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.driller import Driller
-from graphrepo.utils import parse_config
 from graphrepo.miners.developer import DeveloperMiner
-from datetime import datetime
 
 
 class TestDevMiner:
@@ -48,13 +45,13 @@ class TestDevMiner:
 
         all_com_id = dev_miner.get_commits(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb",
-            project_id=test_driller.config.PROJECT_ID
+            project_id=test_driller.config.ct.project_id
         )
         assert len(all_com_id) == 7
 
         all_com_id_dates = dev_miner.get_commits(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb",
-            project_id=test_driller.config.PROJECT_ID,
+            project_id=test_driller.config.ct.project_id,
             start_date=st_date,
             end_date=end_date
         )
@@ -67,7 +64,7 @@ class TestDevMiner:
 
         all_files_id_dates = dev_miner.get_files(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb",
-            project_id=test_driller.config.PROJECT_ID,
+            project_id=test_driller.config.ct.project_id,
             start_date=st_date,
             end_date=end_date
         )
@@ -80,7 +77,7 @@ class TestDevMiner:
 
         files_updates_id_dates = dev_miner.get_files_updates(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb",
-            project_id=test_driller.config.PROJECT_ID,
+            project_id=test_driller.config.ct.project_id,
             start_date=st_date,
             end_date=end_date
         )
@@ -93,7 +90,7 @@ class TestDevMiner:
 
         all_methods_id_dates = dev_miner.get_methods(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb",
-            project_id=test_driller.config.PROJECT_ID,
+            project_id=test_driller.config.ct.project_id,
             start_date=st_date,
             end_date=end_date
         )
@@ -106,7 +103,7 @@ class TestDevMiner:
 
         method_updates_id_dates = dev_miner.get_method_updates(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb",
-            project_id=test_driller.config.PROJECT_ID,
+            project_id=test_driller.config.ct.project_id,
             start_date=st_date,
             end_date=end_date
         )

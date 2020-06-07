@@ -18,6 +18,8 @@ from graphrepo.miners.utils import format_commit_id_date
 
 
 class CommitMiner(DefaultMiner):
+    """This class holds queries for commits"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -29,10 +31,11 @@ class CommitMiner(DefaultMiner):
         :param kwargs: any parameter and value, between hash, name or email
         :returns: list of commit nodes matched
         """
-        c_ = self.node_matcher.match("Commit", **kwargs)
-        return list(c_) if not dic else [dict(x) for x in c_]
+        com_ = self.node_matcher.match("Commit", **kwargs)
+        return list(com_) if not dic else [dict(x) for x in com_]
 
-    def get_between_dates(self, start_date, end_date, project_id=None, dic=True):
+    def get_between_dates(self, start_date, end_date,
+                          project_id=None, dic=True):
         """Returns all commits between start and end date
         :param start_date: timestamp, start date
         :param end_date: timestamp, end date
@@ -58,12 +61,13 @@ class CommitMiner(DefaultMiner):
           to list of dictionaries
         :returns: list of commit nodes
         """
-        c_ = self.node_matcher.match("Commit")
-        return list(c_) if not dic else [dict(x) for x in c_]
+        com_ = self.node_matcher.match("Commit")
+        return list(com_) if not dic else [dict(x) for x in com_]
 
     def get_commit_files(self, commit_hash, dic=True):
         """Returns the files updated in a commit
-        :param commit_hash: optional; if given, it will return the data only for one commit
+        :param commit_hash: optional; if given, it will
+          return the data only for one commit
         :param dic: optional, boolean for ocnverting the data to dictionaries
         :returns: list of
         """
@@ -77,7 +81,8 @@ class CommitMiner(DefaultMiner):
 
     def get_commit_file_updates(self, commit_hash, dic=True):
         """Returns the updates a commit made to files (UpdateFile rel)
-        :param commit_hash: optional; if given, it will return the data only for one commit
+        :param commit_hash: optional; if given, it will
+          return the data only for one commit
         :param dic: optional, boolean for ocnverting the data to dictionaries
         :returns: list of
         """
@@ -91,7 +96,8 @@ class CommitMiner(DefaultMiner):
 
     def get_commit_methods(self, commit_hash=None, dic=True):
         """Returns the methods updated in a commit
-        :param commit_hash: optional; if given, it will return the data only for one commit
+        :param commit_hash: optional; if given, it will
+          return the data only for one commit
         :param dic: optional, boolean for ocnverting the data to dictionaries
         """
         query = """
@@ -104,7 +110,8 @@ class CommitMiner(DefaultMiner):
 
     def get_commit_method_updates(self, commit_hash=None, dic=True):
         """Returns the updatemethod relationships from a commit
-        :param commit_hash: optional; if given, it will return the data only for one commit
+        :param commit_hash: optional; if given,
+          it will return the data only for one commit
         :param dic: optional, boolean for ocnverting the data to dictionaries
         """
         query = """

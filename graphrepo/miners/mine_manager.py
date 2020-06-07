@@ -11,10 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""
-"""
-import graphrepo.utils as utl
+"""This module initializes and configures all miners"""
 from py2neo import Graph, NodeMatcher, RelationshipMatcher
+import graphrepo.utils as utl
 from graphrepo.config import Config
 from graphrepo.logger import Logger
 from graphrepo.singleton import Singleton
@@ -34,6 +33,8 @@ class MineManager(metaclass=Singleton):
 
     def __init__(self, config_path):
         """Initializes the properties of this class"""
+        self.commit_miner, self.dev_miner, \
+            self.file_miner, self.method_miner = None, None, None, None
         try:
             if not config_path:
                 raise FileNotFoundError
@@ -53,10 +54,10 @@ class MineManager(metaclass=Singleton):
         Throws exception if the connection can not pe realized
         """
         try:
-            self.graph = Graph(host=self.config.DB_URL,
-                               user=self.config.DB_USER,
-                               password=self.config.DB_PWD,
-                               http_port=self.config.PORT)
+            self.graph = Graph(host=self.config.ct.db_url,
+                               user=self.config.ct.db_user,
+                               password=self.config.ct.db_pwd,
+                               http_port=self.config.ct.port)
             self.node_matcher = NodeMatcher(self.graph)
             self.rel_matcher = RelationshipMatcher(self.graph)
             self.init_miners()
@@ -82,15 +83,18 @@ class MineManager(metaclass=Singleton):
                 graph=self.graph,
                 node_matcher=self.node_matcher,
                 rel_matcher=self.rel_matcher)
-            self.dev_miner = miners.DeveloperMiner(graph=self.graph,
-                                                   node_matcher=self.node_matcher,
-                                                   rel_matcher=self.rel_matcher)
-            self.file_miner = miners.FileMiner(graph=self.graph,
-                                               node_matcher=self.node_matcher,
-                                               rel_matcher=self.rel_matcher)
-            self.method_miner = miners.MethodMiner(graph=self.graph,
-                                                   node_matcher=self.node_matcher,
-                                                   rel_matcher=self.rel_matcher)
+            self.dev_miner = \
+                miners.DeveloperMiner(graph=self.graph,
+                                      node_matcher=self.node_matcher,
+                                      rel_matcher=self.rel_matcher)
+            self.file_miner = \
+                miners.FileMiner(graph=self.graph,
+                                 node_matcher=self.node_matcher,
+                                 rel_matcher=self.rel_matcher)
+            self.method_miner = \
+                miners.MethodMiner(graph=self.graph,
+                                   node_matcher=self.node_matcher,
+                                   rel_matcher=self.rel_matcher)
 
         except Exception as exc:
             LG.log_and_raise(exc)

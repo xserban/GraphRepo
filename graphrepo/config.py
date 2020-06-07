@@ -16,40 +16,29 @@
 because it is used across in several modules inside the app"""
 
 from graphrepo.singleton import Singleton
+from graphrepo.utils import Dotdict
 
 
 class Config(metaclass=Singleton):
     """This class contains all config flags"""
-    DB_URL = ""
-    PORT = 0
-    DB_USER = ""
-    DB_PWD = ""
-    REPO = ""
-    START_DATE = None
-    END_DATE = None
-    PROJECT_ID = None
-    BATCH_SIZE = 100
+    ct = {}
 
-    def configure(self, *args, **kwargs):
-        self.DB_URL = kwargs['db_url']
-        self.PORT = kwargs['port']
-        self.DB_USER = kwargs['db_user']
-        self.DB_PWD = kwargs['db_pwd']
-        self.REPO = kwargs['repo']
-        self.START_DATE = kwargs['start_date']
-        self.END_DATE = kwargs['end_date']
-        self.PROJECT_ID = kwargs['project_id']
-        self.BATCH_SIZE = kwargs['batch_size']
+    def configure(self, **kwargs):
+        """Stores configuration contants, parsed
+        from yaml config file
+        :param kwargs: keys and values from config
+        """
+        self.ct = Dotdict(kwargs)
 
     def check_config(self):
         """Checks if the config properties are set and
         raises ValueError if any value misses"""
 
-        if self.DB_URL == "":
+        if not self.ct.db_url:
             raise ValueError("Database URL is not set.")
 
-        if self.PORT == 0:
+        if not self.ct.port or self.ct.port == 0:
             raise ValueError("Database port is not set.")
 
-        if self.DB_USER == "" or self.DB_PWD == "":
+        if not self.ct.db_user or not self.ct.db_pwd:
             raise ValueError("Database credentials are not set.")

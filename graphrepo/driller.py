@@ -15,14 +15,15 @@
 """ This module uses pydriller to search a repository
 and indexes it in neo4j
 """
+from datetime import datetime
+from py2neo import Graph
+from pydriller import RepositoryMining
+
 import graphrepo.utils as utl
 import graphrepo.batch_utils as b_utl
-from py2neo import Graph, NodeMatcher
-from pydriller import RepositoryMining, GitRepository
 from graphrepo.config import Config
 from graphrepo.logger import Logger
 from graphrepo.singleton import Singleton
-from datetime import datetime
 LG = Logger()
 
 
@@ -53,49 +54,60 @@ class Driller(metaclass=Singleton):
         Throws exception if the connection can not pe realized
         """
         try:
-            self.graph = Graph(host=self.config.DB_URL,
-                               user=self.config.DB_USER,
-                               password=self.config.DB_PWD,
-                               port=self.config.PORT)
+            self.graph = Graph(host=self.config.ct.db_url,
+                               user=self.config.ct.db_user,
+                               password=self.config.ct.db_pwd,
+                               port=self.config.ct.port)
         except Exception as exc:
             LG.log_and_raise(exc)
 
     def drill_batch(self, index=True, save_path=None):
+        """Extracts data from a software repository, with the option
+        of saving it on diks and indexing it in Neo4j
+        :param index: optional, if True, the data is indexed in Neo4j
+        :param save_path: optional, if given, the data is stored on dik
+        :returns: dictionary with all data
+        """
         start = datetime.now()
         print('Driller started at: \t', start)
-        commits, parents, devs, dev_com, branches, branches_com, files, com_files, \
-            methods, files_methods, com_methods = [], [], [], [], [], [], [], [], [], [], []
-        for commit in RepositoryMining(self.config.REPO,
-                                       since=self.config.START_DATE,
-                                       to=self.config.END_DATE).traverse_commits():
+        commits, parents, devs, dev_com, branches,\
+            branches_com, files, com_files, \
+            methods, files_methods, com_methods = \
+            [], [], [], [], [], [], [], [], [], [], []
+        for commit in \
+            RepositoryMining(self.config.ct.repo,
+                             since=self.config.ct.start_date,
+                             to=self.config.ct.end_date).traverse_commits():
             timestamp = commit.author_date.timestamp()
             dev = utl.format_dev(commit)
             devs.append(dev)
-            com = utl.format_commit(commit, self.config.PROJECT_ID)
+            com = utl.format_commit(commit, self.config.ct.project_id)
             commits.append(com)
             dev_com.append(utl.format_author_commit(dev, com, timestamp))
             for parent in commit.parents:
                 parents.append(utl.format_parent_commit(
                     com['hash'], parent))
             for branch in commit.branches:
-                br_ = utl.format_branch(branch, self.config.PROJECT_ID)
+                br_ = utl.format_branch(branch, self.config.ct.project_id)
                 branches.append(br_)
                 branches_com.append(
                     utl.format_branch_commit(br_['hash'], com['hash']))
             for file in commit.modifications:
-                fl = utl.format_file(file, self.config.PROJECT_ID)
+                fl = utl.format_file(file, self.config.ct.project_id)
                 files.append(fl)
                 com_files.append(utl.format_commit_file(
-                    com['hash'], fl['hash'], file, timestamp))
+                    com['hash'], fl['hash'], file,
+                    timestamp, self.config.ct.index_code))
                 for method in file.changed_methods:
                     met = utl.format_method(
-                        method, file, self.config.PROJECT_ID)
+                        method, file, self.config.ct.project_id)
                     methods.append(met)
                     files_methods.append(
                         utl.format_file_method(fl['hash'], met['hash'])
                     )
-                    com_methods.append(utl.format_commit_method(com['hash'],
-                                                                met['hash'], method, timestamp))
+                    com_methods.append(
+                        utl.format_commit_method(com['hash'], met['hash'],
+                                                 method, timestamp))
         data_ = {'commits': commits,
                  'parents': parents,
                  'developers': devs,
@@ -115,18 +127,25 @@ class Driller(metaclass=Singleton):
             self.index_batch(**data_)
         return data_
 
-    def index_batch(self, *args, **kwargs):
+    def index_batch(self, **kwargs):
+        """Indexes data extracted by drill_batch of from
+        disk in Neo4j
+        :param kwargs: data keys and values (see the drill_batch return)
+        """
         try:
             self.config.check_config()
             self._check_connection()
             b_utl.index_all(
-                self.graph, batch_size=self.config.BATCH_SIZE, **kwargs)
+                self.graph, batch_size=self.config.ct.batch_size, **kwargs)
         except Exception as exc:
             LG.log_and_raise(exc)
         else:
             return
 
     def index_from_file(self, file_path):
+        """Reads a file and indexes the data in Neo4j
+        :param file_path: the path of the JSON file with data
+        """
         try:
             data_ = utl.load_json(file_path)
             self.index_batch(**data_)
