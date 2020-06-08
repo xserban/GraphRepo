@@ -10,3 +10,4 @@ project:
   end_date: "1 May, 2020 00:00"
   project_id: jax
   batch_size: 50
+  index_code: True

@@ -17,13 +17,9 @@
 # This file assumes the project from the config file was already indexed
 ###
 import argparse
-import os
-import pandas as pd
-import plotly.express as px
 
 from datetime import datetime
 from graphrepo.miners import MineManager
-from graphrepo.utils import parse_config
 
 
 def parse_args():
@@ -38,16 +34,25 @@ def main():
     if 'jax' in args.config:
         dev_query = {
             'hash': '93476add93abfb4fcfdd5c61ed811099bbb2aab70874f554d38bf381'}
+    if 'hadoop' in args.config:
+        dev_query = {
+            'hash': 'c92a1ec4e3eec053698d080439dc284a824b4de6fd5a4c8351631685'}
+    if 'kibana' in args.config:
+        dev_query = {
+            'hash': 'bc95ed12093e3ca5ce0b30f4edda5b3692510d87b0b0bd08d2999750'}
+    if 'tensorflow' in args.config:
+        dev_query = {
+            'hash': '1dfed5c1dfcb5c5eaf63522b7d993b721774bb153ef4be087384e72e'}
 
     start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
     method_updates = mine_manager.dev_miner.get_method_updates(
         dev_query['hash'],
-        mine_manager.config.PROJECT_ID
+        mine_manager.config.ct.project_id
     )
     complexity = [c['complexity']
                   for c in method_updates if c['complexity'] != -1]
-    avg = sum(complexity) / len(complexity)
+    _ = sum(complexity) / len(complexity)
 
     print('Dev file types took {}'.format(datetime.now() - start))
     print('Nr method updates', len(method_updates))

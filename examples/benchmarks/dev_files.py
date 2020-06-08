@@ -38,12 +38,22 @@ def main():
     if 'jax' in args.config:
         dev_query = {
             'hash': '93476add93abfb4fcfdd5c61ed811099bbb2aab70874f554d38bf381'}
+    if 'hadoop' in args.config:
+        dev_query = {
+            'hash': 'c92a1ec4e3eec053698d080439dc284a824b4de6fd5a4c8351631685'}
+    if 'kibana' in args.config:
+        dev_query = {
+            'hash': 'bc95ed12093e3ca5ce0b30f4edda5b3692510d87b0b0bd08d2999750'}
+
+    if 'tensorflow' in args.config:
+        dev_query = {
+            'hash': '1dfed5c1dfcb5c5eaf63522b7d993b721774bb153ef4be087384e72e'}
 
     start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
     files = mine_manager.dev_miner.get_files(
         dev_query['hash'],
-        mine_manager.config.PROJECT_ID
+        mine_manager.config.ct.project_id
     )
     ft = [f['type'] for f in files]
     grouped = [{'file': x, 'count': len(

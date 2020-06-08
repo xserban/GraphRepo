@@ -13,11 +13,8 @@
 # limitations under the License.
 
 import os
-import pytest
-import yaml
 
 from graphrepo.driller import Driller
-from graphrepo.utils import parse_config
 
 
 class TestDriller:
@@ -26,8 +23,8 @@ class TestDriller:
         test_driller = Driller(os.path.join(folder, 'cnfg_init.yml'))
         test_driller.drill_batch()
 
-        assert test_driller.config.DB_URL == 'localhost'
-        assert test_driller.config.REPO == 'tests/gr-test'
+        assert test_driller.config.ct.db_url == 'localhost'
+        assert test_driller.config.ct.repo == 'tests/gr-test'
 
         assert test_driller.graph is not None
 
@@ -39,4 +36,22 @@ class TestDriller:
             "MATCH(n) RETURN n")]
         assert len(records) == 22
 
+        test_driller.clean()
+
+    def test_index_save(self):
+        folder = os.path.dirname(os.path.abspath(__file__))
+        test_driller = Driller(os.path.join(folder, 'cnfg_init.yml'))
+        test_driller.drill_batch(save_path='data/graphrepo.json')
+        records = [r for r in test_driller.graph.run(
+            "MATCH(n) RETURN n")]
+        assert len(records) == 22
+
+        test_driller.clean()
+
+        test_driller.index_from_file(file_path='data/graphrepo.json')
+        records = [r for r in test_driller.graph.run(
+            "MATCH(n) RETURN n")]
+        assert len(records) == 22
+
+        os.remove('data/graphrepo.json')
         test_driller.clean()

@@ -37,7 +37,7 @@ def main():
     mine_manager = MineManager(config_path=args.config)
 
     file_miner = mine_manager.file_miner
-    file_ = file_miner.query(pproject_id=mine_manager.config.PROJECT_ID,
+    file_ = file_miner.query(pproject_id=mine_manager.config.ct.project_id,
                              name="commit.py")
     updated_file_rels = file_miner.get_change_history(file_)
 

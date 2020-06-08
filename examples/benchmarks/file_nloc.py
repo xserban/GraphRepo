@@ -39,15 +39,27 @@ def main():
     if 'jax' in args.config:
         file_query = {
             'hash': '84a34a3b24d33ba7736a19f7009591d6d4af6aa4368680664fd3a5ae'}
+    if 'hadoop' in args.config:
+        file_query = {
+            'hash': '0f3a2c18d68cf908803c5493a39f5039b7effa929ada77b43325e806'}
+
+    if 'kibana' in args.config:
+        file_query = {
+            'hash': 'bafb026d5ad56f9975c0feb6ea387126b8d953e5061c26ed11737b48'
+        }
+    if 'tensorflow' in args.config:
+        file_query = {
+            'hash': 'd5204d385a92141e49aa8ce8b6330fafd825c02e4ee5ed86747c8e73'
+        }
 
     start = datetime.now()
 
     mine_manager = MineManager(config_path=args.config)
     updated_file_rels = mine_manager.file_miner.get_change_history(
         file_hash=file_query['hash'])
-    complexity = [x['complexity'] for x in updated_file_rels]
+    nloc = [x['nloc'] for x in updated_file_rels]
 
-    print('File complexity took {}'.format(datetime.now() - start))
+    print('File nloc took {}'.format(datetime.now() - start))
     print('File changes', len(updated_file_rels))
     # print(updated_file_rels.data)
 

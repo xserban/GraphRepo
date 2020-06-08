@@ -37,25 +37,25 @@ def main():
     mine_manager = MineManager(config_path=args.config)
     files = mine_manager.dev_miner.get_files(
         "6cf1f138e29c1bf82810ad0b73012302e0d20c2f76a24e3b225017b0",
-        mine_manager.config.PROJECT_ID
+        mine_manager.config.ct.project_id
     )
     print(len(files), ' files')
 
     file_updates = mine_manager.dev_miner.get_files_updates(
         "6cf1f138e29c1bf82810ad0b73012302e0d20c2f76a24e3b225017b0",
-        mine_manager.config.PROJECT_ID
+        mine_manager.config.ct.project_id
     )
     print(len(file_updates), ' file updates')
 
     methods = mine_manager.dev_miner.get_methods(
         "6cf1f138e29c1bf82810ad0b73012302e0d20c2f76a24e3b225017b0",
-        mine_manager.config.PROJECT_ID
+        mine_manager.config.ct.project_id
     )
     print(len(methods), ' methods')
 
     method_updates = mine_manager.dev_miner.get_method_updates(
         "6cf1f138e29c1bf82810ad0b73012302e0d20c2f76a24e3b225017b0",
-        mine_manager.config.PROJECT_ID
+        mine_manager.config.ct.project_id
     )
     print(len(method_updates), ' method updates')
 
