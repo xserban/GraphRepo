@@ -126,6 +126,7 @@ The direction is from Commit to File and the relationship attributes are::
     "timestamp": "int - Unix epoch, time of the commit",
     "old_path": "string - old path, if the file was moved (see type attribute)",
     "path": "string - current file path",
+    "diff: "string - commit diff",
     "source_code": "string - source code after the commit",
     "source_code_before": "string - source before after the commit",
     "nloc": "int - file lines of code after the commit",
