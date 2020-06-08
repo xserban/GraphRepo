@@ -1,6 +1,6 @@
 # GraphRepo ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square) [![BCH compliance](https://bettercodehub.com/edge/badge/NullConvergence/GraphRepo?branch=develop)](https://bettercodehub.com/)
 
-GraphRepo is a tool that indexes Git repositories in Neo4j and implements multiple queries to select and process the data.
+GraphRepo is a tool for mining software repositories in real time. It indexes Git repositories in Neo4j and implements multiple queries to select and process the repository data.
 For a complete description, see the [online documentation](https://graphrepo.readthedocs.io/en/latest/).
 
 <p align="center">
