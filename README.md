@@ -1,8 +1,11 @@
 # GraphRepo ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square) [![BCH compliance](https://bettercodehub.com/edge/badge/NullConvergence/GraphRepo?branch=develop)](https://bettercodehub.com/)
 
-This tool indexes git repositories to a Neo4j database.
-For a complete overview, see the [documentation](https://graphrepo.readthedocs.io/en/latest/).
+This tool indexes Git repositories in Neo4j and implements multiple queries to select and process the data.
+For a complete description, see the [online documentation](https://graphrepo.readthedocs.io/en/latest/).
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/NullConvergence/GraphRepo/develop/docs/source/GraphRepoSchema.svg">
+</p>
 
 ###  1. Installation & First run
 
@@ -44,11 +47,11 @@ The default one is *neo4j*.
 #### 1.4. Index and vizualize a repo
 
 Please clone a project configure the constants in a config file, e.g., clone
-the [pydriller] project in the ``repos`` folder and update the yaml file at [examples/configs/pydriller.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/configs/pydriller.yml).
+the [GraphRepo] project in the ``repos`` folder and update the yaml file at [examples/configs/graphrepo.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/configs/graphrepo.yml).
 Then index the repo using:
 
 ```
-$ python -m examples.index_all --config=examples/configs/pydriller.yml
+$ python -m examples.index_all --config=examples/configs/graphrepo.yml
 ```
 
 Go to [http://<neo4j-address>:7474](http://<>:7474) and use the first query from Section 3.
@@ -59,7 +62,7 @@ Go to [http://<neo4j-address>:7474](http://<>:7474) and use the first query from
 Assuming you succeded in step 1.4, use the follwing command to retrieve all indexed data:
 
 ```
-$ python -m examples.mine_all --config=examples/configs/pydriller.yml
+$ python -m examples.mine_all --config=examples/configs/graphrepo.yml
 ```
 
 
