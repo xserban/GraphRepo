@@ -14,43 +14,26 @@
 
 import os
 
-from graphrepo.drillers.driller import Driller
+from graphrepo.drillers.cache_driller import CacheDriller
 
 
-class TestDriller:
-    def test_configure(self):
-        folder = os.path.dirname(os.path.abspath(__file__))
-        test_driller = Driller(os.path.join(folder, 'cnfg_init.yml'))
-
-        assert test_driller.config.ct.db_url == 'localhost'
-        assert test_driller.config.ct.repo == 'tests/gr-test'
-
-        assert test_driller.graph is not None
-
+class TestCacheDriller:
     def test_indexing(self):
         folder = os.path.dirname(os.path.abspath(__file__))
-        test_driller = Driller(os.path.join(folder, 'cnfg_init.yml'))
-        test_driller.drill_batch()
+        test_driller = CacheDriller(os.path.join(folder, 'cnfg_init.yml'))
+        test_driller.drill_batch_cache_sequential()
         records = [r for r in test_driller.graph.run(
             "MATCH(n) RETURN n")]
         assert len(records) == 22
 
         test_driller.clean()
 
-    def test_index_save(self):
+    def test_drill_batch_cache(self):
         folder = os.path.dirname(os.path.abspath(__file__))
-        test_driller = Driller(os.path.join(folder, 'cnfg_init.yml'))
-        test_driller.drill_batch(save_path='data/graphrepo.json')
+        test_driller = CacheDriller(os.path.join(folder, 'cnfg_init.yml'))
+        test_driller.drill_batch_cache_all()
         records = [r for r in test_driller.graph.run(
             "MATCH(n) RETURN n")]
         assert len(records) == 22
 
-        test_driller.clean()
-
-        test_driller.index_from_file(file_path='data/graphrepo.json')
-        records = [r for r in test_driller.graph.run(
-            "MATCH(n) RETURN n")]
-        assert len(records) == 22
-
-        os.remove('data/graphrepo.json')
         test_driller.clean()

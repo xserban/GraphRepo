@@ -17,7 +17,7 @@ import pytest
 import yaml
 
 from py2neo import NodeMatcher, RelationshipMatcher
-from graphrepo.driller import Driller
+from graphrepo.drillers.driller import Driller
 
 
 class TestCommit:

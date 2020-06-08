@@ -34,11 +34,6 @@ class Config(metaclass=Singleton):
         """Checks if the config properties are set and
         raises ValueError if any value misses"""
 
-        if not self.ct.db_url:
-            raise ValueError("Database URL is not set.")
-
-        if not self.ct.port or self.ct.port == 0:
-            raise ValueError("Database port is not set.")
-
-        if not self.ct.db_user or not self.ct.db_pwd:
-            raise ValueError("Database credentials are not set.")
+        if not self.ct.db_url or not self.ct.port \
+                or not self.ct.db_user or not self.ct.db_pwd:
+            raise ValueError("Neo4j configuartion is invalid.")

@@ -1,9 +1,19 @@
 """This module saves the cache data on disk"""
+import collections
 from diskcache import Index
 
 
+class DrillCache:
+    """Class for storing all data at once in the cache"""
+
+    def __init__(self, data):
+        """Transforms dictionary to ordered dic and saves it"""
+        dt_ = [(k, v) for k, v in data.items()]
+        self.data = Index(collections.OrderedDict(dt_))
+
+
 class DrillCacheSequential:
-    """Class for disk cache"""
+    """Class for disk cache sequential"""
 
     def __init__(self):
         """Init drill cache"""

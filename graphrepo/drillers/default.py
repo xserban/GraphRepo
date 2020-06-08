@@ -11,26 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-""" This module uses pydriller to search a repository
-and indexes it in neo4j
+"""Default Parent class for drillers
 """
+from abc import abstractmethod
 from datetime import datetime
 from py2neo import Graph
 from pydriller import RepositoryMining
 
 import graphrepo.utils as utl
-import graphrepo.batch_utils as b_utl
 from graphrepo.config import Config
 from graphrepo.logger import Logger
-from graphrepo.singleton import Singleton
 LG = Logger()
 
 
-class Driller(metaclass=Singleton):
-    """Drill class - parses a git repo and uses the models
-    to index everything in Neo4j. This class is a singleton
-    because it holds the connection to Neo4j in self.graph
+class DefaultDriller():
+    """DefaultDriller class - parses a git repo and uses the models
+    to index everything in Neo4j.
     """
 
     def __init__(self, config_path):
@@ -58,6 +54,28 @@ class Driller(metaclass=Singleton):
                                user=self.config.ct.db_user,
                                password=self.config.ct.db_pwd,
                                port=self.config.ct.port)
+        except Exception as exc:
+            LG.log_and_raise(exc)
+
+    def _check_connection(self):
+        """Checks if there is a db connection and raises
+        ReferenceError if not.
+        """
+        try:
+            self._connect()
+        except:
+            raise ReferenceError("There is no valid "
+                                 "database connection. Please "
+                                 "configure and connect first.")
+
+    def clean(self):
+        """Removes all data in a graph
+        """
+        try:
+            self.config.check_config()
+            self._check_connection()
+
+            self.graph.run("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
         except Exception as exc:
             LG.log_and_raise(exc)
 
@@ -93,32 +111,32 @@ class Driller(metaclass=Singleton):
                 branches_com.append(
                     utl.format_branch_commit(br_['hash'], com['hash']))
             for file in commit.modifications:
-                fl = utl.format_file(file, self.config.ct.project_id)
-                files.append(fl)
+                fl_ = utl.format_file(file, self.config.ct.project_id)
+                files.append(fl_)
                 com_files.append(utl.format_commit_file(
-                    com['hash'], fl['hash'], file,
+                    com['hash'], fl_['hash'], file,
                     timestamp, self.config.ct.index_code))
                 for method in file.changed_methods:
                     met = utl.format_method(
                         method, file, self.config.ct.project_id)
                     methods.append(met)
                     files_methods.append(
-                        utl.format_file_method(fl['hash'], met['hash'])
+                        utl.format_file_method(fl_['hash'], met['hash'])
                     )
                     com_methods.append(
                         utl.format_commit_method(com['hash'], met['hash'],
                                                  method, timestamp))
-        data_ = {'commits': commits,
-                 'parents': parents,
-                 'developers': devs,
-                 'dev_commits': dev_com,
-                 'branches': branches,
-                 'branches_commits': branches_com,
-                 'files': files,
-                 'commit_files': com_files,
-                 'methods': methods,
-                 'file_methods': files_methods,
-                 'commit_methods': com_methods}
+        data_ = utl.Dotdict({'commits': commits,
+                             'parents': parents,
+                             'developers': devs,
+                             'dev_commits': dev_com,
+                             'branches': branches,
+                             'branches_commits': branches_com,
+                             'files': files,
+                             'commit_files': com_files,
+                             'methods': methods,
+                             'file_methods': files_methods,
+                             'commit_methods': com_methods})
         print('Driller finished in: \t', datetime.now() - start)
 
         if save_path:
@@ -127,51 +145,8 @@ class Driller(metaclass=Singleton):
             self.index_batch(**data_)
         return data_
 
-    def index_batch(self, **kwargs):
-        """Indexes data extracted by drill_batch of from
-        disk in Neo4j
-        :param kwargs: data keys and values (see the drill_batch return)
+    @abstractmethod
+    def index_batch(self):
+        """Abstract index batch driller method
         """
-        try:
-            self.config.check_config()
-            self._check_connection()
-            b_utl.index_all(
-                self.graph, batch_size=self.config.ct.batch_size, **kwargs)
-        except Exception as exc:
-            LG.log_and_raise(exc)
-        else:
-            return
-
-    def index_from_file(self, file_path):
-        """Reads a file and indexes the data in Neo4j
-        :param file_path: the path of the JSON file with data
-        """
-        try:
-            data_ = utl.load_json(file_path)
-            self.index_batch(**data_)
-        except Exception as exc:
-            LG.log_and_raise(exc)
-        else:
-            return
-
-    def _check_connection(self):
-        """Checks if there is a db connection and raises
-        ReferenceError if not.
-        """
-        try:
-            self._connect()
-        except:
-            raise ReferenceError("There is no valid "
-                                 "database connection. Please "
-                                 "configure and connect first.")
-
-    def clean(self):
-        """Removes all data in a graph
-        """
-        try:
-            self.config.check_config()
-            self._check_connection()
-
-            self.graph.run("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
-        except Exception as exc:
-            LG.log_and_raise(exc)
+        raise NotImplementedError

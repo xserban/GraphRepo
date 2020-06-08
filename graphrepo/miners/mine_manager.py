@@ -18,7 +18,7 @@ from graphrepo.config import Config
 from graphrepo.logger import Logger
 from graphrepo.singleton import Singleton
 from graphrepo import miners
-from graphrepo.miners import mappers
+import graphrepo.mappers as mappers
 
 
 LG = Logger()
