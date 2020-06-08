@@ -59,10 +59,10 @@ Then index the repo using:
 $ python -m examples.index_all --config=examples/configs/graphrepo.yml
 ```
 
-Go to [http://<neo4j-address>:7474](http://<>:7474) and use the first query from Section 3.
+Go to [http://<neo4j-address>:7474](http://<>:7474) and use the query from 3.1
 
 
-#### 1.5. Retrieve all data from Neo4j
+#### 1.5. Retrieve all data from Neo4j using GraphRepo
 
 Assuming you succeded in step 1.4, use the follwing command to retrieve all indexed data:
 
