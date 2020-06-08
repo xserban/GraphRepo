@@ -17,6 +17,7 @@ def index_commits(graph, commits, batch_size=100):
     """
     for b in batch(commits, batch_size):
         graph.run(query, commits=b)
+    create_index_commits(graph)
 
 
 def index_parent_commits(graph, parents, batch_size=100):
@@ -38,11 +39,9 @@ def index_authors(graph, authors, batch_size=100):
                         name: a.name
                       })
     """
-    if batch_size:
-        for b in batch(authors, batch_size):
-            graph.run(query, authors=b)
-    else:
-        graph.run(query, authors=authors)
+    for b in batch(authors, batch_size):
+        graph.run(query, authors=b)
+    create_index_authors(graph)
 
 
 def index_branches(graph, branches, batch_size=100):
@@ -54,6 +53,7 @@ def index_branches(graph, branches, batch_size=100):
     """
     for b in batch(branches, batch_size):
         graph.run(query, branches=b)
+    create_index_branches(graph)
 
 
 def index_branch_commits(graph, bc, batch_size=100):
@@ -74,11 +74,9 @@ def index_files(graph, files, batch_size=100):
                    project_id: f.project_id,
                    type:f.type, name: f.name})
     """
-    if batch_size:
-        for b in batch(files, batch_size):
-            graph.run(query, files=b)
-    else:
-        graph.run(query, files=files)
+    for b in batch(files, batch_size):
+        graph.run(query, files=b)
+    create_index_files(graph)
 
 
 def index_methods(graph, methods, batch_size=100):
@@ -89,11 +87,10 @@ def index_methods(graph, methods, batch_size=100):
                      name: f.name,
                      file_name: f.file_name})
     """
-    if batch_size:
-        for b in batch(methods, batch_size):
-            graph.run(query, methods=b)
-    else:
-        graph.run(query, methods=methods)
+
+    for b in batch(methods, batch_size):
+        graph.run(query, methods=b)
+    create_index_methods(graph)
 
 
 def index_author_commits(graph, ac, batch_size=100):
@@ -203,13 +200,11 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     print('Indexing ', len(developers), ' authors')
     start = datetime.now()
     index_authors(graph, developers, batch_size)
-    create_index_authors(graph)
     print('Indexed authors in: \t', datetime.now()-start)
 
     print('Indexing ', len(commits), ' commits')
     start = datetime.now()
     index_commits(graph, commits, batch_size)
-    create_index_commits(graph)
     print('Indexed commits in: \t', datetime.now()-start)
 
     branches = list({v['hash']: v for v in branches}.values())
@@ -217,7 +212,6 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     print('Indexing ', len(branches), ' branches')
     start = datetime.now()
     index_branches(graph, branches, batch_size)
-    create_index_branches(graph)
     index_branch_commits(graph, branches_commits, batch_size)
     print('Indexed branches in: \t', datetime.now()-start)
 
@@ -225,14 +219,12 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     print('Indexing ', len(files), ' files')
     start = datetime.now()
     index_files(graph, files, batch_size)
-    create_index_files(graph)
     print('Indexed files in: \t', datetime.now()-start)
 
     methods = list({v['hash']: v for v in methods}.values())
     print('Indexing ', len(methods), ' methods')
     start = datetime.now()
     index_methods(graph, methods, batch_size)
-    create_index_methods(graph)
     print('Indexed methods in: \t', datetime.now()-start)
 
     parents = list({str(i): i for i in parents}.values())
@@ -267,41 +259,22 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
 
 def index_cache(graph, cache, batch_size=100):
     total = datetime.now()
-    developers = list(
-        {v['hash']: v for v in cache.data['developers']}.values())
-    index_authors(graph, developers, batch_size)
-    create_index_authors(graph)
-
+    index_authors(graph, list(
+        {v['hash']: v for v in cache.data['developers']}.values()), batch_size)
     index_commits(graph, cache.data['commits'], batch_size)
-    create_index_commits(graph)
-
-    branches = list({v['hash']: v for v in cache.data['branches']}.values())
-    branches_commits = list(
-        {str(i): i for i in cache.data['branches_commits']}.values())
-    index_branches(graph, branches, batch_size)
-    create_index_branches(graph)
-    index_branch_commits(graph, branches_commits, batch_size)
-
-    files = list({v['hash']: v for v in cache.data['files']}.values())
-    index_files(graph, files, batch_size)
-    create_index_files(graph)
-
-    methods = list({v['hash']: v for v in cache.data['methods']}.values())
-    index_methods(graph, methods, batch_size)
-    create_index_methods(graph)
-
-    parents = list({str(i): i for i in cache.data['parents']}.values())
-    index_parent_commits(graph, parents, batch_size)
-
-    start = datetime.now()
+    index_branches(graph, list(
+        {v['hash']: v for v in cache.data['branches']}.values()), batch_size)
+    index_branch_commits(graph,  list(
+        {str(i): i for i in cache.data['branches_commits']}.values()), batch_size)
+    index_files(graph, list(
+        {v['hash']: v for v in cache.data['files']}.values()), batch_size)
+    index_methods(graph, list(
+        {v['hash']: v for v in cache.data['methods']}.values()), batch_size)
+    index_parent_commits(graph, list(
+        {str(i): i for i in cache.data['parents']}.values()), batch_size)
     index_author_commits(graph, cache.data['dev_commits'], batch_size)
-
-    file_methods = list(
-        {str(i): i for i in cache.data['file_methods']}.values())
-    index_file_methods(graph, file_methods, batch_size)
-
+    index_file_methods(graph, list(
+        {str(i): i for i in cache.data['file_methods']}.values()), batch_size)
     index_commit_method(graph, cache.data['commit_methods'], batch_size)
-
     index_commit_files(graph, cache.data['commit_files'], batch_size)
-
     print('Indexing took: \t', datetime.now()-total)
