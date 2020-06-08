@@ -77,18 +77,28 @@ For a comprehensive introduction and more examples, see the [documentation](http
 
 
 
-### 3. Useful Neo4j queries
+### 3. Useful Neo4j queries for the web interface
 
-#### 2.1 Match all nodes in a graph
+#### 3.1 Match all nodes in a graph
 ```
 MATCH (n) RETURN n
 ```
 
 
-#### 2.2 Delete all nodes in a graph
+#### 3.2 Delete all nodes and relationships in a graph
 
 ```
-MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r
+MATCH (n) DETACH DELETE n;
+```
+
+#### 3.2 Delete a limited number commits and relationshipss
+
+```
+MATCH (n:Commit) 
+// Take the first 100 commits nodes and their rels
+WITH n LIMIT 100
+DETACH DELETE n
+RETURN count(*);
 ```
 
 
