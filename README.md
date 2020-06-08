@@ -10,7 +10,7 @@ For a complete description, see the [online documentation](https://graphrepo.rea
 ###  1. Installation & First run
 
 #### 1.1 Prereq
-The only requirement is to have Python and Docker installed on your system.
+The only requirement is to have Python >=3.5 and Docker installed on your system.
 
 #### 1.2 Install the production release with pip using the following command. Please be aware that the final release may miss some functionality.
 
