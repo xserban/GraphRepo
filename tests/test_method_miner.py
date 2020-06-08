@@ -15,7 +15,7 @@
 import os
 
 from py2neo import NodeMatcher, RelationshipMatcher
-from graphrepo.driller import Driller
+from graphrepo.drillers.driller import Driller
 from graphrepo.miners.method import MethodMiner
 
 

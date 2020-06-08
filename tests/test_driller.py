@@ -14,7 +14,7 @@
 
 import os
 
-from graphrepo.driller import Driller
+from graphrepo.drillers.driller import Driller
 
 
 class TestDriller:
