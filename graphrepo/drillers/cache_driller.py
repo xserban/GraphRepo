@@ -16,12 +16,11 @@
 and indexes it in neo4j
 """
 from datetime import datetime
-from diskcache import Cache
 from pydriller import RepositoryMining
 
 import graphrepo.utils as utl
 import graphrepo.drillers.batch_utils as b_utl
-from graphrepo.drillers.drill_cache import DrillCacheSequential
+from graphrepo.drillers.drill_cache import DrillCache, DrillCacheSequential
 from graphrepo.drillers.default import DefaultDriller
 from graphrepo.logger import Logger
 
@@ -42,14 +41,14 @@ class CacheDriller(DefaultDriller):
         start = datetime.now()
         print('Driller started at: \t', start)
         cache = DrillCacheSequential()
-        for commit in RepositoryMining(self.config.REPO,
-                                       since=self.config.START_DATE,
-                                       to=self.config.END_DATE) \
-                .traverse_commits():
+        for commit in \
+            RepositoryMining(self.config.ct.repo,
+                             since=self.config.ct.start_date,
+                             to=self.config.ct.end_date).traverse_commits():
             timestamp = commit.author_date.timestamp()
             dev = utl.format_dev(commit)
             cache.append_cache('developers', dev)
-            com = utl.format_commit(commit, self.config.PROJECT_ID)
+            com = utl.format_commit(commit, self.config.ct.project_id)
             cache.append_cache('commits', com)
             cache.append_cache(
                 'dev_commits',
@@ -58,18 +57,18 @@ class CacheDriller(DefaultDriller):
                 cache.append_cache('parents', utl.format_parent_commit(
                     com['hash'], parent))
             for branch in commit.branches:
-                br_ = utl.format_branch(branch, self.config.PROJECT_ID)
+                br_ = utl.format_branch(branch, self.config.ct.project_id)
                 cache.append_cache('branches', br_)
                 cache.append_cache('branches_commits', utl.format_branch_commit(
                     br_['hash'], com['hash']))
             for file in commit.modifications:
-                fl_ = utl.format_file(file, self.config.PROJECT_ID)
+                fl_ = utl.format_file(file, self.config.ct.project_id)
                 cache.append_cache('files', fl_)
                 cache.append_cache('commit_files', utl.format_commit_file(
                     com['hash'], fl_['hash'], file, timestamp))
                 for method in file.changed_methods:
                     met = utl.format_method(
-                        method, file, self.config.PROJECT_ID)
+                        method, file, self.config.ct.project_id)
                     cache.append_cache('methods', met)
                     cache.append_cache(
                         'file_methods',
@@ -83,7 +82,7 @@ class CacheDriller(DefaultDriller):
                                            timestamp))
         print('Driller finished in: \t', datetime.now() - start)
         if index:
-            self.index_batch(cache.data)
+            self.index_batch(cache)
         return cache
 
     def index_batch(self, cache):
@@ -94,7 +93,7 @@ class CacheDriller(DefaultDriller):
             self.config.check_config()
             self._check_connection()
             b_utl.index_cache(
-                self.graph, cache, batch_size=self.config.BATCH_SIZE)
+                self.graph, cache, batch_size=self.config.ct.batch_size)
         except Exception as exc:
             LG.log_and_raise(exc)
         else:
@@ -105,9 +104,8 @@ class CacheDriller(DefaultDriller):
         and caches it after the extraction
         :param index: optional, if True, the data is indexed in Neo4j
         """
-        cache = Cache()
         data = self.drill_batch(index=False)
-        cache['data'] = data
+        cache = DrillCache(data)
         if index:
             self.index_batch(cache)
         return cache

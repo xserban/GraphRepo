@@ -126,17 +126,17 @@ class DefaultDriller():
                     com_methods.append(
                         utl.format_commit_method(com['hash'], met['hash'],
                                                  method, timestamp))
-        data_ = {'commits': commits,
-                 'parents': parents,
-                 'developers': devs,
-                 'dev_commits': dev_com,
-                 'branches': branches,
-                 'branches_commits': branches_com,
-                 'files': files,
-                 'commit_files': com_files,
-                 'methods': methods,
-                 'file_methods': files_methods,
-                 'commit_methods': com_methods}
+        data_ = utl.Dotdict({'commits': commits,
+                             'parents': parents,
+                             'developers': devs,
+                             'dev_commits': dev_com,
+                             'branches': branches,
+                             'branches_commits': branches_com,
+                             'files': files,
+                             'commit_files': com_files,
+                             'methods': methods,
+                             'file_methods': files_methods,
+                             'commit_methods': com_methods})
         print('Driller finished in: \t', datetime.now() - start)
 
         if save_path:

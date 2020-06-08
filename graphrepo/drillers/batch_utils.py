@@ -266,42 +266,42 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
 
 
 def index_cache(graph, cache, batch_size=100):
-
+    total = datetime.now()
     developers = list(
-        {v['hash']: v for v in cache['data']['developers']}.values())
+        {v['hash']: v for v in cache.data['developers']}.values())
     index_authors(graph, developers, batch_size)
     create_index_authors(graph)
 
-    index_commits(graph, cache['data']['commits'], batch_size)
+    index_commits(graph, cache.data['commits'], batch_size)
     create_index_commits(graph)
 
-    branches = list({v['hash']: v for v in cache['data']['branches']}.values())
+    branches = list({v['hash']: v for v in cache.data['branches']}.values())
     branches_commits = list(
-        {str(i): i for i in cache['data']['branches_commits']}.values())
+        {str(i): i for i in cache.data['branches_commits']}.values())
     index_branches(graph, branches, batch_size)
     create_index_branches(graph)
     index_branch_commits(graph, branches_commits, batch_size)
 
-    files = list({v['hash']: v for v in cache['data']['files']}.values())
+    files = list({v['hash']: v for v in cache.data['files']}.values())
     index_files(graph, files, batch_size)
     create_index_files(graph)
 
-    methods = list({v['hash']: v for v in cache['data']['methods']}.values())
+    methods = list({v['hash']: v for v in cache.data['methods']}.values())
     index_methods(graph, methods, batch_size)
     create_index_methods(graph)
 
-    parents = list({str(i): i for i in cache['data']['parents']}.values())
+    parents = list({str(i): i for i in cache.data['parents']}.values())
     index_parent_commits(graph, parents, batch_size)
 
     start = datetime.now()
-    index_author_commits(graph, cache['data']['dev_commits'], batch_size)
+    index_author_commits(graph, cache.data['dev_commits'], batch_size)
 
     file_methods = list(
-        {str(i): i for i in cache['data']['file_methods']}.values())
+        {str(i): i for i in cache.data['file_methods']}.values())
     index_file_methods(graph, file_methods, batch_size)
 
-    index_commit_method(graph, cache['data']['commit_methods'], batch_size)
+    index_commit_method(graph, cache.data['commit_methods'], batch_size)
 
-    index_commit_files(graph, cache['data']['commit_files'], batch_size)
+    index_commit_files(graph, cache.data['commit_files'], batch_size)
 
     print('Indexing took: \t', datetime.now()-total)
