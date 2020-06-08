@@ -47,7 +47,7 @@ The default one is *neo4j*.
 #### 1.4. Index and vizualize a repo
 
 Please clone a project configure the constants in a config file, e.g., clone
-the [GraphRepo] project in the ``repos`` folder and update the yaml file at [examples/configs/graphrepo.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/configs/graphrepo.yml).
+the [GraphRepo](https://github.com/NullConvergence/GraphRepo) project in the ``repos`` folder and update the yaml file at [examples/configs/graphrepo.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/configs/graphrepo.yml).
 Then index the repo using:
 
 ```
