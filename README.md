@@ -12,13 +12,18 @@ For a complete description, see the [online documentation](https://graphrepo.rea
 #### 1.1 Prereq
 The only requirement is to have Python >=3.5 and Docker installed on your system.
 
-#### 1.2 Install the production release with pip using the following command. Please be aware that the final release may miss some functionality.
+#### 1.2 Install using pip
+
+The production release can be installed using pip: 
 
 ```
 $ pip install graphrepo
 ```
 
 #### Alternative: Install the development version
+
+Note that the development version may have new, but unreliable or poorly documented features.
+
 ```
 $ git clone --recurse-submodules https://github.com/NullConvergence/GraphRepo
 $ cd graphrepo/
