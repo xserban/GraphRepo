@@ -1,15 +1,14 @@
 .. _DS:
 
 ==================
-Data Structure
+Schema
 ==================
 
-The resulting Neo4j data Structure consists of 5 node types and 6 relationship types, as illustrated below:
+The resulting Neo4j schema consists of 5 node types and 6 relationship types, as illustrated below:
 
-.. image:: /GraphRepoDS.svg
-   :width: 300
+.. figure:: /GraphRepoSchema.svg
+   :width: 45 %
    :align: center
-
 
 Nodes
 ===========
@@ -97,9 +96,9 @@ The direction is from Commit to Author and the relationship attributes are::
   }
 
 
-Branch
+BranchCommit
 -----------
-A Branch relationship exists between each branch and the branch commits.
+A BranchCommit relationship exists between each branch and the branch commits.
 The direction is from Branch to Commit. This relationship does not have any special attributes.
 
 
