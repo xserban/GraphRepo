@@ -1,3 +1,4 @@
+# v0.1.5 released
 from setuptools import setup, find_packages
 
 setup(name="graphrepo",
