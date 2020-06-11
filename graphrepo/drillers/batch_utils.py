@@ -1,6 +1,6 @@
 """This module is the wild wild west of batch indexing :-)
 In contains all Neo4j queries for indexing the data in batches.
-More documentation will folow soon.
+More documentation will follow soon.
 """
 from datetime import datetime
 
