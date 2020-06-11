@@ -86,7 +86,7 @@ class TestDevMiner:
         all_methods = dev_miner.get_methods(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb"
         )
-        assert len(all_methods) == 9
+        assert len(all_methods) == 5
 
         all_methods_id_dates = dev_miner.get_methods(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb",
@@ -94,7 +94,7 @@ class TestDevMiner:
             start_date=st_date,
             end_date=end_date
         )
-        assert len(all_methods_id_dates) == 9
+        assert len(all_methods_id_dates) == 5
 
         method_updates = dev_miner.get_method_updates(
             dev_hash="bb1a1830d2f4f4d13151827aa1072ed43bd8738a139da332e1ee3ddb"

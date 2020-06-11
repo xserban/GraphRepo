@@ -40,7 +40,7 @@ class FileMiner(DefaultMiner):
         :return: list of update file relationships
         """
         query = """MATCH ()-[r:UpdateFile]->(f:File {{hash: "{0}"}})
-        return r
+        return distinct r
         """.format(file_hash)
         dt_ = self.graph.run(query)
         return dt_ if not dic else [dict(x['r']) for x in dt_.data()]
@@ -54,7 +54,7 @@ class FileMiner(DefaultMiner):
         :return: list of methods
         """
         query = """MATCH (f:File {{hash: "{0}"}})-[r:Method]->(m:Method)
-        return m
+        return distinct m
         """.format(file_hash)
         dt_ = self.graph.run(query)
         return dt_ if not dic else [dict(x['m']) for x in dt_.data()]

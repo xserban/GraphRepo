@@ -52,7 +52,7 @@ class DeveloperMiner(DefaultMiner):
               -[r:Author]->
               (c:Commit {1})
         {2}
-        RETURN c;
+        RETURN distinct c;
         """.format(dev_hash, com_filter, where)
         dt_ = self.graph.run(query)
         return dt_ if not dic else [dict(x['c']) for x in dt_.data()]
@@ -114,7 +114,7 @@ class DeveloperMiner(DefaultMiner):
               -[fu: UpdateFile]->
               (f: File)
         {2}
-        RETURN fu;
+        RETURN distinct fu;
         """.format(dev_hash, com_filter, where)
 
         dt_ = self.graph.run(query)
@@ -145,7 +145,7 @@ class DeveloperMiner(DefaultMiner):
               -[um: UpdateMethod]->
               (m: Method)
         {2}
-        RETURN m;
+        RETURN distinct m;
         """.format(dev_hash, com_filter, where)
 
         dt_ = self.graph.run(query)
@@ -177,7 +177,7 @@ class DeveloperMiner(DefaultMiner):
               -[um: UpdateMethod]->
               ()
         {2}
-        RETURN um;
+        RETURN distinct um;
         """.format(dev_hash, com_filter, where)
 
         dt_ = self.graph.run(query)

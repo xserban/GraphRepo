@@ -50,7 +50,7 @@ class CommitMiner(DefaultMiner):
         query = """
         MATCH (c: Commit {0})
         {1}
-        RETURN c
+        RETURN distinct c
         """.format(com_filter, where)
         dt_ = self.graph.run(query)
         return dt_ if not dic else [dict(x['c']) for x in dt_.data()]
@@ -74,7 +74,7 @@ class CommitMiner(DefaultMiner):
         query = """
           MATCH (c:Commit {{hash: "{0}"}})
           -[UpdateFile]->(f:File)
-          return f
+          return distinct f
           """.format(commit_hash)
         files_ = self.graph.run(query)
         return files_ if not dic else [x['f'] for x in files_.data()]
@@ -89,7 +89,7 @@ class CommitMiner(DefaultMiner):
         query = """
           MATCH (c:Commit {{hash: "{0}"}})
           -[f: UpdateFile]->(fu:File)
-          return f
+          return distinct f
           """.format(commit_hash)
         files_ = self.graph.run(query)
         return files_ if not dic else [x['f'] for x in files_.data()]
@@ -103,7 +103,7 @@ class CommitMiner(DefaultMiner):
         query = """
           MATCH (c:Commit {{hash: "{0}"}})
           -[UpdateMethod]->(m:Method)
-          return m
+          return distinct m
           """.format(commit_hash)
         files_ = self.graph.run(query)
         return files_ if not dic else [x['m'] for x in files_.data()]
@@ -117,7 +117,7 @@ class CommitMiner(DefaultMiner):
         query = """
           MATCH (c:Commit {{hash: "{0}"}})
           -[m:UpdateMethod]->(mu:Method)
-          return m
+          return distinct m
           """.format(commit_hash)
         files_ = self.graph.run(query)
         return files_ if not dic else [x['m'] for x in files_.data()]

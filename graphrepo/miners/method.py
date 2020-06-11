@@ -41,7 +41,7 @@ class MethodMiner(DefaultMiner):
           :return: list of UpdateMethod relationships / dics
           """
         query = """MATCH ()-[r:UpdateMethod]->(m: Method{{hash: "{0}"}})
-        RETURN r
+        RETURN distinct r
           """.format(method_hash)
         dt_ = self.graph.run(query)
         return dt_ if not dic else [dict(x['r']) for x in dt_.data()]
