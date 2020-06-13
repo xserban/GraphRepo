@@ -31,10 +31,15 @@ Commit
 Each commit is indexed as a node with the following attributes::
 
   {
-    "hash": "string - unique identifier which corresponds with the commit hash in git",
+    "hash": "string - unique identifier in Neo4j",
+    "commit_hash: "string - commit hash in git",
+    "message": "string - commit message in git",
     "is_merge": "int - 1 if the commit is merge, 0 otherwise",
     "timestamp": "int - Unix epoch, time of the commit",
-    "project_id": "string - project id from config (can be used to select all branches from a project)"
+    "project_id": "string - project id from config (can be used to select all branches from a project)",
+    "dmm_unit_complexity": "int, see Pydriller",
+    "dmm_unit_interfacing": "int, see Pydriller",
+    "dmm_unit_size": "int, see Pydriller"
   }
 
 

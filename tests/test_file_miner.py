@@ -38,7 +38,7 @@ class TestFileMiner:
         assert readme['name'] == 'README.MD'
 
         # get file history
-        f_hash = '3bb6694eb3d4b721b8b3aa178c3da5b23437a0e901f9e1d1d3fa66ec'
+        f_hash = 'f85f4af5b20ddd617f93da13c7789a65fb972e68a8d634d5f253abab'
         update_history = f_miner.get_change_history(f_hash)
         assert len(update_history) == 3
 

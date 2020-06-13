@@ -15,9 +15,15 @@ def index_commits(graph, commits, batch_size=100):
     query = """
     UNWIND {commits} AS c
     MERGE (:Commit { hash: c.hash,
+                     commit_hash: c.commit_hash,
                      timestamp: c.timestamp,
                      is_merge: c.is_merge,
-                     project_id: c.project_id})
+                     project_id: c.project_id,
+                     message: c.message,
+                     dmm_unit_complexity: c.dmm_unit_complexity,
+                     dmm_unit_interfacing: c.dmm_unit_interfacing,
+                     dmm_unit_size: c.dmm_unit_size
+                     })
     """
     for b in batch(commits, batch_size):
         graph.run(query, commits=b)

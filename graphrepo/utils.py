@@ -52,7 +52,7 @@ def load_json(path):
         return json.load(json_file)
 
 
-def get_file_hash(file):
+def get_file_hash(file, project_id=None):
     name = ''
     if file.old_path and not file.new_path:
         name = name+file.old_path
@@ -60,6 +60,7 @@ def get_file_hash(file):
         name = name+file.new_path
 
     name = name+file.filename
+    name = project_id + name if project_id else name
     return hashlib.sha224(str(name).encode('utf-8')).hexdigest()
 
 
@@ -72,9 +73,10 @@ def get_method_type(method, m_before, m_current):
         return "ADD"
 
 
-def get_method_hash(method, file):
-    fhash = get_file_hash(file)
+def get_method_hash(method, file, project_id=None):
+    fhash = get_file_hash(file, project_id)
     _fmname = fhash + "_" + method.long_name
+    _fmname = project_id + _fmname if project_id else _fmname
     return hashlib.sha224(_fmname.encode('utf-8')).hexdigest()
 
 
@@ -90,25 +92,34 @@ def format_dev(dev):
     }
 
 
+def get_commit_hash(chash, project_id):
+    return hashlib.sha224(str(project_id + chash).encode('utf-8')).hexdigest()
+
+
 def format_commit(com, project_id):
     return {
-        'hash': com.hash,
+        'hash': get_commit_hash(com.hash, project_id),
+        'commit_hash': com.hash,
+        'message': com.msg,
         'is_merge': 1 if com.merge else 0,
         'timestamp': com.author_date.timestamp(),
-        'project_id': project_id
+        'project_id': project_id,
+        'dmm_unit_complexity': com.dmm_unit_complexity if com.dmm_unit_complexity else -1,
+        'dmm_unit_interfacing': com.dmm_unit_interfacing if com.dmm_unit_interfacing else -1,
+        'dmm_unit_size': com.dmm_unit_size if com.dmm_unit_size else -1,
     }
 
 
-def format_parent_commit(c_hash, parent_hash):
+def format_parent_commit(c_hash, parent_hash, project_id=None):
     return {
         'child_hash': c_hash,
-        'parent_hash': parent_hash
+        'parent_hash': get_commit_hash(parent_hash, project_id)
     }
 
 
 def format_branch(name, project_id):
     return {
-        'hash':  hashlib.sha224(str(name).encode('utf-8')).hexdigest(),
+        'hash':  hashlib.sha224(str(project_id+name).encode('utf-8')).hexdigest(),
         'project_id': project_id,
         'name': name
     }
@@ -122,12 +133,14 @@ def format_author_commit(dev, com, timestamp):
 
 
 def format_branch_commit(bhash, chash):
-    return {'branch_hash': bhash, 'commit_hash': chash}
+    return {'branch_hash': bhash,
+            'commit_hash': chash
+            }
 
 
 def format_file(file, project_id):
     return {
-        'hash': get_file_hash(file),
+        'hash': get_file_hash(file, project_id),
         'name': file.filename,
         'project_id': project_id,
         'type': '.' + file.filename.split('.')[-1:][0]
@@ -140,6 +153,8 @@ def format_commit_file(c_hash, f_hash, file, timestamp, index_code=True):
                'timestamp': timestamp,
                'old_path': file.old_path if file.old_path else '',
                'path': file.new_path if file.new_path else '',
+               'source_code': '',
+               'source_code_before': '',
                'diff': file.diff,
                'nloc': file.nloc if file.nloc else -1,
                'complexity': file.complexity if file.complexity else -1,
@@ -178,7 +193,7 @@ def format_commit_method(c_hash, m_hash, met, timestamp):
 
 def format_method(met, fille, project_id):
     return {
-        'hash': get_method_hash(met, fille),
+        'hash': get_method_hash(met, fille, project_id),
         'name': met.name,
         'file_name': met.filename,
         'project_id': project_id}

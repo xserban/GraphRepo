@@ -55,7 +55,7 @@ class CacheDriller(DefaultDriller):
                 utl.format_author_commit(dev, com, timestamp))
             for parent in commit.parents:
                 cache.append_cache('parents', utl.format_parent_commit(
-                    com['hash'], parent))
+                    com['hash'], parent, self.config.ct.project_id))
             for branch in commit.branches:
                 br_ = utl.format_branch(branch, self.config.ct.project_id)
                 cache.append_cache('branches', br_)
