@@ -3,11 +3,11 @@ neo:
   port: 7687
   db_user: neo4j
   db_pwd: neo4jj
+  batch_size: 50
 
 project:
   repo: repos/tensorflow/
   start_date: "1 January, 2020 00:00"
   end_date: "1 March, 2020 00:00"
   project_id: 'tensorflow'
-  batch_size: 50
   index_code: True
