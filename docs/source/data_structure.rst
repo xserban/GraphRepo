@@ -32,7 +32,7 @@ Each commit is indexed as a node with the following attributes::
 
   {
     "hash": "string - unique identifier in Neo4j",
-    "commit_hash: "string - commit hash in git",
+    "commit_hash": "string - commit hash in git",
     "message": "string - commit message in git",
     "is_merge": "int - 1 if the commit is merge, 0 otherwise",
     "timestamp": "int - Unix epoch, time of the commit",
