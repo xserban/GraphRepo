@@ -97,14 +97,14 @@ class DefaultDriller():
                              since=self.config.ct.start_date,
                              to=self.config.ct.end_date).traverse_commits():
             timestamp = commit.author_date.timestamp()
-            dev = utl.format_dev(commit)
+            dev = utl.format_dev(commit, self.config.ct.index_developer_email)
             devs.append(dev)
             com = utl.format_commit(commit, self.config.ct.project_id)
             commits.append(com)
             dev_com.append(utl.format_author_commit(dev, com, timestamp))
             for parent in commit.parents:
                 parents.append(utl.format_parent_commit(
-                    com['hash'], parent))
+                    com['hash'], parent, self.config.ct.project_id))
             for branch in commit.branches:
                 br_ = utl.format_branch(branch, self.config.ct.project_id)
                 branches.append(br_)

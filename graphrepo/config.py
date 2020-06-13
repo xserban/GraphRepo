@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """This module stores all config constants. It is a singleton
-because it is used across in several modules inside the app"""
+because it is used across several modules inside the app"""
 
 from graphrepo.singleton import Singleton
 from graphrepo.utils import Dotdict

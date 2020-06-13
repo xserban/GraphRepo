@@ -4,11 +4,12 @@ neo:
   port: 7687
   db_user: neo4j
   db_pwd: neo4jj
+  batch_size: 50
 
 project:
   repo: repos/GraphRepo/
   start_date: #"1 February, 2018"
   end_date: #"30 March, 2018"
   project_id: 'graphrepo'
-  batch_size: 50
   index_code: True
+  index_developer_email: True

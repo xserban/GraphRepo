@@ -3,11 +3,12 @@ neo:
   port: 7687
   db_user: neo4j
   db_pwd: neo4jj
+  batch_size: 50
 
 project:
   repo: repos/jax/
   start_date: "1 January, 2019 00:00"
   end_date: "1 May, 2020 00:00"
   project_id: jax
-  batch_size: 50
   index_code: True
+  index_developer_email: True
