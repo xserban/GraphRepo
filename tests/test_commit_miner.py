@@ -42,19 +42,19 @@ class TestCommitMiner:
         assert len(all_com_dates) == 8
 
         c_files = com_miner.get_commit_files(
-            'f186cfdc2f0b5ea16c7f676272dcb8220ceed5d9')
+            'ad98f8594c15b1ebc4be4f20d849bcc0edf69ec574c33dfd84b7792d')
         assert len(c_files) == 3
 
         c_file_updates = com_miner.get_commit_file_updates(
-            'f186cfdc2f0b5ea16c7f676272dcb8220ceed5d9')
+            'ad98f8594c15b1ebc4be4f20d849bcc0edf69ec574c33dfd84b7792d')
         assert len(c_file_updates) == 3
 
         c_methods = com_miner.get_commit_methods(
-            'f186cfdc2f0b5ea16c7f676272dcb8220ceed5d9')
+            'ad98f8594c15b1ebc4be4f20d849bcc0edf69ec574c33dfd84b7792d')
         assert len(c_methods) == 3
 
         c_method_updates = com_miner.get_commit_method_updates(
-            'f186cfdc2f0b5ea16c7f676272dcb8220ceed5d9')
+            'ad98f8594c15b1ebc4be4f20d849bcc0edf69ec574c33dfd84b7792d')
         assert len(c_method_updates) == 3
 
         test_driller.clean()

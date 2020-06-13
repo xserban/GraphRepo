@@ -104,7 +104,7 @@ class DefaultDriller():
             dev_com.append(utl.format_author_commit(dev, com, timestamp))
             for parent in commit.parents:
                 parents.append(utl.format_parent_commit(
-                    com['hash'], parent))
+                    com['hash'], parent, self.config.ct.project_id))
             for branch in commit.branches:
                 br_ = utl.format_branch(branch, self.config.ct.project_id)
                 branches.append(br_)

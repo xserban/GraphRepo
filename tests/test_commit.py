@@ -18,6 +18,7 @@ import yaml
 
 from py2neo import NodeMatcher, RelationshipMatcher
 from graphrepo.drillers.driller import Driller
+from graphrepo.drillers.cache_driller import CacheDriller
 
 
 class TestCommit:
@@ -76,6 +77,34 @@ class TestCommit:
 
         test_driller.clean()
 
+    def test_rel_index_cache(self):
+        folder = os.path.dirname(os.path.abspath(__file__))
+        test_driller = CacheDriller(os.path.join(folder, 'cnfg_simple.yml'))
+        test_driller.drill_batch_cache_sequential()
+
+        # test that all relationships were indexed
+        rel_matcher = RelationshipMatcher(test_driller.graph)
+
+        all_branch = list(rel_matcher.match(None, "BranchCommit"))
+        assert len(all_branch) == 8
+
+        all_authorship = list(rel_matcher.match(None, "Author"))
+        assert len(all_authorship) == 8
+
+        all_parent = list(rel_matcher.match(None, "Parent"))
+        assert len(all_parent) == 8
+
+        all_updadedfile = list(rel_matcher.match(None, "UpdateFile"))
+        assert len(all_updadedfile) == 9
+
+        all_hasmethod = list(rel_matcher.match(None, "Method"))
+        assert len(all_hasmethod) == 5
+
+        all_updatemethod = list(rel_matcher.match(None, "UpdateMethod"))
+        assert len(all_updatemethod) == 9
+
+        test_driller.clean()
+
     def test_custom_attributes_rel(self):
         folder = os.path.dirname(os.path.abspath(__file__))
         test_driller = Driller(os.path.join(folder, 'cnfg_simple.yml'))
@@ -85,7 +114,7 @@ class TestCommit:
         rel_matcher = RelationshipMatcher(test_driller.graph)
 
         commit = node_matcher.match(
-            "Commit", hash="7a0d1eac6dd6a7af7ff0b0f4927b9beaedaacd52").first()
+            "Commit", hash="aa6fa504ccb0fa919acc3cb31e510dc2048314eb0656f34babada15c").first()
         assert commit['is_merge'] == 0
 
         update_file_rel = rel_matcher.match([commit], "UpdateFile").first()
