@@ -11,3 +11,4 @@ project:
   end_date: "1 June, 2019 00:00"
   project_id: kibana
   index_code: True
+  index_developer_email: True

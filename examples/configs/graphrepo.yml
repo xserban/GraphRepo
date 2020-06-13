@@ -12,3 +12,4 @@ project:
   end_date: #"30 March, 2018"
   project_id: 'graphrepo'
   index_code: True
+  index_developer_email: True

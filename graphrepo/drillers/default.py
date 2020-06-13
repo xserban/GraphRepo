@@ -97,7 +97,7 @@ class DefaultDriller():
                              since=self.config.ct.start_date,
                              to=self.config.ct.end_date).traverse_commits():
             timestamp = commit.author_date.timestamp()
-            dev = utl.format_dev(commit)
+            dev = utl.format_dev(commit, self.config.ct.index_developer_email)
             devs.append(dev)
             com = utl.format_commit(commit, self.config.ct.project_id)
             commits.append(com)

@@ -23,7 +23,8 @@ as follows::
       start_date: "1 February, 2018" # the start date for indexing (leave empty if it corresponds with the initial start date of the project)
       end_date: "30 March, 2018" # the start date for indexing (leave empty if it corresponds with the last commit)
       project_id: 'pydriller' # a unique project id for the database
-      index_code: False # boolean, if true GraphRepo indexes for each file touched by a commit the source code before and after the commit. This parameter significantly increases the index time and the hardware resources needed for Neo4j. For a medium size project, with 4000 commits, with an average of 1 file edited/commit, the equivalent of 8000 files will be stored in text in Neo4j if this parameter is set to True.
+      index_code: False # boolean, if True GraphRepo indexes for each file touched by a commit the source code before and after the commit. This parameter significantly increases the index time and the hardware resources needed for Neo4j. For a medium size project, with 4000 commits, with an average of 1 file edited/commit, the equivalent of 8000 files will be stored in text in Neo4j if this parameter is set to True.
+      index_developer_email: True # boolean, if True, GraphRepo indexes the developer emails in the Developer node. Turn flag off for GDPR or any other privacy concerns
 
 
 

@@ -84,10 +84,10 @@ def get_author_hash(email):
     return hashlib.sha224(email.encode('utf-8')).hexdigest()
 
 
-def format_dev(dev):
+def format_dev(dev, index_email=True):
     return {
         'name': dev.author.name,
-        'email': dev.author.email,
+        'email': dev.author.email if index_email else '',
         'hash': get_author_hash(dev.author.email)
     }
 

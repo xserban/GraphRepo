@@ -11,3 +11,4 @@ project:
   end_date: "1 January, 2018 00:00"
   project_id: hadoop
   index_code: True
+  index_developer_email: True

@@ -11,3 +11,4 @@ project:
   end_date: "1 March, 2020 00:00"
   project_id: 'tensorflow'
   index_code: True
+  index_developer_email: True
