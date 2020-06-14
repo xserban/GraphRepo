@@ -14,15 +14,15 @@
 """This module is a custom miner class with some abstractions"""
 from abc import abstractmethod
 
+from graphrepo.mappers import default
 
-class DefaultMapper:
+
+class CSVMapper(object):
     """The miners are currently synchronous, but
     ideally they will be async in the future"""
 
     def __init__(self):
         pass
 
-    @abstractmethod
     def map(self, objects):
-        """Maps objects"""
-        raise NotImplementedError
+        return objects.to_csv()

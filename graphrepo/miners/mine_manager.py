@@ -18,7 +18,6 @@ from graphrepo.config import Config
 from graphrepo.logger import Logger
 from graphrepo.singleton import Singleton
 from graphrepo import miners
-import graphrepo.mappers as mappers
 
 
 LG = Logger()
@@ -101,22 +100,12 @@ class MineManager(metaclass=Singleton):
         else:
             return
 
-    def get_all_data(self, map=False, merge=False):
+    def get_all_data(self):
         """Returns all nodes and relationships from Neo4j
-        :param map: Map data using default mappers for nodes and rels
-        :param merge: Concatenates nodes an relationships
-        :returns: if merge is False it returns a tuple with two
-          arrays: the first with nodes, the second with relationships
-          if merge is True it returns only one array
+        :returns:  a tuple with two arrays: the first with nodes,
+            the second with relationships
         """
         nodes = self.node_matcher.match()
         rels = self.rel_matcher.match()
 
-        if map is True:
-            nodes = [mappers.node.NodeMapper.map_default_node(
-                n) for n in nodes]
-            rels = [mappers.rels.RelMapper.map_default_rel(r) for r in rels]
-            if merge is True:
-                return nodes+rels, None
-
-        return nodes, rels
+        return list(nodes), list(rels)
