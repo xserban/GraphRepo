@@ -15,12 +15,11 @@
 from abc import abstractmethod
 
 
-class DefaultMiner(object):
+class DefaultMiner():
     """The miners are currently synchronous, but
     ideally they will be async in the future"""
 
     def __init__(self, graph, node_matcher, rel_matcher, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self.graph = graph
         self.node_matcher = node_matcher
         self.rel_matcher = rel_matcher

@@ -39,7 +39,7 @@ def main():
     file_miner = mine_manager.file_miner
     file_ = file_miner.query(pproject_id=mine_manager.config.ct.project_id,
                              name="commit.py")
-    updated_file_rels = file_miner.get_change_history(file_)
+    updated_file_rels = file_miner.get_change_history(file_['hash'])
 
     # sort update relationships and transform data for plotting
     updated_file_rels.sort(key=lambda x: x['timestamp'])
