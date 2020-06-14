@@ -20,29 +20,22 @@ from graphrepo.miners.utils import format_commit_id_date
 class CommitMiner(DefaultMiner):
     """This class holds queries for commits"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def query(self, dic=True, **kwargs):
+    def query(self, **kwargs):
         """Queries commits by any arguments given in kwargs
         For example kwargs can be {'hash': 'example-hash'}
-        :param dic: optional; boolean for converting data
-          to list of dictionaries
         :param kwargs: any parameter and value, between hash, name or email
         :returns: list of commit nodes matched
         """
         com_ = self.node_matcher.match("Commit", **kwargs)
-        return list(com_) if not dic else [dict(x) for x in com_]
+        return [dict(x) for x in com_]
 
     def get_between_dates(self, start_date, end_date,
-                          project_id=None, dic=True):
+                          project_id=None):
         """Returns all commits between start and end date
         :param start_date: timestamp, start date
         :param end_date: timestamp, end date
         :param project_id: optional; if given only the commits from a project
           are returned
-        :param dic: optional; boolean for converting data
-          to list of dictionaries
         :returns: list of commitss
         """
         com_filter, where = format_commit_id_date(
@@ -53,23 +46,20 @@ class CommitMiner(DefaultMiner):
         RETURN distinct c
         """.format(com_filter, where)
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x['c']) for x in dt_.data()]
+        return [dict(x['c']) for x in dt_.data()]
 
-    def get_all(self, dic=True):
+    def get_all(self,):
         """Returns all commits
-        :param dic: optional; boolean for converting data
-          to list of dictionaries
         :returns: list of commit nodes
         """
         com_ = self.node_matcher.match("Commit")
-        return list(com_) if not dic else [dict(x) for x in com_]
+        return [dict(x) for x in com_]
 
-    def get_commit_files(self, commit_hash, dic=True):
+    def get_commit_files(self, commit_hash):
         """Returns the files updated in a commit
         :param commit_hash: optional; if given, it will
           return the data only for one commit
-        :param dic: optional, boolean for ocnverting the data to dictionaries
-        :returns: list of
+        :returns: list of commit files
         """
         query = """
           MATCH (c:Commit {{hash: "{0}"}})
@@ -77,13 +67,12 @@ class CommitMiner(DefaultMiner):
           return distinct f
           """.format(commit_hash)
         files_ = self.graph.run(query)
-        return files_ if not dic else [x['f'] for x in files_.data()]
+        return [x['f'] for x in files_.data()]
 
-    def get_commit_file_updates(self, commit_hash, dic=True):
+    def get_commit_file_updates(self, commit_hash):
         """Returns the updates a commit made to files (UpdateFile rel)
         :param commit_hash: optional; if given, it will
           return the data only for one commit
-        :param dic: optional, boolean for ocnverting the data to dictionaries
         :returns: list of
         """
         query = """
@@ -92,13 +81,12 @@ class CommitMiner(DefaultMiner):
           return distinct f
           """.format(commit_hash)
         files_ = self.graph.run(query)
-        return files_ if not dic else [x['f'] for x in files_.data()]
+        return [x['f'] for x in files_.data()]
 
-    def get_commit_methods(self, commit_hash=None, dic=True):
+    def get_commit_methods(self, commit_hash=None):
         """Returns the methods updated in a commit
         :param commit_hash: optional; if given, it will
           return the data only for one commit
-        :param dic: optional, boolean for ocnverting the data to dictionaries
         """
         query = """
           MATCH (c:Commit {{hash: "{0}"}})
@@ -106,9 +94,9 @@ class CommitMiner(DefaultMiner):
           return distinct m
           """.format(commit_hash)
         files_ = self.graph.run(query)
-        return files_ if not dic else [x['m'] for x in files_.data()]
+        return [x['m'] for x in files_.data()]
 
-    def get_commit_method_updates(self, commit_hash=None, dic=True):
+    def get_commit_method_updates(self, commit_hash=None):
         """Returns the updatemethod relationships from a commit
         :param commit_hash: optional; if given,
           it will return the data only for one commit
@@ -120,4 +108,4 @@ class CommitMiner(DefaultMiner):
           return distinct m
           """.format(commit_hash)
         files_ = self.graph.run(query)
-        return files_ if not dic else [x['m'] for x in files_.data()]
+        return [x['m'] for x in files_.data()]

@@ -11,13 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""This module is a custom mapper class with some abstractions"""
+"""This module is a custom miner class with some abstractions"""
 from abc import abstractmethod
+import pandas as pd
+
+from graphrepo.mappers.default import DefaultMapper
 
 
-class DefaultMapper():
+class CSVMapper(DefaultMapper):
     """The miners are currently synchronous, but
     ideally they will be async in the future"""
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def map(self, objects):
+        """The csv default map function
+        assumes the objectss are of the type
+
+        """
+        return pd.DataFrame(objects)
