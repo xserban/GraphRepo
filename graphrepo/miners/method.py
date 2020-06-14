@@ -30,9 +30,9 @@ class MethodMiner(DefaultMiner):
         """Returns all node of type Method
         :return: list of method
         """
-        return list(self.node_matcher.match("Method"))
+        return self.node_matcher.match("Method")
 
-    def get_change_history(self, method_hash, dic=True):
+    def get_change_history(self, method_hash):
         """Returns all UpdateMethod relationships
           :param method_hash: method unique identifier
           :param dic: optional; boolean for converting data to dictionary
@@ -44,4 +44,4 @@ class MethodMiner(DefaultMiner):
         RETURN distinct r
           """.format(method_hash)
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x['r']) for x in dt_.data()]
+        return [dict(x['r']) for x in dt_.data()]

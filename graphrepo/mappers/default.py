@@ -15,9 +15,9 @@
 from abc import abstractmethod
 
 
-class DefaultMapper(object):
-  """The miners are currently synchronous, but
-  ideally they will be async in the future"""
+class DefaultMapper():
+    """The miners are currently synchronous, but
+    ideally they will be async in the future"""
 
-  def __init__(self, *args, **kwargs):
-    pass
+    def __init__(self, *args, **kwargs):
+        pass

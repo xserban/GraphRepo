@@ -27,10 +27,10 @@ class DeveloperMiner(DefaultMiner):
         :param kwargs: any parameter and value, between hash, name or email
         :returns: list of nodes matched
         """
-        return list(self.node_matcher.match("Developer", **kwargs))
+        return self.node_matcher.match("Developer", **kwargs)
 
     def get_commits(self, dev_hash, project_id=None,
-                    start_date=None, end_date=None, dic=True):
+                    start_date=None, end_date=None):
         """Returns all commits authored by a developer.
         Optionally, it also filters by project id
         :param dev_hash: developer unique identifier
@@ -40,9 +40,6 @@ class DeveloperMiner(DefaultMiner):
           beginning with this date
         :param end_date: optional timestamp; filter commits
           untill this date
-        :param dic: optional; boolean for converting data to dictionary
-          or returning it as py2neo records - the py2neo raw
-          records can be used in mappers
         :returns: list of commits
         """
         com_filter, where = fcid(project_id,
@@ -55,10 +52,10 @@ class DeveloperMiner(DefaultMiner):
         RETURN distinct c;
         """.format(dev_hash, com_filter, where)
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x['c']) for x in dt_.data()]
+        return [dict(x['c']) for x in dt_.data()]
 
     def get_files(self, dev_hash, project_id=None,
-                  start_date=None, end_date=None, dic=True):
+                  start_date=None, end_date=None):
         """Returns all files edited by a developer.
         Optionally it also filters by project_id
         :params dev_hash: developer unique identifier
@@ -68,9 +65,6 @@ class DeveloperMiner(DefaultMiner):
           beginning with this date
         :param end_date: optional timestamp; filter files
           untill this date
-        :param dic: optional; boolean for converting data to dictionary
-                  or returning it as py2neo records - the py2neo raw
-                  records can be used in mappers
         :returns: list of files
         """
         com_filter, where = fcid(project_id,
@@ -85,11 +79,10 @@ class DeveloperMiner(DefaultMiner):
         RETURN collect(distinct f);
         """.format(dev_hash, com_filter, where)
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x) for x in dt_.data()[
-            0]['collect(distinct f)']]
+        return [dict(x) for x in dt_.data()[0]['collect(distinct f)']]
 
     def get_files_updates(self, dev_hash, project_id=None,
-                          start_date=None, end_date=None, dic=True):
+                          start_date=None, end_date=None):
         """Returns all file update information (e.g. file complexity),
         for all files edited by a developer.
         Optionally it also filters by project_id
@@ -100,9 +93,6 @@ class DeveloperMiner(DefaultMiner):
           beginning with this date
         :param end_date: optional timestamp; filter files
           untill this date
-        :param dic: optional; boolean for converting data to dictionary
-                  or returning it as py2neo records - the py2neo raw
-                  records can be used in mappers
         :returns: list of file updates
         """
         com_filter, where = fcid(project_id,
@@ -118,10 +108,10 @@ class DeveloperMiner(DefaultMiner):
         """.format(dev_hash, com_filter, where)
 
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x['fu']) for x in dt_.data()]
+        return [dict(x['fu']) for x in dt_.data()]
 
     def get_methods(self, dev_hash, project_id=None,
-                    start_date=None, end_date=None, dic=True):
+                    start_date=None, end_date=None):
         """Returns all methods updated by a developer.
         Optionally it also filters by project_id
         :params dev_hash: developer unique identifier
@@ -131,9 +121,6 @@ class DeveloperMiner(DefaultMiner):
           beginning with this date
         :param end_date: optional timestamp; filter files
           untill this date
-        :param dic: optional; boolean for converting data to dictionary
-                  or returning it as py2neo records - the py2neo raw
-                  records can be used in mappers
         :returns: list of methods
         """
         com_filter, where = fcid(project_id,
@@ -149,10 +136,10 @@ class DeveloperMiner(DefaultMiner):
         """.format(dev_hash, com_filter, where)
 
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x['m']) for x in dt_.data()]
+        return [dict(x['m']) for x in dt_.data()]
 
     def get_method_updates(self, dev_hash, project_id=None,
-                           start_date=None, end_date=None, dic=True):
+                           start_date=None, end_date=None):
         """Returns all method update information, for all
         methods update by a developer.
         Optionally it also filters by project_id
@@ -163,9 +150,6 @@ class DeveloperMiner(DefaultMiner):
           beginning with this date
         :param end_date: optional timestamp; filter files
           untill this date
-        :param dic: optional; boolean for converting data to dictionary
-                  or returning it as py2neo records - the py2neo raw
-                  records can be used in mappers
         :returns: list of method updates
         """
         com_filter, where = fcid(project_id,
@@ -181,7 +165,7 @@ class DeveloperMiner(DefaultMiner):
         """.format(dev_hash, com_filter, where)
 
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x['um']) for x in dt_.data()]
+        return [dict(x['um']) for x in dt_.data()]
 
     def get_all(self):
         return self.node_matcher.match("Developer")

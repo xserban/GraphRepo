@@ -35,7 +35,13 @@ class TestCSVMapper:
         com_miner = CommitMiner(test_driller.graph, n_matcher, r_matcher)
         mapper = CSVMapper()
 
-        commits = com_miner.get_all(dic=False)
+        commits = com_miner.get_all()
         mapped_commits = mapper.map(commits)
+        assert mapped_commits.shape == (8, 9)
+
+        c_files = com_miner.get_commit_files(
+            'ad98f8594c15b1ebc4be4f20d849bcc0edf69ec574c33dfd84b7792d')
+        c_csv = mapper.map(c_files)
+        assert c_csv.shape == (3, 4)
 
         test_driller.clean()

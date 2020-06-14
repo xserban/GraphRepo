@@ -15,14 +15,17 @@
 from abc import abstractmethod
 
 
-class DefaultMapper:
+class DefaultMiner():
     """The miners are currently synchronous, but
     ideally they will be async in the future"""
 
-    def __init__(self):
-        pass
+    def __init__(self, graph, node_matcher, rel_matcher, *args, **kwargs):
+        self.graph = graph
+        self.node_matcher = node_matcher
+        self.rel_matcher = rel_matcher
 
     @abstractmethod
-    def map(self, objects):
-        """Maps objects"""
+    def get_all(self):
+        """This method returns all artifacts
+        found by a miner"""
         raise NotImplementedError

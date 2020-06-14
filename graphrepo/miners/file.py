@@ -29,9 +29,9 @@ class FileMiner(DefaultMiner):
         """Returns all node of type File
         :return: list of files
         """
-        return list(self.node_matcher.match("File"))
+        return self.node_matcher.match("File")
 
-    def get_change_history(self, file_hash, dic=True):
+    def get_change_history(self, file_hash):
         """Returns all updated relationships
         :param file_hash: a string, unique identifier for file
         :param dic: optional; boolean for converting data to dictionary
@@ -43,9 +43,9 @@ class FileMiner(DefaultMiner):
         return distinct r
         """.format(file_hash)
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x['r']) for x in dt_.data()]
+        return [dict(x['r']) for x in dt_.data()]
 
-    def get_current_methods(self, file_hash, dic=True):
+    def get_current_methods(self, file_hash):
         """Returns all current methods
         :param file_hash: a string, unique identifier for file
         :param dic: optional; boolean for converting data to dictionary
@@ -57,7 +57,7 @@ class FileMiner(DefaultMiner):
         return distinct m
         """.format(file_hash)
         dt_ = self.graph.run(query)
-        return dt_ if not dic else [dict(x['m']) for x in dt_.data()]
+        return [dict(x['m']) for x in dt_.data()]
 
     def get_past_methods(self, file):
         """Returns methods that were removed from the file
