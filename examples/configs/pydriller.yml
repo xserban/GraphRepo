@@ -1,5 +1,5 @@
 neo:
-  db_url: localhost
+  db_url: 192.168.178.75
   port: 7687
   db_user: neo4j
   db_pwd: neo4jj

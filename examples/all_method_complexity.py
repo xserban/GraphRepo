@@ -28,7 +28,8 @@ from datetime import datetime
 def parse_args():
     """Parse args"""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='configs/pydriller.yml', type=str)
+    parser.add_argument(
+        '--config', default='examples/configs/pydriller.yml', type=str)
     parser.add_argument('--plot', default=False, type=bool)
     return parser.parse_args()
 
@@ -37,18 +38,13 @@ def main():
     """Main"""
     args = parse_args()
 
-    # pydriller
     file_query = {
         'hash': 'e2eb7bf414cebe68f46fa88e4abe9ae5813e91c4e1e97570f8e41cf4'}
-    file_query = {
-        'hash': '3738c06335e8f7c316121467e2146700c572298e7d2c6ec58ff60513'}  # jax
 
     start = datetime.now()
     mine_manager = MineManager(config_path=args.config)
 
-    file_ = mine_manager.file_miner.query(project_id=mine_manager.config.ct.project_id,
-                                          **file_query)
-    methods = mine_manager.file_miner.get_current_methods(file_)
+    methods = mine_manager.file_miner.get_current_methods(file_query['hash'])
 
     m_changes = []
     for m in methods:

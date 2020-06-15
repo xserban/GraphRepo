@@ -21,7 +21,8 @@ from datetime import datetime
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='configs/pydriller.yml', type=str)
+    parser.add_argument(
+        '--config', default='examples/configs/pydriller.yml', type=str)
     return parser.parse_args()
 
 
@@ -32,7 +33,7 @@ def main():
     miner = MineManager(config_path=args.config)
 
     # get all nodes and relationships from the manager
-    nodes, rels = miner.get_all_data(map=False, merge=False)
+    nodes, rels = miner.get_all_data()
     print("The DB has a total of {} nodes and {} relationships".format(
         len(nodes), len(rels)))
     print("All data took: {}".format(datetime.now() - start))
