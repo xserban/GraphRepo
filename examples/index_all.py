@@ -14,7 +14,7 @@
 """This module is an example of indexing all data from a repository in Neo4j"""
 
 import argparse
-from graphrepo.drillers.driller import Driller
+from graphrepo.drillers import Driller
 
 
 def parse_args():
