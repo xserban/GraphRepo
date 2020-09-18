@@ -11,3 +11,4 @@ plotly==4.1.1
 pandas==1.1.0
 diskcache==4.1.0
 pika==1.1.0
+stomp=6.1.0
