@@ -1,3 +1,4 @@
+
 # Copyright 2019 NullConvergence
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -96,47 +97,14 @@ class DefaultDriller():
             RepositoryMining(self.config.ct.repo,
                              since=self.config.ct.start_date,
                              to=self.config.ct.end_date).traverse_commits():
-            timestamp = commit.author_date.timestamp()
-            dev = utl.format_dev(commit, self.config.ct.index_developer_email)
-            devs.append(dev)
-            com = utl.format_commit(commit, self.config.ct.project_id)
-            commits.append(com)
-            dev_com.append(utl.format_author_commit(dev, com, timestamp))
-            for parent in commit.parents:
-                parents.append(utl.format_parent_commit(
-                    com['hash'], parent, self.config.ct.project_id))
-            for branch in commit.branches:
-                br_ = utl.format_branch(branch, self.config.ct.project_id)
-                branches.append(br_)
-                branches_com.append(
-                    utl.format_branch_commit(br_['hash'], com['hash']))
-            for file in commit.modifications:
-                fl_ = utl.format_file(file, self.config.ct.project_id)
-                files.append(fl_)
-                com_files.append(utl.format_commit_file(
-                    com['hash'], fl_['hash'], file,
-                    timestamp, self.config.ct.index_code))
-                for method in file.changed_methods:
-                    met = utl.format_method(
-                        method, file, self.config.ct.project_id)
-                    methods.append(met)
-                    files_methods.append(
-                        utl.format_file_method(fl_['hash'], met['hash'])
-                    )
-                    com_methods.append(
-                        utl.format_commit_method(com['hash'], met['hash'],
-                                                 method, timestamp))
-        data_ = utl.Dotdict({'commits': commits,
-                             'parents': parents,
-                             'developers': devs,
-                             'dev_commits': dev_com,
-                             'branches': branches,
-                             'branches_commits': branches_com,
-                             'files': files,
-                             'commit_files': com_files,
-                             'methods': methods,
-                             'file_methods': files_methods,
-                             'commit_methods': com_methods})
+            self.drill_commit(commit, commits, parents, devs, dev_com, branches,
+                              branches_com, files, com_files,
+                              methods, files_methods, com_methods)
+
+        data_ = self.data_dot_dict(commits, parents, devs, dev_com, branches,
+                                   branches_com, files, com_files,
+                                   methods, files_methods, com_methods)
+
         print('Driller finished in: \t', datetime.now() - start)
 
         if save_path:
@@ -144,6 +112,57 @@ class DefaultDriller():
         if index:
             self.index_batch(**data_)
         return data_
+
+    def drill_commit(self, commit, commits, parents, devs, dev_com, branches,
+                     branches_com, files, com_files,
+                     methods, files_methods, com_methods):
+        """Helper method - works with pass by reference"""
+        timestamp = commit.author_date.timestamp()
+        dev = utl.format_dev(commit, self.config.ct.index_developer_email)
+        devs.append(dev)
+        com = utl.format_commit(commit, self.config.ct.project_id)
+        commits.append(com)
+        dev_com.append(utl.format_author_commit(dev, com, timestamp))
+        for parent in commit.parents:
+            parents.append(utl.format_parent_commit(
+                com['hash'], parent, self.config.ct.project_id))
+        for branch in commit.branches:
+            br_ = utl.format_branch(branch, self.config.ct.project_id)
+            branches.append(br_)
+            branches_com.append(
+                utl.format_branch_commit(br_['hash'], com['hash']))
+        for file in commit.modifications:
+            fl_ = utl.format_file(file, self.config.ct.project_id)
+            files.append(fl_)
+            com_files.append(utl.format_commit_file(
+                com['hash'], fl_['hash'], file,
+                timestamp, self.config.ct.index_code))
+            for method in file.changed_methods:
+                met = utl.format_method(
+                    method, file, self.config.ct.project_id)
+                methods.append(met)
+                files_methods.append(
+                    utl.format_file_method(fl_['hash'], met['hash'])
+                )
+                com_methods.append(
+                    utl.format_commit_method(com['hash'], met['hash'],
+                                             method, timestamp))
+
+    def data_dot_dict(self, commits, parents, devs, dev_com, branches,
+                      branches_com, files, com_files,
+                      methods, files_methods, com_methods):
+        """Helper method"""
+        return utl.Dotdict({'commits': commits,
+                            'parents': parents,
+                            'developers': devs,
+                            'dev_commits': dev_com,
+                            'branches': branches,
+                            'branches_commits': branches_com,
+                            'files': files,
+                            'commit_files': com_files,
+                            'methods': methods,
+                            'file_methods': files_methods,
+                            'commit_methods': com_methods})
 
     @abstractmethod
     def index_batch(self):
