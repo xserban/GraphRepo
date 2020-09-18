@@ -1,11 +1,11 @@
-# v0.1.8 released
+# v0.1.9 released
 from setuptools import setup, find_packages
 
 with open('requirements.txt') as reqs_file:
     requirements = reqs_file.read().splitlines()
 
 setup(name="graphrepo",
-      version="0.1.8",
+      version="0.1.9",
       description="A tool that maps a Github repo to Neo4j and Helps Mining the Repo in the DB",
       url="https://github.com/NullConvergence/GraphRepo",
       license='Apache License',
