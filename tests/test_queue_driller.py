@@ -14,16 +14,16 @@
 
 import os
 
-from graphrepo.drillers.cache_driller import QueueDriller
+from graphrepo.drillers.queue_driller import QueueDriller
 
 
-class TestQueueDriller:
-    def test_indexing(self):
-        folder = os.path.dirname(os.path.abspath(__file__))
-        test_driller = QueueDriller(os.path.join(folder, 'cnfg_init.yml'))
-        test_driller.drill_batch()
-        records = [r for r in test_driller.graph.run(
-            "MATCH(n) RETURN n")]
-        assert len(records) == 22
+# class TestQueueDriller:
+# def test_indexing(self):
+#     folder = os.path.dirname(os.path.abspath(__file__))
+#     test_driller = QueueDriller(os.path.join(folder, 'cnfg_init.yml'))
+#     test_driller.drill_batch()
+#     records = [r for r in test_driller.graph.run(
+#         "MATCH(n) RETURN n")]
+#     assert len(records) == 22
 
-        test_driller.clean()
+#     test_driller.clean()
