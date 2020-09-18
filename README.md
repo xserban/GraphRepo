@@ -42,7 +42,7 @@ $ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data/e
 ```
 
 Open a browser window and go to [http://localhost:7474](http://localhost:7474). Here you can configure the neo4j password.
-The default one is *neo4j*.
+The default one is *neo4jj*.
 
 ##### Optionally, configure Neo4j to allow larger heap size using the following attributes with the command above:
 

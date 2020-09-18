@@ -44,14 +44,14 @@ class DeveloperMiner(DefaultMiner):
         """
         com_filter, where = fcid(project_id,
                                  start_date, end_date)
-        query = """
+        cquery = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
               (c:Commit {1})
         {2}
         RETURN distinct c;
         """.format(dev_hash, com_filter, where)
-        dt_ = self.graph.run(query)
+        dt_ = self.graph.run(cquery)
         return [dict(x['c']) for x in dt_.data()]
 
     def get_files(self, dev_hash, project_id=None,
@@ -69,7 +69,7 @@ class DeveloperMiner(DefaultMiner):
         """
         com_filter, where = fcid(project_id,
                                  start_date, end_date)
-        query = """
+        fquery = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
               (c:Commit {1})
@@ -78,7 +78,7 @@ class DeveloperMiner(DefaultMiner):
         {2}
         RETURN collect(distinct f);
         """.format(dev_hash, com_filter, where)
-        dt_ = self.graph.run(query)
+        dt_ = self.graph.run(fquery)
         return [dict(x) for x in dt_.data()[0]['collect(distinct f)']]
 
     def get_files_updates(self, dev_hash, project_id=None,
@@ -97,7 +97,7 @@ class DeveloperMiner(DefaultMiner):
         """
         com_filter, where = fcid(project_id,
                                  start_date, end_date)
-        query = """
+        fuquery = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
               (c:Commit {1})
@@ -107,7 +107,7 @@ class DeveloperMiner(DefaultMiner):
         RETURN distinct fu;
         """.format(dev_hash, com_filter, where)
 
-        dt_ = self.graph.run(query)
+        dt_ = self.graph.run(fuquery)
         return [dict(x['fu']) for x in dt_.data()]
 
     def get_methods(self, dev_hash, project_id=None,
@@ -125,7 +125,7 @@ class DeveloperMiner(DefaultMiner):
         """
         com_filter, where = fcid(project_id,
                                  start_date, end_date)
-        query = """
+        mquery = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
               (c:Commit {1})
@@ -135,7 +135,7 @@ class DeveloperMiner(DefaultMiner):
         RETURN distinct m;
         """.format(dev_hash, com_filter, where)
 
-        dt_ = self.graph.run(query)
+        dt_ = self.graph.run(mquery)
         return [dict(x['m']) for x in dt_.data()]
 
     def get_method_updates(self, dev_hash, project_id=None,
@@ -154,7 +154,7 @@ class DeveloperMiner(DefaultMiner):
         """
         com_filter, where = fcid(project_id,
                                  start_date, end_date)
-        query = """
+        muquery = """
         MATCH (d:Developer {{hash: "{0}"}})
               -[r:Author]->
               (c:Commit {1})
@@ -164,7 +164,7 @@ class DeveloperMiner(DefaultMiner):
         RETURN distinct um;
         """.format(dev_hash, com_filter, where)
 
-        dt_ = self.graph.run(query)
+        dt_ = self.graph.run(muquery)
         return [dict(x['um']) for x in dt_.data()]
 
     def get_all(self):
