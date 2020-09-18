@@ -20,14 +20,14 @@ from pydriller import RepositoryMining
 
 import graphrepo.utils as utl
 from graphrepo.config import Config
-from graphrepo.drillers.default import DefaultDriller
+from graphrepo.drillers.driller import Driller
 import graphrepo.drillers.batch_utils as b_utl
 from graphrepo.logger import Logger
 
 LG = Logger()
 
 
-class QueueDriller(DefaultDriller):
+class QueueDriller(Driller):
     """QueueDriller class - parses a git repo and publishes
     the data in a queue every n commits
     """
