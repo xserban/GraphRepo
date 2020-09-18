@@ -48,6 +48,16 @@ class QueueDriller(DefaultDriller):
         except Exception as exc:
             LG.log_and_raise(exc)
 
+    @abstractmethod
+    def connect_queue(self):
+        """Establishes a connection to queue"""
+        raise NotImplementedError
+
+    @abstractmethod
+    def send_index_data(self, data):
+        """Indexes data"""
+        raise NotImplementedError
+
     def drill_batch(self, index=True, save_path=None):
         """Extracts data from a software repository, with the option
         of saving it on diks and indexing it in Neo4j
@@ -72,17 +82,9 @@ class QueueDriller(DefaultDriller):
                               methods, files_methods, com_methods)
 
             if commit_index == self.queue['commit_batch'] - 1:
-                data_ = utl.Dotdict({'commits': commits,
-                                     'parents': parents,
-                                     'developers': devs,
-                                     'dev_commits': dev_com,
-                                     'branches': branches,
-                                     'branches_commits': branches_com,
-                                     'files': files,
-                                     'commit_files': com_files,
-                                     'methods': methods,
-                                     'file_methods': files_methods,
-                                     'commit_methods': com_methods})
+                data_ = self.data_dot_dict(commits, parents, devs, dev_com, branches,
+                                           branches_com, files, com_files,
+                                           methods, files_methods, com_methods)
 
                 self.send_index_data(
                     {'project_conf': self.project, 'data': data_})
@@ -94,13 +96,3 @@ class QueueDriller(DefaultDriller):
                 commit_index += 1
 
         print('Driller finished in: \t', datetime.now() - start)
-
-    @abstractmethod
-    def connect_queue(self):
-        """Establishes a connection to queue"""
-        raise NotImplementedError
-
-    @abstractmethod
-    def send_index_data(self, data):
-        """Indexes data"""
-        raise NotImplementedError
