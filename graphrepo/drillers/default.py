@@ -20,6 +20,7 @@ from py2neo import Graph
 from pydriller import RepositoryMining
 
 import graphrepo.utils as utl
+import graphrepo.drillers.db_init as db_init
 from graphrepo.config import Config
 from graphrepo.logger import Logger
 LG = Logger()
@@ -68,6 +69,16 @@ class DefaultDriller():
             raise ReferenceError("There is no valid "
                                  "database connection. Please "
                                  "configure and connect first.")
+
+    def init_db(self):
+        """Runs initialization of a database; creates
+        constraints and indexes"""
+        try:
+            self._check_connection()
+            db_init.create_hash_constraints(self.graph)
+            db_init.create_indices(self.graph)
+        except Exception as e:
+            raise e
 
     def clean(self):
         """Removes all data in a graph
