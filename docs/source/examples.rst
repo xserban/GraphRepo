@@ -7,6 +7,10 @@ Examples
 In the project's repository there are many examples on how to
 use GraphRepo to index and mine data.
 
+Please note that in order to run the plotting examples you have to install ``pandas`` and ``plotly``, for example using pip::
+
+    $ pip install pandas
+
 1. Index data
 ==============
 

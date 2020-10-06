@@ -11,7 +11,7 @@ def batch(iterable, n=1):
         yield iterable[ndx:min(ndx + n, l)]
 
 
-def index_commits(graph, commits, batch_size=100):
+def index_commits(graph, commits, batch_size=100, index=True):
     query = """
     UNWIND {commits} AS c
     MERGE (:Commit { hash: c.hash,
@@ -27,7 +27,8 @@ def index_commits(graph, commits, batch_size=100):
     """
     for b in batch(commits, batch_size):
         graph.run(query, commits=b)
-    create_index_commits(graph)
+    if index:
+        create_index_commits(graph)
 
 
 def index_parent_commits(graph, parents, batch_size=100):
@@ -41,7 +42,7 @@ def index_parent_commits(graph, parents, batch_size=100):
         graph.run(query, ac=b)
 
 
-def index_authors(graph, authors, batch_size=100):
+def index_authors(graph, authors, batch_size=100, index=True):
     query = """
     UNWIND {authors} AS a
     MERGE (:Developer { hash: a.hash,
@@ -51,10 +52,11 @@ def index_authors(graph, authors, batch_size=100):
     """
     for b in batch(authors, batch_size):
         graph.run(query, authors=b)
-    create_index_authors(graph)
+    if index:
+        create_index_authors(graph)
 
 
-def index_branches(graph, branches, batch_size=100):
+def index_branches(graph, branches, batch_size=100, index=True):
     query = """
     UNWIND {branches} AS a
     MERGE (:Branch { hash: a.hash,
@@ -63,7 +65,8 @@ def index_branches(graph, branches, batch_size=100):
     """
     for b in batch(branches, batch_size):
         graph.run(query, branches=b)
-    create_index_branches(graph)
+    if index:
+        create_index_branches(graph)
 
 
 def index_branch_commits(graph, bc, batch_size=100):
@@ -77,7 +80,7 @@ def index_branch_commits(graph, bc, batch_size=100):
         graph.run(query, ac=b)
 
 
-def index_files(graph, files, batch_size=100):
+def index_files(graph, files, batch_size=100, index=True):
     query = """
     UNWIND {files} AS f
     MERGE (:File { hash: f.hash,
@@ -86,10 +89,11 @@ def index_files(graph, files, batch_size=100):
     """
     for b in batch(files, batch_size):
         graph.run(query, files=b)
-    create_index_files(graph)
+    if index:
+        create_index_files(graph)
 
 
-def index_methods(graph, methods, batch_size=100):
+def index_methods(graph, methods, batch_size=100, index=True):
     query = """
     UNWIND {methods} AS f
     MERGE (:Method { hash: f.hash,
@@ -100,7 +104,8 @@ def index_methods(graph, methods, batch_size=100):
 
     for b in batch(methods, batch_size):
         graph.run(query, methods=b)
-    create_index_methods(graph)
+    if index:
+        create_index_methods(graph)
 
 
 def index_author_commits(graph, ac, batch_size=100):
@@ -202,39 +207,39 @@ def create_index_methods(graph):
 
 def index_all(graph, developers, commits, parents, dev_commits, branches,
               branches_commits, files, commit_files, methods, file_methods,
-              commit_methods, batch_size=100):
+              commit_methods, batch_size=100, index=True):
 
     total = datetime.now()
 
     developers = list({v['hash']: v for v in developers}.values())
     print('Indexing ', len(developers), ' authors')
     start = datetime.now()
-    index_authors(graph, developers, batch_size)
+    index_authors(graph, developers, batch_size, index)
     print('Indexed authors in: \t', datetime.now()-start)
 
     print('Indexing ', len(commits), ' commits')
     start = datetime.now()
-    index_commits(graph, commits, batch_size)
+    index_commits(graph, commits, batch_size, index)
     print('Indexed commits in: \t', datetime.now()-start)
 
     branches = list({v['hash']: v for v in branches}.values())
     branches_commits = list({str(i): i for i in branches_commits}.values())
     print('Indexing ', len(branches), ' branches')
     start = datetime.now()
-    index_branches(graph, branches, batch_size)
+    index_branches(graph, branches, batch_size, index)
     index_branch_commits(graph, branches_commits, batch_size)
     print('Indexed branches in: \t', datetime.now()-start)
 
     files = list({v['hash']: v for v in files}.values())
     print('Indexing ', len(files), ' files')
     start = datetime.now()
-    index_files(graph, files, batch_size)
+    index_files(graph, files, batch_size, index)
     print('Indexed files in: \t', datetime.now()-start)
 
     methods = list({v['hash']: v for v in methods}.values())
     print('Indexing ', len(methods), ' methods')
     start = datetime.now()
-    index_methods(graph, methods, batch_size)
+    index_methods(graph, methods, batch_size, index)
     print('Indexed methods in: \t', datetime.now()-start)
 
     parents = list({str(i): i for i in parents}.values())
@@ -267,19 +272,19 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     print('Indexing took: \t', datetime.now()-total)
 
 
-def index_cache(graph, cache, batch_size=100):
+def index_cache(graph, cache, batch_size=100, index=True):
     total = datetime.now()
     index_authors(graph, list(
-        {v['hash']: v for v in cache.data['developers']}.values()), batch_size)
-    index_commits(graph, cache.data['commits'], batch_size)
+        {v['hash']: v for v in cache.data['developers']}.values()), batch_size, index)
+    index_commits(graph, cache.data['commits'], batch_size, index)
     index_branches(graph, list(
-        {v['hash']: v for v in cache.data['branches']}.values()), batch_size)
+        {v['hash']: v for v in cache.data['branches']}.values()), batch_size, index)
     index_branch_commits(graph,  list(
         {str(i): i for i in cache.data['branches_commits']}.values()), batch_size)
     index_files(graph, list(
-        {v['hash']: v for v in cache.data['files']}.values()), batch_size)
+        {v['hash']: v for v in cache.data['files']}.values()), batch_size, index)
     index_methods(graph, list(
-        {v['hash']: v for v in cache.data['methods']}.values()), batch_size)
+        {v['hash']: v for v in cache.data['methods']}.values()), batch_size, index)
     index_parent_commits(graph, list(
         {str(i): i for i in cache.data['parents']}.values()), batch_size)
     index_author_commits(graph, cache.data['dev_commits'], batch_size)
