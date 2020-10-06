@@ -16,7 +16,7 @@ The only requirement is to have Python >=3.5 and Docker installed on your system
 
 #### 1.2 Install using pip
 
-The production release can be installed using pip: 
+The production release can be installed using pip:
 
 ```
 $ pip install graphrepo
@@ -96,7 +96,7 @@ MATCH (n) DETACH DELETE n;
 #### 3.2 Delete a limited number commits and relationshipss
 
 ```
-MATCH (n:Commit) 
+MATCH (n:Commit)
 // Take the first 100 commits nodes and their rels
 WITH n LIMIT 100
 DETACH DELETE n
