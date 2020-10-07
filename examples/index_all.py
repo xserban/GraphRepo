@@ -29,6 +29,9 @@ def main():
     """Main method"""
     args = parse_args()
     driller = Driller(config_path=args.config)
+    # this method should be called only once, when initializing
+    # a database for the first time
+    driller.init_db()
     driller.drill_batch()
 
 
