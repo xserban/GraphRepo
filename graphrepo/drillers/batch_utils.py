@@ -16,27 +16,9 @@ def index_commits(graph, commits, batch_size=100):
     UNWIND {commits} AS c
     MERGE (nc :Commit { hash: c.hash})
       ON CREATE SET
-                nc = {hash: c.hash,
-                     commit_hash: c.commit_hash,
-                     timestamp: c.timestamp,
-                     is_merge: c.is_merge,
-                     project_id: c.project_id,
-                     message: c.message,
-                     dmm_unit_complexity: c.dmm_unit_complexity,
-                     dmm_unit_interfacing: c.dmm_unit_interfacing,
-                     dmm_unit_size: c.dmm_unit_size
-                     }
+                nc = c
       ON MATCH SET
-                nc = {hash: c.hash,
-                     commit_hash: c.commit_hash,
-                     timestamp: c.timestamp,
-                     is_merge: c.is_merge,
-                     project_id: c.project_id,
-                     message: c.message,
-                     dmm_unit_complexity: c.dmm_unit_complexity,
-                     dmm_unit_interfacing: c.dmm_unit_interfacing,
-                     dmm_unit_size: c.dmm_unit_size
-                     }
+                nc = c
     """
     for b in batch(commits, batch_size):
         graph.run(query, commits=b)
@@ -57,12 +39,8 @@ def index_authors(graph, authors, batch_size=100):
     query = """
     UNWIND {authors} AS a
     MERGE (nd:Developer { hash: a.hash})
-      ON CREATE SET nd = {hash: a.hash,
-                          email: a.email,
-                          name: a.name}
-      ON MATCH SET nd = { hash: a.hash,
-                          email: a.email,
-                          name: a.name}
+      ON CREATE SET nd = a
+      ON MATCH SET nd = a
     """
     for b in batch(authors, batch_size):
         graph.run(query, authors=b)
@@ -72,12 +50,8 @@ def index_branches(graph, branches, batch_size=100):
     query = """
     UNWIND {branches} AS a
     MERGE (nb:Branch { hash: a.hash})
-      ON CREATE SET nb = {hash: a.hash,
-                     name:a.name,
-                     project_id: a.project_id}
-      ON MATCH SET nb = {hash: a.hash,
-                     name:a.name,
-                     project_id: a.project_id}
+      ON CREATE SET nb = a
+      ON MATCH SET nb = a
     """
     for b in batch(branches, batch_size):
         graph.run(query, branches=b)
@@ -98,12 +72,8 @@ def index_files(graph, files, batch_size=100):
     query = """
     UNWIND {files} AS f
     MERGE (nf:File { hash: f.hash})
-      ON CREATE SET nf = {hash: f.hash,
-                   project_id: f.project_id,
-                   type:f.type, name: f.name}
-      ON MATCH SET nf = {hash: f.hash,
-                   project_id: f.project_id,
-                   type:f.type, name: f.name}
+      ON CREATE SET nf = f
+      ON MATCH SET nf = f
     """
     for b in batch(files, batch_size):
         graph.run(query, files=b)
@@ -113,14 +83,8 @@ def index_methods(graph, methods, batch_size=100):
     query = """
     UNWIND {methods} AS f
     MERGE (nm:Method { hash: f.hash})
-      ON CREATE SET nm = {hash: f.hash,
-                     project_id: f.project_id,
-                     name: f.name,
-                     file_name: f.file_name}
-      ON MATCH SET nm = {hash: f.hash,
-                     project_id: f.project_id,
-                     name: f.name,
-                     file_name: f.file_name}
+      ON CREATE SET nm = f
+      ON MATCH SET nm = f
     """
 
     for b in batch(methods, batch_size):
