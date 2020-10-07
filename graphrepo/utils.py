@@ -52,12 +52,19 @@ def load_json(path):
         return json.load(json_file)
 
 
-def get_file_hash(file, project_id=None):
+def get_file_hash(file, project_id=None, use_new_path=False):
     name = ''
-    if file.old_path and not file.new_path:
-        name = name+file.old_path
-    else:
+    if not file.old_path and file.new_path:
         name = name+file.new_path
+    elif file.old_path and not file.new_path:
+        name = name+file.old_path
+    elif file.old_path and file.new_path:
+        if file.old_path != file.new_path:
+            print(file.old_path, file.new_path)
+        if use_new_path:
+            name = name+file.new_path
+        else:
+            name = name + file.old_path
 
     name = name+file.filename
     name = project_id + name if project_id else name
@@ -141,6 +148,7 @@ def format_branch_commit(bhash, chash):
 def format_file(file, project_id):
     return {
         'hash': get_file_hash(file, project_id),
+        'new_hash': get_file_hash(file, project_id, use_new_path=True),
         'name': file.filename,
         'project_id': project_id,
         'type': '.' + file.filename.split('.')[-1:][0]
