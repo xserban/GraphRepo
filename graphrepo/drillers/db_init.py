@@ -10,10 +10,11 @@ def create_hash_constraints(graph):
         graph.run(q)
 
 
-def create_indices(graph):
+def create_indices(graph, hash_index=True):
     """Initializes all indexes for database"""
-    utils.create_index_authors(graph)
-    utils.create_index_branches(graph)
-    utils.create_index_commits(graph)
-    utils.create_index_files(graph)
-    utils.create_index_methods(graph)
+    if hash_index:
+        utils.create_index_authors(graph)
+    utils.create_index_branches(graph, hash_index)
+    utils.create_index_commits(graph, hash_index)
+    utils.create_index_files(graph, hash_index)
+    utils.create_index_methods(graph, hash_index)

@@ -76,7 +76,7 @@ class DefaultDriller():
         try:
             self._check_connection()
             db_init.create_hash_constraints(self.graph)
-            db_init.create_indices(self.graph)
+            db_init.create_indices(self.graph, hash_index=False)
         except Exception as e:
             raise e
 
