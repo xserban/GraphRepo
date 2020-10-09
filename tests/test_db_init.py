@@ -29,12 +29,9 @@ class TestDBInit:
         folder = os.path.dirname(os.path.abspath(__file__))
         test_driller = DefaultDriller(os.path.join(folder, 'cnfg_simple.yml'))
 
-        db_init.create_indices(test_driller.graph)
+        db_init.create_indices(test_driller.graph, hash_index=True)
 
         schm = Schema(test_driller.graph)
-
-        index_authors = schm.get_indexes("Developer")
-        assert len(index_authors) == 1
 
         index_branch = schm.get_indexes("Branch")
         assert len(index_branch) == 2

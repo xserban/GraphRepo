@@ -42,6 +42,6 @@ class TestCSVMapper:
         c_files = com_miner.get_commit_files(
             'ad98f8594c15b1ebc4be4f20d849bcc0edf69ec574c33dfd84b7792d')
         c_csv = mapper.map(c_files)
-        assert c_csv.shape == (3, 4)
+        assert c_csv.shape == (3, 5)
 
         test_driller.clean()

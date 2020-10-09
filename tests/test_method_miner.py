@@ -32,7 +32,7 @@ class TestMethodMiner:
 
         all_methods = m_miner.get_all()
         assert len(all_methods) == 5
-        m_hash = '417e845b5d0702fcb26954809407f0919dfa229308e520de01e0cf6e'
+        m_hash = '45ce8dcd8b0cd8ed42e592ce828ab6418e7c79713b8dc99805bcb7ea'
         met = m_miner.query(hash=m_hash)
         assert met['name'] == 'get_name'
 
