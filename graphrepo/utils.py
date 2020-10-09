@@ -59,8 +59,6 @@ def get_file_hash(file, project_id=None, use_new_path=False):
     elif file.old_path and not file.new_path:
         name = name+file.old_path
     elif file.old_path and file.new_path:
-        if file.old_path != file.new_path:
-            print(file.old_path, file.new_path)
         if use_new_path:
             name = name+file.new_path
         else:
@@ -82,7 +80,7 @@ def get_method_type(method, m_before, m_current):
 
 def get_method_hash(method, file, project_id=None):
     fhash = get_file_hash(file, project_id)
-    _fmname = fhash + "_" + method.long_name
+    _fmname = fhash + "_" + method.name
     _fmname = project_id + _fmname if project_id else _fmname
     return hashlib.sha224(_fmname.encode('utf-8')).hexdigest()
 
@@ -148,7 +146,7 @@ def format_branch_commit(bhash, chash):
 def format_file(file, project_id):
     return {
         'hash': get_file_hash(file, project_id),
-        'new_hash': get_file_hash(file, project_id, use_new_path=True),
+        'merge_hash': get_file_hash(file, project_id, use_new_path=True),
         'name': file.filename,
         'project_id': project_id,
         'type': '.' + file.filename.split('.')[-1:][0]

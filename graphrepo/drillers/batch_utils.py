@@ -197,6 +197,29 @@ def create_index_methods(graph, hash=True):
     graph.run(pid_q)
 
 
+def merge_files(graph):
+  query = """
+    MATCH (n1:File),(n2:File)
+    WHERE n1.merge_hash = n2.merge_hash  and id(n1) < id(n2)
+    WITH [n1,n2] as ns
+    CALL apoc.refactor.mergeNodes(ns, {properties: 'overwrite', mergeRels:true}) YIELD node
+    MATCH (f:File {hash: node.hash}) -[]->(mf:Method) WITH DISTINCT f, mf
+    with collect({hash: mf.hash, new_hash: f.hash}) as allRows
+    unwind allRows as row
+    match (mu: Method {hash: row.hash})
+    SET mu.merge_hash = row.new_hash"""
+  graph.run(query)
+
+def merge_methods(graph):
+  query = """
+  MATCH (n1:Method),(n2:Method)
+  WHERE n1.file_name = n2.file_name and n1.name = n2.name and n1.project_id = n2.project_id and n1.merge_hash = n2.merge_hash and id(n1) < id(n2)
+  WITH [n1,n2] as ns
+  CALL apoc.refactor.mergeNodes(ns, {properties: 'overwrite', mergeRels:true}) YIELD node
+  return node
+  """
+  graph.run(query)
+
 def index_all(graph, developers, commits, parents, dev_commits, branches,
               branches_commits, files, commit_files, methods, file_methods,
               commit_methods, batch_size=100):
@@ -261,6 +284,12 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     index_commit_files(graph, commit_files, batch_size)
     print('Indexed commit_files in: \t', datetime.now()-start)
 
+    print('Merging moved files and methods')
+    start = datetime.now()
+    merge_files(graph)
+    merge_methods(graph)
+    print('Merged files and methods in \t', datetime.now()-start)
+
     print('Indexing took: \t', datetime.now()-total)
 
 
@@ -284,4 +313,6 @@ def index_cache(graph, cache, batch_size=100):
         {str(i): i for i in cache.data['file_methods']}.values()), batch_size)
     index_commit_method(graph, cache.data['commit_methods'], batch_size)
     index_commit_files(graph, cache.data['commit_files'], batch_size)
+    merge_files(graph)
+    merge_methods(graph)
     print('Indexing took: \t', datetime.now()-total)
