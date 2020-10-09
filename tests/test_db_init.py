@@ -33,6 +33,9 @@ class TestDBInit:
 
         schm = Schema(test_driller.graph)
 
+        index_authors = schm.get_indexes("Developer")
+        assert len(index_authors) == 1
+
         index_branch = schm.get_indexes("Branch")
         assert len(index_branch) == 2
 
