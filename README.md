@@ -36,9 +36,10 @@ $ pip install -r requirements.txt
 #### 1.3 Run and configure Neo4j
 
 The following instructions assume the Docker daemon is running on your machine.
+In case you use a different version of Neo4j, make sure to install apoc.
 
 ```
-$ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data/exp:/data --volume=$HOME/neo4j/logs/exp:/logs --env NEO4J_AUTH=neo4j/neo4jj  neo4j:3.0
+$ docker run -p=7474:7474 -p=7687:7687 -v=$HOME/neo4j/data/exp:/data -v=$HOME/neo4j/logs/exp:/logs --env NEO4J_AUTH=neo4j/neo4jj  --env 'NEO4JLABS_PLUGINS=["apoc", "graph-algorithms”] neo4j:3.5.11
 ```
 
 Open a browser window and go to [http://localhost:7474](http://localhost:7474). Here you can configure the neo4j password.
