@@ -202,7 +202,7 @@ def merge_files(graph):
     MATCH (n1:File),(n2:File)
     WHERE n1.merge_hash = n2.merge_hash  and id(n1) < id(n2)
     WITH [n1,n2] as ns
-    order by id(ns[1])
+    order by id(ns[1]) desc
     CALL apoc.refactor.mergeNodes(ns, {properties: 'overwrite', mergeRels:true}) YIELD node
     MATCH (f:File {hash: node.hash}) -[]->(mf:Method) WITH DISTINCT f, mf
     with collect({hash: mf.hash, new_hash: f.hash}) as allRows
@@ -216,7 +216,7 @@ def merge_methods(graph):
   MATCH (n1:Method),(n2:Method)
   WHERE n1.file_name = n2.file_name and n1.name = n2.name and n1.project_id = n2.project_id and n1.merge_hash = n2.merge_hash and id(n1) < id(n2)
   WITH [n1,n2] as ns
-  order by id(ns[1])
+  order by id(ns[1]) desc
   CALL apoc.refactor.mergeNodes(ns, {properties: 'overwrite', mergeRels:true}) YIELD node
   return node
   """
