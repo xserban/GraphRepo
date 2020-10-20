@@ -286,10 +286,10 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
 
     print('Merging moved files and methods')
     start = datetime.now()
-    merge_files(graph)
     merge_methods(graph)
-    print('Merged files and methods in \t', datetime.now()-start)
+    merge_files(graph)
 
+    print('Merged files and methods in \t', datetime.now()-start)
     print('Indexing took: \t', datetime.now()-total)
 
 
@@ -313,6 +313,6 @@ def index_cache(graph, cache, batch_size=100):
         {str(i): i for i in cache.data['file_methods']}.values()), batch_size)
     index_commit_method(graph, cache.data['commit_methods'], batch_size)
     index_commit_files(graph, cache.data['commit_files'], batch_size)
-    merge_files(graph)
     merge_methods(graph)
+    merge_files(graph)
     print('Indexing took: \t', datetime.now()-total)
