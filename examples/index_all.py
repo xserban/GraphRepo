@@ -31,7 +31,10 @@ def main():
     driller = Driller(config_path=args.config)
     # this method should be called only once, when initializing
     # a database for the first time
-    driller.init_db()
+    try:
+      driller.init_db()
+    except:
+      print("DB already initialized")
     driller.drill_batch()
 
 

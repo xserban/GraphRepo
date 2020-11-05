@@ -45,7 +45,7 @@ class Driller(DefaultDriller):
             self.config.check_config()
             self._check_connection()
             b_utl.index_all(
-                self.graph, batch_size=self.config.ct.batch_size, **kwargs)
+                self.graph, config=self.config.ct, **kwargs)
         except Exception as exc:
             LG.log_and_raise(exc)
         else:
