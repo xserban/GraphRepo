@@ -77,8 +77,8 @@ class DefaultDriller():
             self._check_connection()
             db_init.create_hash_constraints(self.graph)
             db_init.create_indices(self.graph, hash_index=False)
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def clean(self):
         """Removes all data in a graph

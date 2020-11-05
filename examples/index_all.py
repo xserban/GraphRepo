@@ -33,9 +33,10 @@ def main():
     # a database for the first time
     try:
       driller.init_db()
-    except:
+    except Exception as exc:
       print("DB already initialized")
     driller.drill_batch()
+    driller.merge_all()
 
 
 if __name__ == '__main__':

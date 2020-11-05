@@ -236,15 +236,31 @@ def merge_files_hash(graph, project_id):
     """.format(project_id)
   graph.run(query)
 
-def merge_methods(graph):
+def merge_files(graph, config):
+  print('Merging moved files')
+  start = datetime.now()
+  merge_by_hash = config.merge_by_hash if 'merge_by_hash' in config else False
+  if merge_by_hash:
+    merge_files_hash(graph, config.project_id)
+  else:
+    merge_files_merge_hash(graph, config.project_id)
+  print('Merged files \t', datetime.now()-start)
+  print('Merging moved methods')
+  start = datetime.now()
+  merge_methods(graph, config.project_id)
+  print('Merged methods \t', datetime.now()-start)
+
+
+def merge_methods(graph, project_id):
   query = """
   MATCH (n1:Method),(n2:Method)
-  WHERE n1.file_name = n2.file_name and n1.name = n2.name and n1.project_id = n2.project_id and n1.merge_hash = n2.merge_hash and id(n1) < id(n2)
+  WHERE n1.project_id = "{0}" and n2.project_id = "{0}"
+  and n1.file_name = n2.file_name and n1.name = n2.name and n1.project_id = n2.project_id and n1.merge_hash = n2.merge_hash and id(n1) < id(n2)
   WITH [n1,n2] as ns
   order by id(ns[1]) desc
-  CALL apoc.refactor.mergeNodes(ns, {properties: 'overwrite', mergeRels:true}) YIELD node
+  CALL apoc.refactor.mergeNodes(ns, {{properties: 'overwrite', mergeRels:true}}) YIELD node
   return node
-  """
+  """.format(project_id)
   graph.run(query)
 
 def index_all(graph, developers, commits, parents, dev_commits, branches,
@@ -254,7 +270,6 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     total = datetime.now()
 
     batch_size = config.batch_size
-    merge_by_hash = config.merge_by_hash if 'merge_by_hash' in config else False
 
     developers = list({v['hash']: v for v in developers}.values())
     print('Indexing ', len(developers), ' authors')
@@ -313,16 +328,6 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     start = datetime.now()
     index_commit_files(graph, commit_files, batch_size)
     print('Indexed commit_files in: \t', datetime.now()-start)
-
-    print('Merging moved files and methods')
-    start = datetime.now()
-    if merge_by_hash:
-      merge_files_hash(graph, config.project_id)
-    else:
-      merge_files_merge_hash(graph, config.project_id)
-    merge_methods(graph)
-    print('Merged files and methods in \t', datetime.now()-start)
-
     print('Indexing took: \t', datetime.now()-total)
 
 
@@ -348,9 +353,4 @@ def index_cache(graph, cache, config):
         {str(i): i for i in cache.data['file_methods']}.values()), batch_size)
     index_commit_method(graph, cache.data['commit_methods'], batch_size)
     index_commit_files(graph, cache.data['commit_files'], batch_size)
-    if merge_by_hash:
-      merge_files_hash(graph, config.project_id)
-    else:
-      merge_files_merge_hash(graph, config.project_id)
-    merge_methods(graph)
     print('Indexing took: \t', datetime.now()-total)

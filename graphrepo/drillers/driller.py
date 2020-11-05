@@ -62,3 +62,12 @@ class Driller(DefaultDriller):
             LG.log_and_raise(exc)
         else:
             return
+
+    def merge_all(self):
+      """Merges file renaming and methods"""
+      try:
+        b_utl.merge_files(self.graph, self.config.ct)
+      except Exception as exc:
+        LG.log_and_raise(exc)
+      else:
+        return
