@@ -39,7 +39,7 @@ The following instructions assume the Docker daemon is running on your machine.
 In case you use a different version of Neo4j, make sure to install apoc.
 
 ```
-$ docker run -p=7474:7474 -p=7687:7687 -v=$HOME/neo4j/data/exp:/data -v=$HOME/neo4j/logs/exp:/logs --env NEO4J_AUTH=neo4j/neo4jj  --env 'NEO4JLABS_PLUGINS=["apoc", "graph-algorithms”] neo4j:3.5.11
+$ ocker run -p 7474:7474 -p 7687:7687 -v $HOME/neo4j/data:/data -v $HOME/neo4j/plugins:/plugins  -e NEO4JLABS_PLUGINS=\[\"apoc\"\]   -e NEO4J_AUTH=neo4j/neo4jj neo4j:3.5.11
 ```
 
 Open a browser window and go to [http://localhost:7474](http://localhost:7474). Here you can configure the neo4j password.
