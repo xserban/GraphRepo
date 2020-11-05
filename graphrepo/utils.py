@@ -55,12 +55,15 @@ def load_json(path):
 def get_file_hash(file, project_id=None, use_new_path=False):
     name = ''
     if not file.old_path and file.new_path:
-        name = name+file.new_path
+        # ADD File
+        name = name + file.new_path
     elif file.old_path and not file.new_path:
+        # DELETE (?)
         name = name+file.old_path
     elif file.old_path and file.new_path:
+        # MODIFY OR RENAME
         if use_new_path:
-            name = name+file.new_path
+            name = name + file.new_path
         else:
             name = name + file.old_path
 
@@ -153,7 +156,9 @@ def format_file(file, project_id):
     }
 
 
-def format_commit_file(c_hash, f_hash, file, timestamp, index_code=True):
+def format_commit_file(c_hash, file, timestamp, project_id, index_code=True):
+    f_hash = get_file_hash(file, project_id)
+    f_merge_hash = get_file_hash(file, project_id, use_new_path=True)
     dt_ = {'commit_hash': c_hash, 'file_hash': f_hash,
            'attributes': {
                'timestamp': timestamp,
@@ -161,13 +166,15 @@ def format_commit_file(c_hash, f_hash, file, timestamp, index_code=True):
                'path': file.new_path if file.new_path else '',
                'source_code': '',
                'source_code_before': '',
-               'diff': file.diff,
+               'diff': '', #file.diff,
                'nloc': file.nloc if file.nloc else -1,
                'complexity': file.complexity if file.complexity else -1,
                'token_count': file.token_count if file.token_count else -1,
                'added': file.added,
                'removed': file.removed,
-               'type': file.change_type.name}}
+               'type': file.change_type.name,
+               'f_hash': f_hash,
+               'm_hash': f_merge_hash}}
 
     if index_code:
         dt_['attributes']['source_code'] = str(
