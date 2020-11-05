@@ -207,33 +207,33 @@ def create_index_methods(graph, hash=True):
     graph.run(pid_q)
 
 
-def merge_files_merge_hash(graph):
+def merge_files_merge_hash(graph, project_id):
   query = """
     MATCH (n1:File),(n2:File)
-    WHERE n1.merge_hash = n2.merge_hash  and id(n1) < id(n2)
+    WHERE n1.project_id = "{0}" and n2.project_id = "{0}" and n1.merge_hash = n2.merge_hash  and id(n1) < id(n2)
     WITH [n1,n2] as ns
     order by id(ns[1]) desc
-    CALL apoc.refactor.mergeNodes(ns, {properties: 'overwrite', mergeRels:true}) YIELD node
-    MATCH (f:File {hash: node.hash}) -[]->(mf:Method) WITH DISTINCT f, mf
-    with collect({hash: mf.hash, new_hash: f.hash}) as allRows
+    CALL apoc.refactor.mergeNodes(ns, {{properties: 'overwrite', mergeRels:true}}) YIELD node
+    MATCH (f:File {{hash: node.hash}}) -[]->(mf:Method) WITH DISTINCT f, mf
+    with collect({{hash: mf.hash, new_hash: f.hash}}) as allRows
     unwind allRows as row
-    match (mu: Method {hash: row.hash})
-    SET mu.merge_hash = row.new_hash"""
+    match (mu: Method {{hash: row.hash}})
+    SET mu.merge_hash = row.new_hash""".format(project_id)
   graph.run(query)
 
-def merge_files_hash(graph):
+def merge_files_hash(graph, project_id):
   query = """
     MATCH (n1:File),(n2:File)
-    WHERE n1.merge_hash = n2.hash and id(n1) < id(n2)
+    WHERE n1.project_id = "{0}" and n2.project_id = "{0}" and n1.merge_hash = n2.hash and id(n1) < id(n2)
     WITH [n1,n2] as ns
     order by id(ns[1]) desc
-    CALL apoc.refactor.mergeNodes(ns, {properties: 'overwrite', mergeRels:true}) YIELD node
-    MATCH (f:File {hash: node.hash}) -[]->(mf:Method) WITH DISTINCT f, mf
-    with collect({hash: mf.hash, new_hash: f.hash}) as allRows
+    CALL apoc.refactor.mergeNodes(ns, {{properties: 'overwrite', mergeRels:true}}) YIELD node
+    MATCH (f:File {{hash: node.hash}}) -[]->(mf:Method) WITH DISTINCT f, mf
+    with collect({{hash: mf.hash, new_hash: f.hash}}) as allRows
     unwind allRows as row
-    match (mu: Method {hash: row.hash})
+    match (mu: Method {{hash: row.hash}})
     SET mu.merge_hash = row.new_hash
-    """
+    """.format(project_id)
   graph.run(query)
 
 def merge_methods(graph):
@@ -317,10 +317,9 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
     print('Merging moved files and methods')
     start = datetime.now()
     if merge_by_hash:
-      merge_files_hash(graph)
-      print('MERGING BY HASH')
+      merge_files_hash(graph, config.project_id)
     else:
-      merge_files_merge_hash(graph)
+      merge_files_merge_hash(graph, config.project_id)
     merge_methods(graph)
     print('Merged files and methods in \t', datetime.now()-start)
 
@@ -350,8 +349,8 @@ def index_cache(graph, cache, config):
     index_commit_method(graph, cache.data['commit_methods'], batch_size)
     index_commit_files(graph, cache.data['commit_files'], batch_size)
     if merge_by_hash:
-      merge_files_hash(graph)
+      merge_files_hash(graph, config.project_id)
     else:
-      merge_files_merge_hash(graph)
+      merge_files_merge_hash(graph, config.project_id)
     merge_methods(graph)
     print('Indexing took: \t', datetime.now()-total)
