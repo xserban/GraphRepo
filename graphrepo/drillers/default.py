@@ -20,6 +20,7 @@ from py2neo import Graph
 from pydriller import RepositoryMining
 
 import graphrepo.utils as utl
+import graphrepo.drillers.batch_utils as b_utl
 import graphrepo.drillers.db_init as db_init
 from graphrepo.config import Config
 from graphrepo.logger import Logger
@@ -180,3 +181,13 @@ class DefaultDriller():
         """Abstract index batch driller method
         """
         raise NotImplementedError
+
+
+    def merge_all(self):
+      """Merges file renaming and methods"""
+      try:
+        b_utl.merge_files(self.graph, self.config.ct)
+      except Exception as exc:
+        LG.log_and_raise(exc)
+      else:
+        return
