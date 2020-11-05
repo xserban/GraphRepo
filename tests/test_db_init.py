@@ -43,10 +43,10 @@ class TestDBInit:
         assert len(index_commits) == 2
 
         index_files = schm.get_indexes("File")
-        assert len(index_files) == 2
+        assert len(index_files) == 3
 
         index_methods = schm.get_indexes("Method")
-        assert len(index_methods) == 2
+        assert len(index_methods) == 3
 
         # clean
         schm.drop_index("Developer", "hash")

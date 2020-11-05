@@ -166,7 +166,7 @@ def format_commit_file(c_hash, file, timestamp, project_id, index_code=True):
                'path': file.new_path if file.new_path else '',
                'source_code': '',
                'source_code_before': '',
-               'diff': '', #file.diff,
+               'diff': file.diff,
                'nloc': file.nloc if file.nloc else -1,
                'complexity': file.complexity if file.complexity else -1,
                'token_count': file.token_count if file.token_count else -1,

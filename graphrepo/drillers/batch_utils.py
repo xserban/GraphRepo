@@ -178,6 +178,11 @@ def create_index_files(graph, hash=True):
         """
         graph.run(hash_q)
 
+    mhash_q = """
+    CREATE INDEX ON :File(merge_hash)
+    """
+    graph.run(mhash_q)
+
     pid_q = """
     CREATE INDEX ON :File(project_id)
     """
@@ -190,6 +195,11 @@ def create_index_methods(graph, hash=True):
         CREATE INDEX ON :Method(hash)
         """
         graph.run(hash_q)
+
+    mhash_q = """
+    CREATE INDEX ON :Method(merge_hash)
+    """
+    graph.run(mhash_q)
 
     pid_q = """
     CREATE INDEX ON :Method(project_id)
