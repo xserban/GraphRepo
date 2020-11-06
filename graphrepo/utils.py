@@ -58,7 +58,7 @@ def get_file_hash(file, project_id=None, use_new_path=False):
         # ADD File
         name = name + file.new_path
     elif file.old_path and not file.new_path:
-        # DELETE (?)
+        # DELETE
         name = name+file.old_path
     elif file.old_path and file.new_path:
         # MODIFY OR RENAME

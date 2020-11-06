@@ -207,7 +207,7 @@ def create_index_methods(graph, hash=True):
     graph.run(pid_q)
 
 
-def merge_files_merge_hash(graph, project_id):
+def merge_renamed_files(graph, project_id):
   query = """
     MATCH (n1:File),(n2:File)
     WHERE n1.project_id = "{0}" and n2.project_id = "{0}" and n1.merge_hash = n2.merge_hash  and id(n1) < id(n2)
@@ -221,7 +221,7 @@ def merge_files_merge_hash(graph, project_id):
     SET mu.merge_hash = row.new_hash""".format(project_id)
   graph.run(query)
 
-def merge_files_hash(graph, project_id):
+def merge_new_files(graph, project_id):
   query = """
     MATCH (n1:File),(n2:File)
     WHERE n1.project_id = "{0}" and n2.project_id = "{0}" and n1.merge_hash = n2.hash and id(n1) < id(n2)
@@ -236,20 +236,6 @@ def merge_files_hash(graph, project_id):
     """.format(project_id)
   graph.run(query)
 
-def merge_files(graph, config):
-  print('Merging moved files')
-  start = datetime.now()
-  merge_by_hash = config.merge_by_hash if 'merge_by_hash' in config else False
-  if merge_by_hash:
-    merge_files_hash(graph, config.project_id)
-  else:
-    merge_files_merge_hash(graph, config.project_id)
-  print('Merged files \t', datetime.now()-start)
-  print('Merging moved methods')
-  start = datetime.now()
-  merge_methods(graph, config.project_id)
-  print('Merged methods \t', datetime.now()-start)
-
 
 def merge_methods(graph, project_id):
   query = """
@@ -262,6 +248,16 @@ def merge_methods(graph, project_id):
   return node
   """.format(project_id)
   graph.run(query)
+
+
+def merge_files(graph, config):
+  print('Merging moved files and methods')
+  start = datetime.now()
+  merge_renamed_files(graph, config.project_id)
+  merge_methods(graph, config.project_id)
+  merge_new_files(graph, config.project_id)
+  merge_methods(graph, config.project_id)
+  print('Merged files and methods \t', datetime.now()-start)
 
 def index_all(graph, developers, commits, parents, dev_commits, branches,
               branches_commits, files, commit_files, methods, file_methods,
