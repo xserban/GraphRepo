@@ -4,14 +4,14 @@
 Overview & Installation
 ========================
 
-GraphRepo is a tool to index git repositorie in Neo4j, query and aggregate the data.
+GraphRepo is a tool that indexes Git repositories in Neo4j, and allows to query and aggregate the data.
 Under the hood it uses `PyDriller <https://github.com/ishepard/pydriller>`_ to parse the data from a repository.
 
 Requirements
 ============
 
 * Python 3.4 (or newer)
-* Neo4j 3 - we recommend using Neo4j 3 until Py2Neo releases v5
+* Neo4j 3
 * Docker (Optional) - we recommend to use Docker for Neo4j (as indicated below)
 
 Installation - using pip
@@ -41,7 +41,7 @@ Install the requirements:
 
 Run a docker instance with Neo4j::
 
-    $ docker run --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data/exp:/data --volume=$HOME/neo4j/logs/exp:/logs neo4j:3.0
+    $ docker run -p 7474:7474 -p 7687:7687 -v $HOME/neo4j/data:/data -v $HOME/neo4j/plugins:/plugins  -e NEO4JLABS_PLUGINS=\[\"apoc\"\]   -e NEO4J_AUTH=neo4j/neo4jj neo4j:3.5.11
 
 Run the tests::
 

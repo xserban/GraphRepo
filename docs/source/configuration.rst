@@ -43,7 +43,7 @@ In order to insert a repository in the database, it has to be cloned on the loca
 Afterwards, it can be linked with GraphRepo using the ``project.repo`` attribute in the config file.
 
 If one does not want to use all the repository data (e.g., if the repository is very large), it can configure
-the index dates using the ``project.start_date`` and ``project.end_date`` attributes
+the index dates using the ``project.start_date`` and ``project.end_date`` attributes.
 
 The ``project.project_id`` attribute is used to give each project a unique identifier.
 Currently, GraphRepo indexes all repositories in the same database, in order to allow information about teams of developers that work

@@ -88,7 +88,7 @@ Each method is indexed as a node with the following attributes::
 
 
 Relationships
-==============
+===============
 
 Author
 -----------
@@ -102,7 +102,7 @@ The direction is from Commit to Author and the relationship attributes are::
 
 
 BranchCommit
------------
+--------------
 A BranchCommit relationship exists between each branch and the branch commits.
 The direction is from Branch to Commit. This relationship does not have any special attributes.
 

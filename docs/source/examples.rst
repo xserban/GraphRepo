@@ -60,7 +60,7 @@ in Neo4j, as indicated at Step 1.
 In this example we will use the miners to retrieve a file and
 plot its complexity evolution over time.
 The file used is ``examples/file_complexity.py``.
-The complexity is stored in the ``UpdateFile`` relationship (see Data Structure).
+The complexity is stored in the ``UpdateFile`` relationship (see Schema).
 The ``get_change_history`` from the ``File`` miner retrieves all the ``UpdateFile``
 relationships that point to the file.
 
