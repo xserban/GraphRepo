@@ -329,7 +329,6 @@ def index_all(graph, developers, commits, parents, dev_commits, branches,
 
 def index_cache(graph, cache, config):
     batch_size = config.batch_size
-    merge_by_hash = True if 'merge_by_hash' in config else False
     total = datetime.now()
     index_authors(graph, list(
         {v['hash']: v for v in cache.data['developers']}.values()), batch_size)
