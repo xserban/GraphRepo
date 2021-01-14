@@ -22,8 +22,8 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'GraphRepo'
-copyright = '2020, Alex S'
-author = 'Alex S'
+copyright = '2021, GraphRepo'
+author = 'GraphRepo'
 
 # The full version, including alpha/beta/rc tags
 version = ''
