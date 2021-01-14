@@ -22,6 +22,7 @@ The production release can be installed using pip:
 $ pip install graphrepo
 ```
 
+<!--
 #### Alternative: Install the development version
 
 Note that the development version may have new, but unreliable or poorly documented features.
@@ -31,12 +32,12 @@ $ git clone --recurse-submodules https://github.com/NullConvergence/GraphRepo
 $ cd graphrepo/
 $ pip install -r requirements.txt
 ```
+-->
 
 
 #### 1.3 Run and configure Neo4j
 
-The following instructions assume the Docker daemon is running on your machine.
-In case you use a different version of Neo4j, make sure to install apoc.
+The following instructions assume the Docker daemon is running on your machine:
 
 ```
 $ docker run -p 7474:7474 -p 7687:7687 -v $HOME/neo4j/data:/data -v $HOME/neo4j/plugins:/plugins  -e NEO4JLABS_PLUGINS=\[\"apoc\"\]   -e NEO4J_AUTH=neo4j/neo4jj neo4j:3.5.11
@@ -54,12 +55,23 @@ The default one is *neo4jj*.
 
 #### 1.4. Index and vizualize a repo
 
-Please clone a project configure the constants in a config file, e.g., clone
-the [GraphRepo](https://github.com/NullConvergence/GraphRepo) project in the ``repos`` folder and update the yaml file at [examples/configs/graphrepo.yml](https://github.com/NullConvergence/GraphRepo/blob/develop/examples/configs/graphrepo.yml).
-Then index the repo using:
+In order to index a repository, you must clone it on localhost, and point GraphRepo to it. For example:
+```
+$ mkdir repos
+$ cd repos
+$ git clone https://github.com/ishepard/pydriller
+```
+
+Now enter the [examples](/examples) folder from this repository, and edit the configuration file for PyDriller to reflect the database URL and desired batch size:
+```
+$ cd ../examples/
+$ nano configs/pydriller.yml](/examples/configs/pydriller.yml
+```
+
+Afterwards, we can run the script from the examples folder which indexes the repository in Neo4j:
 
 ```
-$ python -m examples.index_all --config=examples/configs/graphrepo.yml
+$ python -m examples.index_all --config=examples/configs/pydriller.yml
 ```
 
 Go to [http://<neo4j-address>:7474](http://<>:7474) and use the query from 3.1
@@ -70,7 +82,7 @@ Go to [http://<neo4j-address>:7474](http://<>:7474) and use the query from 3.1
 Assuming you succeded in step 1.4, use the follwing command to retrieve all indexed data:
 
 ```
-$ python -m examples.mine_all --config=examples/configs/graphrepo.yml
+$ python -m examples.mine_all --config=examples/configs/pydriller.yml
 ```
 
 
