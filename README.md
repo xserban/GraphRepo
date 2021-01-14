@@ -7,7 +7,7 @@ For a complete description, see the [online documentation](https://graphrepo.rea
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/NullConvergence/GraphRepo/develop/docs/source/GraphRepoSchema.svg">
-</p>
+</p>x
 
 ###  1. Installation & First run
 
@@ -106,7 +106,7 @@ MATCH (n) RETURN n
 MATCH (n) DETACH DELETE n;
 ```
 
-#### 3.2 Delete a limited number commits and relationshipss
+#### 3.2 Delete a limited number commits and relationship
 
 ```
 MATCH (n:Commit)
