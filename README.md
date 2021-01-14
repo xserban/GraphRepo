@@ -3,7 +3,7 @@
 GraphRepo is a tool for mining software repositories in real time. It indexes Git repositories in Neo4j and implements multiple queries to select and process the repository data.
 
 For a complete description, see the [online documentation](https://graphrepo.readthedocs.io/en/latest/).
-# For a [demo](https://github.com/NullConvergence/GraphRepo-Demo) using Jupyter notebooks follow this [link](https://github.com/NullConvergence/GraphRepo-Demo) or see the [video demo](https://www.youtube.com/watch?v=x1ha0fRltGI).
+<!-- For a [demo](https://github.com/NullConvergence/GraphRepo-Demo) using Jupyter notebooks follow this [link](https://github.com/NullConvergence/GraphRepo-Demo) or see the [video demo](https://www.youtube.com/watch?v=x1ha0fRltGI). -->
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/NullConvergence/GraphRepo/develop/docs/source/GraphRepoSchema.svg">
