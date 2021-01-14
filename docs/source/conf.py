@@ -22,8 +22,8 @@ sys.path.insert(0, os.path.abspath('../'))
 # -- Project information -----------------------------------------------------
 
 project = 'GraphRepo'
-copyright = '2020, Alex S'
-author = 'Alex S'
+copyright = '2021, GraphRepo'
+author = 'GraphRepo'
 
 # The full version, including alpha/beta/rc tags
 version = ''
@@ -60,3 +60,8 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+html_css_files = [
+    'css/custom.css',
+]
