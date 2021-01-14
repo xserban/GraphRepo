@@ -65,7 +65,7 @@ $ git clone https://github.com/ishepard/pydriller
 Now enter the [examples](/examples) folder from this repository, and edit the configuration file for PyDriller to reflect the database URL and desired batch size:
 ```
 $ cd ../examples/
-$ nano configs/pydriller.yml](/examples/configs/pydriller.yml
+$ nano configs/pydriller.yml
 ```
 
 Afterwards, we can run the script from the examples folder which indexes the repository in Neo4j:
@@ -74,7 +74,7 @@ Afterwards, we can run the script from the examples folder which indexes the rep
 $ python -m examples.index_all --config=examples/configs/pydriller.yml
 ```
 
-Go to [http://<neo4j-address>:7474](http://<>:7474) and use the query from 3.1
+Go to [http://localhost:7474](http://localhost:7474) and use the query from 3.1
 
 
 #### 1.5. Retrieve all data from Neo4j using GraphRepo
