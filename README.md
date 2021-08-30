@@ -7,7 +7,7 @@ For a complete description, see the [online documentation](https://graphrepo.rea
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/NullConvergence/GraphRepo/develop/docs/source/GraphRepoSchema.svg">
-</p>x
+</p>
 
 ###  1. Installation & First run
 
